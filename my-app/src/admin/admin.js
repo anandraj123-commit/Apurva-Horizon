@@ -5,15 +5,15 @@ import Header from './common/Header';
 function Admin() {
     return (
         <div className="wrapper">
-           <Sidebar/>
+            <Sidebar />
             <div className="main">
-               <Header/>
+                <Header />
                 <main className="content">
-                   <p>Admin Panel</p>
-                </main> 
-                 <Footer/>
+                    <p>Admin Panel</p>
+                </main>
+                <Footer />
             </div>
-        </div>   
+        </div>
     );
 }
 
