@@ -14,6 +14,12 @@ const Sidebar = function(){
                 </li>
 
                 <li className="sidebar-item">
+                    <a className="sidebar-link" href="/admin/content-type">
+                        <i className="align-middle" data-feather="user"></i> <span className="align-middle">Content-Type</span>
+                    </a>
+                </li>
+                
+                <li className="sidebar-item">
                     <a className="sidebar-link" href="./asset/static/pages-profile.html">
                         <i className="align-middle" data-feather="user"></i> <span className="align-middle">Category</span>
                     </a>
