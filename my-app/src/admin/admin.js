@@ -2,6 +2,8 @@ import './asset/css/app.css';
 import Sidebar from './common/Sidebar';
 import Footer from './common/Footer';
 import Header from './common/Header';
+import ImageUpload from './Imageupload';
+import FileUpload from './Fileupload';
 function Admin() {
     return (
         <div className="wrapper">
@@ -10,6 +12,8 @@ function Admin() {
                 <Header />
                 <main className="content">
                     <p>Admin Panel</p>
+                    <ImageUpload/>
+                    <FileUpload/>
                 </main>
                 <Footer />
             </div>
