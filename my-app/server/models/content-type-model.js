@@ -5,11 +5,16 @@ const contentTypeSchema=new Schema({
         type: String,
         require : true
     },
+    description:{
+        type: String,
+        require : true
+    },
     status:{
         type: Boolean,
         require : true
     }
-})
+},
+{timestamps:true})
 
 const ContentType=new model("ContentType",contentTypeSchema);
 module.exports=ContentType;

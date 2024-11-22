@@ -39,6 +39,9 @@ export default function ViewPage() {
                 {document.title}
               </Heading>
               <Heading level={5}>
+                {document.description}
+              </Heading>
+              <Heading level={5}>
                 {document.status?"Active":"Inactive"}
               </Heading>
   

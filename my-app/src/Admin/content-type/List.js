@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useList } from './store/contentcontext';
+import { useNavigate } from 'react-router-dom';
 import TablePagination from '@mui/material/TablePagination';
 import {
     Table,
@@ -14,7 +14,7 @@ import {
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import Sidebar from '../common/Sidebar';
-import { useNavigate } from 'react-router-dom';
+import './css/pagination.css'
 
 const theme: Theme = {
     name: 'table-theme',
@@ -43,13 +43,41 @@ const theme: Theme = {
 
 const List = () => {
     const navigate = useNavigate();
-    const { list } = useList();
-
+    const [list, setList] = useState([]);
+    const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [page, setPage] = useState(0);
+    const [searchDate, setSearchDate] = useState(''); // State for "Created At" filter
+    const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:5000/api/content-type/users?page=${page + 1}&limit=${rowsPerPage}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                if (response.ok) {
+                    const data = await response.json();
+                    setList(data.results);
+                    setTotalCount(data.totalCount); // Update totalCount from API
+                } else {
+                    console.error('Failed to fetch item data');
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [page, rowsPerPage]);
 
     // Filter list based on search query
     const filteredList = list.filter((entry) =>
@@ -58,12 +86,15 @@ const List = () => {
     );
 
     const filteredListByStatus = filteredList.filter((entry) => {
-        // Return all entries if no status filter is selected
         if (statusFilter === '') return true;
-    
-        // Convert the string statusFilter to a boolean for comparison
         const filterValue = statusFilter === 'true';
         return entry.status === filterValue;
+    });
+
+    const filteredListByDate = filteredListByStatus.filter((entry) => {
+        if (!searchDate) return true;
+        const createdAtDate = new Date(entry.createdAt).toISOString().split('T')[0];
+        return createdAtDate === searchDate;
     });
 
     // Reverse order logic
@@ -71,13 +102,7 @@ const List = () => {
         setIsReversed(!isReversed);
     };
 
-    const finalList = isReversed ? [...filteredListByStatus].reverse() : filteredListByStatus;
-
-    // Calculate paginated data
-    const displayedList = finalList.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-    );
+    const finalList = isReversed ? [...filteredListByDate].reverse() : filteredListByDate;
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -85,13 +110,11 @@ const List = () => {
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0); // Reset to the first page whenever rows per page changes
+        setPage(0); // Reset to the first page
     };
 
-    //search filter for status
-    const inputHandler = (event) => {
-        const { name, value } = event.target;
-        setStatusFilter(value)
+    const handleDateChange = (event) => {
+        setSearchDate(event.target.value);
     };
 
     return (
@@ -110,56 +133,81 @@ const List = () => {
                             Add New &nbsp;+
                         </button>
                     </div>
-                    <SearchField
-                        label="Search"
-                        placeholder="Search for Title or Id..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className='col-lg-3 col-md-3'
-                        onClear={(e) => setSearchQuery("")}
-                    />
-                    <SelectField
-                        className='col-lg-3 col-md-3'
-                        label="Status"
-                        onChange={inputHandler}
-                        name='status'
-                        value={statusFilter}
-                    >
-                        <option value={true}>Active</option>
-                        <option value={false}>Inactive</option>
-
-                    </SelectField>
 
                     <ThemeProvider theme={theme} colorMode="light">
                         <Table highlightOnHover variation="striped">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell as="th">
+                                    <TableCell as="th" >
                                         S.No
                                         <i
                                             className="fas fa-sort-up m-2 cursor-pointer"
                                             onClick={toggleOrder}
                                         ></i>
                                     </TableCell>
-                                    <TableCell as="th">Id</TableCell>
-                                    <TableCell as="th">Title</TableCell>
-                                    <TableCell as="th">Status</TableCell>
+                                    <TableCell as="th">Id
+                                        <SearchField
+                                            label="Search"
+                                            placeholder="Search"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            className="w-75"
+                                            onClear={() => setSearchQuery('')}
+                                        />
+                                    </TableCell>
+                                    <TableCell as="th">Title
+                                        <SearchField
+                                            label="Search"
+                                            placeholder="Search"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            className="w-75"
+                                            onClear={() => setSearchQuery('')}
+                                        />
+                                    </TableCell>
+                                    <TableCell as="th">Image</TableCell>
+                                    <TableCell as="th">Status
+                                        <SelectField
+                                            className="w-100"
+                                            onChange={(e) => setStatusFilter(e.target.value)}
+                                            name="status"
+                                            value={statusFilter}
+                                        >
+                                            <option value="">All</option>
+                                            <option value="true">Active</option>
+                                            <option value="false">Inactive</option>
+                                        </SelectField>
+                                    </TableCell>
+                                    <TableCell as="th">Created At
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            value={searchDate}
+                                            onChange={handleDateChange}
+                                        />
+                                    </TableCell>
                                     <TableCell as="th">Delete</TableCell>
                                     <TableCell as="th">Update</TableCell>
                                     <TableCell as="th">View</TableCell>
                                 </TableRow>
                             </TableHead>
-                            {displayedList.map((entries, index) => (
-                                <TableRow key={entries._id}>
+                            {finalList.map((entry, index) => (
+                                <TableRow key={entry._id}>
+                                    <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
+                                    <TableCell>{entry._id}</TableCell>
+                                    <TableCell>{entry.title}</TableCell>
                                     <TableCell>
-                                        {page * rowsPerPage + index + 1}
+                                        <img src="https://picsum.photos/id/1/200/100" alt="content" />
                                     </TableCell>
-                                    <TableCell>{entries._id}</TableCell>
-                                    <TableCell>{entries.title}</TableCell>
+                                    <TableCell className="text-center">{entry.status ? 'active' : 'inactive'}</TableCell>
                                     <TableCell>
-                                        {entries.status ? 'active' : 'inactive'}
+                                        {new Intl.DateTimeFormat('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                        }).format(new Date(entry.createdAt))}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-center">
                                         <button type="button" className="btn">
                                             <i
                                                 className="fa-solid fa-trash fs-2"
@@ -167,22 +215,26 @@ const List = () => {
                                             ></i>
                                         </button>
                                     </TableCell>
-                                    <TableCell>
-                                        <button type="button" className="btn">
+                                    <TableCell className="text-center">
+                                        <button
+                                            type="button"
+                                            className="btn"
+                                            onClick={() =>
+                                                navigate(`/admin/content-type/update/${entry._id}`)
+                                            }
+                                        >
                                             <i
                                                 className="fa-solid fa-pen-nib fs-2"
                                                 style={{ color: '#FFD43B' }}
                                             ></i>
                                         </button>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-center">
                                         <button
                                             type="button"
                                             className="btn"
                                             onClick={() =>
-                                                navigate(
-                                                    `/admin/content-type/view/${entries._id}`
-                                                )
+                                                navigate(`/admin/content-type/view/${entry._id}`)
                                             }
                                         >
                                             <i
@@ -194,15 +246,16 @@ const List = () => {
                                 </TableRow>
                             ))}
                         </Table>
+                        <TablePagination
+                            component="div"
+                            count={totalCount} // Use totalCount from API
+                            page={page}
+                            onPageChange={handleChangePage}
+                            rowsPerPage={rowsPerPage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            className='mt-3'
+                        />
                     </ThemeProvider>
-                    <TablePagination
-                        component="div"
-                        count={finalList.length} // Total items after filtering
-                        page={page}
-                        onPageChange={handleChangePage}
-                        rowsPerPage={rowsPerPage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
                 </main>
                 <Footer />
             </div>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Button, Flex, Input, Label, SelectField, Card, ThemeProvider, Theme } from '@aws-amplify/ui-react';
+import { Button, Flex, Input, Label, SelectField, Card, ThemeProvider, Theme, TextAreaField } from '@aws-amplify/ui-react';
 import Sidebar from '../common/Sidebar';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const theme: Theme = {
     name: 'card-theme',
@@ -31,7 +31,8 @@ const Add = () => {
 
     const [ListItem, setListItem] = useState({
         title: "",
-        status: true  // Default to true
+        status: true,
+        description:""
     });
 
     const inputHandler = (event) => {
@@ -42,27 +43,28 @@ const Add = () => {
         }));
     };
 
-    const submitHandler = async(e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            const response=await fetch("http://localhost:5000/api/content-type/add",{
-              method:"POST",
-              headers:{
-                'Content-Type':'application/json'
-              },
-              body:JSON.stringify(ListItem)
+            //adding date also in records
+            const response = await fetch("http://localhost:5000/api/content-type/add", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ListItem)
             })
-    
-      
-            if(response.ok){
-              alert('Successfully added content type');
-              setListItem({ title: "", status:true });      
-              navigate('/admin/content-type')
+
+
+            if (response.ok) {
+                alert('Successfully added content type');
+                setListItem({ title: "", status: true,description:"" });
+                navigate('/admin/content-type')
             }
-      
-          } catch (error) {
+
+        } catch (error) {
             console.log(error);
-          }
+        }
     }
 
     return (
@@ -80,6 +82,16 @@ const Add = () => {
                                 <Flex direction="column" gap="small">
                                     <Label htmlFor="title">Content-Title</Label>
                                     <Input id="title" type="text" name='title' isRequired onChange={inputHandler} value={ListItem.title} />
+                                </Flex>
+                                <Flex direction="column" gap="small">
+                                    <TextAreaField
+                                        label="Description"
+                                        name="description"
+                                        placeholder="Enter a description"
+                                        isRequired 
+                                        onChange={inputHandler} 
+                                        value={ListItem.description} 
+                                        rows={3} />
                                 </Flex>
                                 <Flex direction="column" gap="small">
                                     <SelectField
