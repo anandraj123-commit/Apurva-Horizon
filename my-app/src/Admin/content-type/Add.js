@@ -4,6 +4,8 @@ import Sidebar from '../common/Sidebar';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { useNavigate } from 'react-router-dom'
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
 
 const theme: Theme = {
     name: 'card-theme',
@@ -32,7 +34,7 @@ const Add = () => {
     const [ListItem, setListItem] = useState({
         title: "",
         status: true,
-        description:""
+        description: ""
     });
 
     const inputHandler = (event) => {
@@ -58,7 +60,7 @@ const Add = () => {
 
             if (response.ok) {
                 alert('Successfully added content type');
-                setListItem({ title: "", status: true,description:"" });
+                setListItem({ title: "", status: true, description: "" });
                 navigate('/admin/content-type')
             }
 
@@ -72,6 +74,14 @@ const Add = () => {
             <Sidebar />
             <div className="main">
                 <Header />
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link underline="hover" color="inherit" href="/admin/content-type">
+                        Content - Type
+                    </Link>
+                    <Link underline="hover" color="inherit" href={`/admin/content-type/add`}>
+                        Add
+                    </Link>
+                </Breadcrumbs>
                 <main className="content">
                     <ThemeProvider theme={theme} colorMode="light">
                         <Card variation="elevated" className='container w-50 py-5 mx-auto '>
@@ -88,9 +98,9 @@ const Add = () => {
                                         label="Description"
                                         name="description"
                                         placeholder="Enter a description"
-                                        isRequired 
-                                        onChange={inputHandler} 
-                                        value={ListItem.description} 
+                                        isRequired
+                                        onChange={inputHandler}
+                                        value={ListItem.description}
                                         rows={3} />
                                 </Flex>
                                 <Flex direction="column" gap="small">

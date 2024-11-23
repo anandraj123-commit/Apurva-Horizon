@@ -4,6 +4,8 @@ import Sidebar from '../common/Sidebar';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { useNavigate, useParams } from 'react-router-dom';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
 
 const theme: Theme = {
     name: 'card-theme',
@@ -28,7 +30,7 @@ const Update = () => {
     const [ListItem, setListItem] = useState({
         title: "",
         status: true,
-        description:""
+        description: ""
     });
 
     // Fetch existing data for the item
@@ -44,12 +46,12 @@ const Update = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
-                    
+                    // console.log(data);
+
                     setListItem({
-                        title: data[0].title,
-                        status: data[0].status,
-                        description: data[0].description,
+                        title: data.title,
+                        status: data.status,
+                        description: data.description,
                     });
                 } else {
                     console.error("Failed to fetch item data");
@@ -106,6 +108,14 @@ const Update = () => {
             <Sidebar />
             <div className="main">
                 <Header />
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link underline="hover" color="inherit" href="/admin/content-type">
+                        Content - Type
+                    </Link>
+                    <Link underline="hover" color="inherit" href={`/admin/content-type/update/${id}`}>
+                        Update
+                    </Link>
+                </Breadcrumbs>
                 <main className="content">
                     <ThemeProvider theme={theme} colorMode="light">
                         <Card variation="elevated" className="container w-50 py-5 mx-auto">
@@ -129,9 +139,9 @@ const Update = () => {
                                         label="Description"
                                         name="description"
                                         placeholder="Enter a description"
-                                        isRequired 
-                                        onChange={inputHandler} 
-                                        value={ListItem.description} 
+                                        isRequired
+                                        onChange={inputHandler}
+                                        value={ListItem.description}
                                         rows={3} />
                                 </Flex>
                                 <Flex direction="column" gap="small">

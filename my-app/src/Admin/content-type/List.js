@@ -15,6 +15,8 @@ import Header from '../common/Header';
 import Footer from '../common/Footer';
 import Sidebar from '../common/Sidebar';
 import './css/pagination.css'
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
 
 const theme: Theme = {
     name: 'table-theme',
@@ -79,6 +81,19 @@ const List = () => {
         fetchData();
     }, [page, rowsPerPage]);
 
+    //delete handler 
+    const deleteHandler = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/content-type/delete/${id}`, {
+                method: "GET",
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     // Filter list based on search query
     const filteredList = list.filter((entry) =>
         entry.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -123,6 +138,11 @@ const List = () => {
             <div className="main">
                 <Header />
                 <main className="content">
+                    <Breadcrumbs aria-label="breadcrumb">
+                        <Link underline="hover" color="inherit" href="/admin/content-type">
+                            Content - Type
+                        </Link>
+                    </Breadcrumbs>
                     <div className="container d-flex flex-row justify-content-between align-self-center">
                         <p className="text-primary display-6">Types of Content</p>
                         <button
@@ -152,6 +172,7 @@ const List = () => {
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             className="w-75"
+                                            hasSearchButton={false}
                                             onClear={() => setSearchQuery('')}
                                         />
                                     </TableCell>
@@ -162,6 +183,7 @@ const List = () => {
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             className="w-75"
+                                            hasSearchButton={false}
                                             onClear={() => setSearchQuery('')}
                                         />
                                     </TableCell>
@@ -208,7 +230,9 @@ const List = () => {
                                         }).format(new Date(entry.createdAt))}
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <button type="button" className="btn">
+                                        <button type="button" className="btn"
+                                            onClick={() => { deleteHandler(entry._id) }}
+                                        >
                                             <i
                                                 className="fa-solid fa-trash fs-2"
                                                 style={{ color: '#d71919' }}
@@ -248,7 +272,7 @@ const List = () => {
                         </Table>
                         <TablePagination
                             component="div"
-                            count={totalCount} // Use totalCount from API
+                            count={totalCount}
                             page={page}
                             onPageChange={handleChangePage}
                             rowsPerPage={rowsPerPage}
