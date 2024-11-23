@@ -4,70 +4,87 @@ function FileUpload() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   function handleFile(e) {
     const selectedFile = e.target.files[0];
     const fileSizeInKB = selectedFile ? selectedFile.size / 1024 : 0;
-    const imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
-
+    const imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    const pdfType = 'application/pdf';
+      
+    // Clear previous success or error state when a new file is selected
+    setSuccess('');
+    setError('');
+    setPreview(null);
     if (selectedFile) {
-      if (imageTypes.includes(selectedFile.type)) {
-        if (fileSizeInKB > 31) {
-          setError('Image files must be 25KB or less.');
+      // Check if it's a PDF
+      if (selectedFile.type === pdfType) {
+        if (fileSizeInKB > 500) {
+          setError('PDF file must be 100KB or less.');
           setFile(null);
           setPreview(null);
           return;
         }
       }
-
-      if (fileSizeInKB <= 100) {
-        setFile(selectedFile);
-        if (imageTypes.includes(selectedFile.type)) {
-          setPreview(URL.createObjectURL(selectedFile));
+      // Check if it's an image file
+      else if (imageTypes.includes(selectedFile.type)) {
+        if (fileSizeInKB > 32) {
+          setError('Image file must be 32KB or less.');
+          setFile(null);
+          setPreview(null);
+          return;
         }
-        setError('');
+        setPreview(URL.createObjectURL(selectedFile));
       } else {
-        setError('File must be 100KB or less.');
+        setError('Invalid file type. Please upload a PDF or an image (jpeg, jpg, png, gif).');
         setFile(null);
         setPreview(null);
+        return;
       }
+
+      setFile(selectedFile);
+      setError('');
+
+      // Automatically upload the file
+      uploadFileToServer(selectedFile);
     }
   }
 
-  function uploadFileToServer() {
-    if (!file) {
+  async function uploadFileToServer(selectedFile) {
+    if (!selectedFile) {
       setError('No file selected to upload.');
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('filedata', selectedFile);
 
-    fetch('/upload', { 
-      method: 'POST',
-      body: formData,
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('File uploaded successfully:', data);
-        alert('File uploaded successfully!');
-      })
-      .catch(error => {
-        console.error('Error uploading file:', error);
-        setError('Failed to upload file. Please try again.');
+    try {
+      const response = await fetch('http://localhost:5000/upload', {  // Ensure URL matches your server endpoint
+        method: 'POST',
+        body: formData,
       });
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('File uploaded successfully!');
+        console.log('File uploaded:', data);
+      } else {
+        setError(data.message || 'Failed to upload file.');
+      }
+    } catch (err) {
+      console.error('Error uploading file:', err);
+      setError('Failed to upload file. Please try again.');
+    }
   }
 
   return (
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-      <input type="file" name="filedata" onChange={handleFile}  />
+    <div>
+      <input type="file" name="filedata" onChange={handleFile} />
       {preview && <img src={preview} alt="Preview" style={{ width: '200px', marginTop: '10px' }} />}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button type="submmit" onChange={uploadFileToServer} disabled={!file}>
-        Upload
-      </button>
-    </form>
-    
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+    </div>
   );
 }
 

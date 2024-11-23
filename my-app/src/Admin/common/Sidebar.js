@@ -14,31 +14,24 @@ const Sidebar = function({ isActive }){
 
             <ul className="sidebar-nav">
                 <li className="sidebar-item active">
-                    <a className="sidebar-link" href="index.html">
+                    <a className="sidebar-link" href="">
                         <i className="align-middle" data-feather="sliders"></i> <span className="align-middle"><AiFillDashboard />Dashboard</span>
                     </a>
                 </li>
 
                 <li className="sidebar-item">
                     <a className="sidebar-link" href="/admin/content-type">
-                        <i className="align-middle" data-feather="user"></i> <span className="align-middle">Content-Type</span>
-                    </a>
-                </li>
-                
-                <li className="sidebar-item">
-                    <a className="sidebar-link" href="./asset/static/pages-profile.html">
                         <i className="align-middle" data-feather="user"></i> <span className="align-middle"><LuFileType />Content-Type</span>
                     </a>
                 </li>
-
                 <li className="sidebar-item">
-                    <a className="sidebar-link" href="./asset/static/pages-profile.html">
+                    <a className="sidebar-link" href="">
                         <i className="align-middle" data-feather="user"></i> <span className="align-middle"><BiCategory />Category</span>
                     </a>
                 </li>
 
                 <li className="sidebar-item">
-                    <a className="sidebar-link" href="./asset/static/pages-sign-in.html">
+                    <a className="sidebar-link" href="">
                         <i className="align-middle" data-feather="log-in"></i> <span className="align-middle"><FaRegUserCircle />User</span>
                     </a>
                 </li>

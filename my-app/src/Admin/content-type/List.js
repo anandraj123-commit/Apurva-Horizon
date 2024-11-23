@@ -143,6 +143,7 @@ const List = () => {
                                     </TableCell>
                                     <TableCell as="th">Id</TableCell>
                                     <TableCell as="th">Title</TableCell>
+                                    <TableCell as="th">File</TableCell>
                                     <TableCell as="th">Status</TableCell>
                                     <TableCell as="th">Delete</TableCell>
                                     <TableCell as="th">Update</TableCell>

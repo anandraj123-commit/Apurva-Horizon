@@ -12,7 +12,9 @@ function Admin() {
                 <Header />
                 <main className="content">
                     <p>Admin Panel</p>
+                    image
                     <ImageUpload/>
+                    file
                     <FileUpload/>
                 </main>
                 <Footer />

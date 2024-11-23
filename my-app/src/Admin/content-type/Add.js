@@ -3,6 +3,8 @@ import { Button, Flex, Input, Label, SelectField, Card, ThemeProvider, Theme } f
 import Sidebar from '../common/Sidebar';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
+import ImageUpload from '../Imageupload';
+import FileUpload from '../Fileupload';
 import {useNavigate} from 'react-router-dom'
 
 const theme: Theme = {
@@ -93,6 +95,10 @@ const Add = () => {
                                         <option value={false}>Inactive</option>
 
                                     </SelectField>
+                                </Flex>
+                                <Flex direction="column" gap="small">
+                                    <Label htmlFor="title">Upload Image</Label>
+                                    <ImageUpload/>
                                 </Flex>
                                 <Button type="submit">Submit</Button>
                             </Flex>
