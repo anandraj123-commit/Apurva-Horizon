@@ -13,6 +13,7 @@ const contentTypeSchema=new Schema({
         type: Boolean,
         require : true
     }
+    
 },
 {timestamps:true})
 

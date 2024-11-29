@@ -4,7 +4,9 @@ import Sidebar from '../common/Sidebar';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import TextField from '@mui/material/TextField';
+import ImageUpload from '../Imageupload';
+import CustomSeparator from '../common/Breadcrumbs';
 const theme: Theme = {
     name: 'card-theme',
     tokens: {
@@ -28,7 +30,7 @@ const Update = () => {
     const [ListItem, setListItem] = useState({
         title: "",
         status: true,
-        description:""
+        description: ""
     });
 
     // Fetch existing data for the item
@@ -45,7 +47,7 @@ const Update = () => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
-                    
+
                     setListItem({
                         title: data[0].title,
                         status: data[0].status,
@@ -107,32 +109,49 @@ const Update = () => {
             <div className="main">
                 <Header />
                 <main className="content">
+                <CustomSeparator/>
                     <ThemeProvider theme={theme} colorMode="light">
-                        <Card variation="elevated" className="container w-50 py-5 mx-auto">
+                        <Card variation="elevated" className="container py-5 mx-auto" style={{ width: '500px', height: '700px' }}>
                             <div className="container">
-                                <p className="text-primary display-6 text-center fw-medium">Update Content Type</p>
+                                <p className="text-primary display-6 text-center fw-medium" style={{
+                                    fontSize: '2rem',  // Adjust the font size
+                                    fontWeight: '500'  // Lighter font weight
+                                }}>UPDATE CONTENT TYPE</p>
                             </div>
                             <Flex as="form" direction="column" width="20rem" onSubmit={submitHandler} className="container">
                                 <Flex direction="column" gap="small">
-                                    <Label htmlFor="title">Content-Title</Label>
-                                    <Input
+                                    {/* <Label htmlFor="title">Content-Title</Label> */}
+                                    {/* <Input
                                         id="title"
                                         type="text"
                                         name="title"
                                         isRequired
                                         onChange={inputHandler}
                                         value={ListItem.title}
-                                    />
+                                    /> */}
+                                    <TextField id="title" name='title' label="Content-Title" variant="outlined" isRequired onChange={inputHandler} value={ListItem.title} />
                                 </Flex>
                                 <Flex direction="column" gap="small">
-                                    <TextAreaField
+                                    {/* <TextAreaField
                                         label="Description"
                                         name="description"
                                         placeholder="Enter a description"
                                         isRequired 
                                         onChange={inputHandler} 
                                         value={ListItem.description} 
-                                        rows={3} />
+                                        rows={3} /> */}
+                                    <TextField
+                                        id="outlined-multiline-static"
+
+                                        name="description"
+                                        placeholder="Enter a description"
+                                        isRequired
+                                        onChange={inputHandler}
+                                        value={ListItem.description}
+                                        label="Description"
+                                        multiline
+                                        rows={4}
+                                    />
                                 </Flex>
                                 <Flex direction="column" gap="small">
                                     <SelectField
@@ -145,8 +164,14 @@ const Update = () => {
                                         <option value={true}>Active</option>
                                         <option value={false}>Inactive</option>
                                     </SelectField>
+                                    <Flex direction="column" gap="small">
+                                        <Label htmlFor="title">Upload Image</Label>
+                                        <div style={{ minHeight: '100px' }}> {/* Reserve space for previews */}
+                                            <ImageUpload />
+                                        </div>
+                                    </Flex>
                                 </Flex>
-                                <Button type="submit">Update</Button>
+                                <button type="submit" className="btn btn-primary">Submit</button>
                             </Flex>
                         </Card>
                     </ThemeProvider>

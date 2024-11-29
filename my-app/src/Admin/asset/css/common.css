@@ -43,12 +43,27 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
+
 .sidebar-link i,
 .sidebar-link svg {
     margin-right: 0.5rem;
     font-size: 1.25rem;
 }
 
+.sidebar-item.active .sidebar-link {
+    background-color: #495057; /* Highlight background */
+    color: #fff; /* Highlight text */
+  }
+  
+  .sidebar-item.active i {
+    color: #fff; /* Highlight icon */
+  }
+  
+  .sidebar-item .sidebar-link:hover {
+    background-color: #6c757d; /* Hover background for inactive items */
+    color: #fff;
+  }
+  /* last  */
 /* Active and hover states */
 .sidebar-item.active .sidebar-link,
 .sidebar-link:hover {
@@ -69,6 +84,8 @@
     color: #b6bdc2;
     text-transform: uppercase;
 }
+
+  
 /* ------------------ header section css ------------------------*/
 
 

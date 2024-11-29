@@ -53,4 +53,23 @@ const viewListItem = async(req,res)=>{
 
 }
 
-module.exports = { listOut, addList, updateList,viewListItem};
+const deleteItem = async(req,res)=>{
+    const { id } = req.params;
+    try {
+        const dbo =await connectDB()
+        const Response = await dbo.collection("content-type").findOne({ _id: new ObjectId(id) });
+        // const data = await Response.json()
+        // console.log(Response.status);
+        
+        const updatedContentType = await dbo.collection("content-type").updateOne(
+            { _id: new ObjectId(id) }, 
+            { $set: { status :false } }
+        );
+        return res.status(200).json({ message: "Status changed successfully" })
+    } catch (error) {
+        return res.status(500).json({ message: "message not delivered" })
+    }
+
+}
+
+module.exports = { listOut, addList, updateList,viewListItem,deleteItem};
