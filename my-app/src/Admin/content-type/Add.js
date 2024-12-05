@@ -36,7 +36,8 @@ const Add = () => {
     const [ListItem, setListItem] = useState({
         title: "",
         status: true,
-        description: ""
+        description: "",
+        imagefile: null
     });
     const [loading, setLoading] = useState(false);
     const inputHandler = (event) => {
@@ -47,13 +48,24 @@ const Add = () => {
         }));
     };
 
+    const imageUploadHandler = (file) => {
+        setListItem((prevValue) => ({
+            ...prevValue,
+            imagefile: file,
+        }));
+    };
+   
+
     const submitHandler = async (e) => {
         e.preventDefault();
         if (!ListItem.title || !ListItem.description) {
             alert('Title and Description are required!');
             return; // Prevent form submission if validation fails
         }
-        
+        if(!ListItem.ImageUpload)
+        {
+            alert('please upload Image');
+        }
         try {
             //adding date also in records
             const response = await fetch("http://localhost:5000/api/content-type/add", {
@@ -103,19 +115,18 @@ const Add = () => {
                             <Flex as="form" direction="column" width="20rem" onSubmit={submitHandler} className='container'>
                                 <Flex direction="column" gap="small">
 
-                                    <TextField id="outlined-basic" name='title' label="Content-Title" variant="outlined" isRequired onChange={inputHandler} value={ListItem.title} />
+                                    <TextField id="outlined-basic" 
+                                    name='title'
+                                    label="Content-Title" 
+                                    variant="outlined" 
+                                    isRequired 
+                                    onChange={inputHandler} 
+                                    value={ListItem.title} />
                                     {/* <Label htmlFor="title">Content-Title</Label> */}
                                     {/* <Input id="title" type="text" name='title' isRequired onChange={inputHandler} value={ListItem.title} /> */}
                                 </Flex>
                                 <Flex direction="column" gap="small">
-                                    {/* <TextAreaField
-                                        label="Description"
-                                        name="description"
-                                        placeholder="Enter a description"
-                                        isRequired
-                                        onChange={inputHandler}
-                                        value={ListItem.description}
-                                        rows={3} /> */}
+                                   
                                     <TextField
                                         id="outlined-multiline-static"
                                         name="description"
@@ -144,7 +155,7 @@ const Add = () => {
                                 <Flex direction="column" gap="small">
                                     <Label htmlFor="title">Upload Image</Label>
                                     <div style={{ minHeight: '100px' }}> {/* Reserve space for previews */}
-                                        <ImageUpload />
+                                        <ImageUpload onImageUpload={imageUploadHandler} />
                                     </div>
                                 </Flex>
                                 <button type="submit" className="btn btn-primary">Submit</button>

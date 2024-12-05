@@ -3,17 +3,25 @@ const {Schema , model}=require("mongoose")
 const contentTypeSchema=new Schema({
     title:{
         type: String,
-        require : true
+        required : true
     },
     description:{
         type: String,
-        require : true
+        required : true
     },
     status:{
         type: Boolean,
-        require : true
-    }
-    
+        required : true
+    },
+    imagefile:{
+        type: String,
+        // uploadDate: { type: Date, default: Date.now },
+        required : true
+    },
+    uploadDate: { 
+      type: Date, 
+      default: Date.now 
+    },
 },
 {timestamps:true})
 

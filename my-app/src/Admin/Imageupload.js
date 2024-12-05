@@ -45,7 +45,7 @@ function ImageUpload() {
     formData.append('filedata', file);
 
 
-    fetch('http://localhost:5000/upload', {
+    fetch('http://localhost:5000/api/file/upload', {
       method: 'POST',
       body: formData,
     })
@@ -58,7 +58,7 @@ function ImageUpload() {
       .catch(error => {
         
         console.error('Error uploading file:', error);
-        setError('Failed to upload file. Please try again.');
+        setError(error.message || 'Failed to upload file. Please try again.');
       });
   }
 

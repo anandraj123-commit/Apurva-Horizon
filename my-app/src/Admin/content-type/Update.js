@@ -37,6 +37,7 @@ const Update = () => {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(`http://localhost:5000/api/content-type/view/${id}`, {
                     method: "GET",
@@ -58,8 +59,10 @@ const Update = () => {
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
-            } finally {
-                setLoading(false); // Set loading to false after fetch
+            }  finally {
+                setTimeout(() => {
+                    setLoading(false);  // Hide loader after a delay
+                }, 400);
             }
         };
 
@@ -68,7 +71,9 @@ const Update = () => {
 
 
     if (loading) {
-        return <p>Loading...</p>; // Render a loading indicator
+        return <div className="modal">
+        <div className="loader"></div>
+    </div> ; // Render a loading indicator
     }
 
     // Handle input changes
@@ -104,6 +109,10 @@ const Update = () => {
     };
 
     return (
+        <>
+         {/* { loading ? <div className="modal">
+            <div className="loader"></div>
+        </div> :  */}
         <div className="wrapper">
             <Sidebar />
             <div className="main">
@@ -179,6 +188,9 @@ const Update = () => {
                 <Footer />
             </div>
         </div>
+        {/* } */}
+    </>
+    
     );
 };
 

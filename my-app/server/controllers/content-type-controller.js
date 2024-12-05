@@ -1,4 +1,6 @@
 const ContentType = require("../models/content-type-model")
+const connectDB = require('../utils/db');
+const { ObjectId } = require('mongodb');
 
 const listOut = async (req, res) => {
     try {
@@ -8,7 +10,6 @@ const listOut = async (req, res) => {
         return res.status(500).json({ message: "message not delivered" })
     }
 }
-
 
 const addList = async (req, res) => {
     try {
@@ -53,23 +54,29 @@ const viewListItem = async(req,res)=>{
 
 }
 
-const deleteItem = async(req,res)=>{
+const deleteItem = async (req, res) => {
     const { id } = req.params;
-    try {
-        const dbo =await connectDB()
-        const Response = await dbo.collection("content-type").findOne({ _id: new ObjectId(id) });
-        // const data = await Response.json()
-        // console.log(Response.status);
-        
-        const updatedContentType = await dbo.collection("content-type").updateOne(
-            { _id: new ObjectId(id) }, 
-            { $set: { status :false } }
-        );
-        return res.status(200).json({ message: "Status changed successfully" })
-    } catch (error) {
-        return res.status(500).json({ message: "message not delivered" })
-    }
 
-}
+    try {
+        const contentType = await ContentType.findById(id);
+
+        if (!contentType) {
+            return res.status(404).json({ message: "Content type not found" });
+        }
+
+        // Toggle the status field
+        contentType.status = !contentType.status;
+        const updatedContentType = await contentType.save();
+
+        return res.status(200).json({
+            message: "Content type status toggled successfully",
+            data: updatedContentType, // Include updated content
+        });
+    } catch (error) {
+        console.error(`Error toggling status for content type ID ${id}:`, error);
+        return res.status(500).json({ message: "Failed to toggle content type status" });
+    }
+};
+
 
 module.exports = { listOut, addList, updateList,viewListItem,deleteItem};

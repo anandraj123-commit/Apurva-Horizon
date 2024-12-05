@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Card,
@@ -19,14 +19,30 @@ import Footer from '../common/Footer';
 import CustomSeparator from '../common/Breadcrumbs';
 
 export default function ViewPage() {
+    
   const navigate = useNavigate();
     const { tokens } = useTheme();
     const { list } = useList();
     const location = useLocation();
+    const [loading, setloading] = useState(false);
     const pathAfterView = location.pathname.split('/view/')[1];
 
     const document = list.find((item) => item._id === pathAfterView);
-
+    // setloading(true);
+    // if (loading) {
+    //     try{
+    //     <div className="modal">
+    //     <div className="loader"></div>
+    // </div> ; // Render a loading indicator
+    //     }catch (error) {
+    //         console.error('Error fetching data:', error);
+    //     } 
+    //     finally {
+    //         setTimeout(() => {
+    //             setLoading(false);  // Hide loader after a delay
+    //         }, 400);
+    //     }
+    // }
     return (
       <div className="wrapper">
       <Sidebar />
