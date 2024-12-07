@@ -304,7 +304,6 @@ const List = () => {
                                                         className="status_icon"
                                                         displayEmpty
                                                         onChange={(e) => setStatusFilter(e.target.value)}
-
                                                     >
                                                         <MenuItem value="">All</MenuItem>
                                                         <MenuItem value="true">Active</MenuItem>

@@ -15,6 +15,7 @@ const Sidebar = ({ isActive }) => {
     localStorage.setItem("activeItem", activeItem);
   }, [activeItem]);
 
+
   // Menu items array
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <AiFillDashboard />, link: "/admin" },
