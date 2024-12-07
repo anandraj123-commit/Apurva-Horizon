@@ -18,7 +18,7 @@ const CountryState = () => {
     redirect: 'follow',
   };
 
-  // Fetch countries
+ 
   const getCountryData = async () => {
     try {
       const response = await fetch("https://api.countrystatecity.in/v1/countries", requestOptions);
@@ -29,7 +29,6 @@ const CountryState = () => {
     }
   };
 
-  // Fetch states based on selected country
   const getStateData = async (countryCode) => {
     try {
       const response = await fetch(
@@ -43,7 +42,7 @@ const CountryState = () => {
     }
   };
 
-  // Fetch cities based on selected state
+ 
   const getCityData = async (countryCode, stateCode) => {
     try {
       const response = await fetch(
@@ -57,19 +56,19 @@ const CountryState = () => {
     }
   };
 
-  // Fetch countries on component mount
+
   useEffect(() => {
     getCountryData();
   }, []);
 
-  // Fetch states when selectedCountry changes
+  
   useEffect(() => {
     if (selectedCountry) {
       getStateData(selectedCountry);
     }
   }, [selectedCountry]);
 
-  // Fetch cities when selectedState changes
+  
   useEffect(() => {
     if (selectedState) {
       getCityData(selectedCountry, selectedState);
@@ -80,7 +79,7 @@ const CountryState = () => {
     <div>
       <h1>Country, State, and City Selector</h1>
 
-      {/* Country Dropdown */}
+    
       <label htmlFor="country-select">Select a Country:</label>
       <select
         id="country-select"
@@ -95,7 +94,7 @@ const CountryState = () => {
         ))}
       </select>
 
-      {/* State Dropdown */}
+     
       {selectedCountry && (
         <>
           <label htmlFor="state-select">Select a State:</label>
@@ -114,7 +113,7 @@ const CountryState = () => {
         </>
       )}
 
-      {/* City Dropdown */}
+
       {selectedState && (
         <>
           <label htmlFor="city-select">Select a City:</label>
