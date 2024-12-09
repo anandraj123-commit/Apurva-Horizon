@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const contentType = require('./routers/content-type-router');
+const categoryType = require('./routers/category-type-router');
 
 const cors = require('cors');
 const connectDb = require('./utils/db');
@@ -18,6 +19,7 @@ app.use(cors(corsOption));
 
 app.use(express.json())
 app.use('/api/content-type', contentType)
+app.use('/api/category-type', categoryType)
 
 
 

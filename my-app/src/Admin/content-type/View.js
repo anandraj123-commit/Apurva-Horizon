@@ -29,62 +29,49 @@ export default function ViewPage() {
       })
       if (response.ok) {
         const data = await response.json()
-        console.log(data);
+        // console.log(data);
         setDocument(data)
+        
+      
       }
     }
     fetchSingleItem();
   }, [])
 
   return (
-    <div className="wrapper">
-      <Sidebar />
-      <div className="main">
-        <Header />
-        <main className="content">
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link underline="hover" color="inherit" href="/admin/content-type">
-              Content - Type
-            </Link>
-            <Link underline="hover" color="inherit" href={`/admin/content-type/view/${pathAfterView}`}>
-              View
-            </Link>
-          </Breadcrumbs>
-          <View
-            backgroundColor={tokens.colors.background.secondary}
-            padding={tokens.space.medium}
-          >
-            <Card variation="elevated">
-              <Flex direction="row" alignItems="flex-start">
-
-                <Flex
-                  direction="column"
-                  alignItems="flex-start"
-                  gap={tokens.space.xs}
-                >
+    <View
+        backgroundColor={tokens.colors.background.secondary}
+        padding={tokens.space.medium}
+      >
+        <Card variation="elevated">
+          <div className="container mt-5">
+            {/* Content Type */}
+              <div className="col text-end">
+                <p className="text-success fw-bold">Id: {document._id}</p>
+              </div>
 
 
-                  <Heading level={5}>
-                    {pathAfterView}
-                  </Heading>
-                  <Heading level={5}>
-                    {document.title}
-                  </Heading>
-                  <Heading level={5}>
-                    {document.description}
-                  </Heading>
-                  <Heading level={5}>
-                    {document.status ? "Active" : "Inactive"}
-                  </Heading>
+            {/* Title */}
+            <div className="mb-3">
+              <h6 className="fw-bold">Title - <span className="text-secondary">{document.title}</span></h6>
+            </div>
 
-
-                </Flex>
-              </Flex>
-            </Card>
-          </View>
-        </main>
-        <Footer />
-      </div>
-    </div>
+            {/* Description */}
+            <div className="mb-4">
+              <h6 className="fw-bold">Description - <span className="text-secondary">{document.description}</span></h6>
+            </div>
+            <div className="mb-4">
+              <h6 className="fw-bold">Status - <span className="text-secondary">{document.status?"Active":"Inactive"}</span></h6>
+            </div>
+            <div className="mb-4">
+              <h6 className="fw-bold">Description - <span className="text-secondary">{new Intl.DateTimeFormat('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                }).format(new Date(document.createdAt))}</span></h6>
+            </div>
+          </div>
+        </Card>
+      </View>
   )
 }

@@ -9,9 +9,9 @@ const addList = async (req, res) => {
         const dbo =await connectDB()
         // console.log(dbo);
         await dbo.collection("content-type").insertOne(listItem)
-        return res.status(200).json({ message: "new list item is successfully added" })
+        return res.status(200).json({ message: "Successfully added ✅" ,type:"success",timeout:3000})
     } catch (error) {
-        return res.status(500).json({ message: "message not delivered" })
+        return res.status(500).json({ message: "Failed to add this item ❌" ,type:"success",timeout:3000})
     }
 }
 
@@ -31,10 +31,10 @@ const updateList = async(req, res) => {
             return res.status(404).json({ message: 'Content type not found' });
         }
 
-        res.json({ message: 'Content type updated successfully', data: updatedContentType });
+        res.json({ message: 'Successfully Updated ✅', data: updatedContentType });
     } catch (error) {
-        console.error('Error updating content type:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        // console.error('Error updating content type:', error);
+        res.status(500).json({ message: 'Internal server error ❌' });
     }
 }
 
@@ -45,7 +45,7 @@ const viewListItem = async(req,res)=>{
         const Response = await dbo.collection("content-type").findOne({ _id: new ObjectId(id) });
         return res.status(200).json(Response)
     } catch (error) {
-        return res.status(500).json({ message: "message not delivered" })
+        return res.status(500).json({ message: "Internal server error ❌" })
     }
 
 }
@@ -55,6 +55,9 @@ const deleteItem = async(req,res)=>{
     try {
         const dbo =await connectDB()
         const Response = await dbo.collection("content-type").findOne({ _id: new ObjectId(id) });
+        if(!Response.status){
+            return res.status(200).json({ message: "Status is already Inactive ⚠️",type:"info"})
+        }
         // const data = await Response.json()
         // console.log(Response.status);
         
@@ -62,9 +65,9 @@ const deleteItem = async(req,res)=>{
             { _id: new ObjectId(id) }, 
             { $set: { status :false } }
         );
-        return res.status(200).json({ message: "Status changed successfully" })
+        return res.status(200).json({ message: "Status changed to Inactive ✅",type:"success"})
     } catch (error) {
-        return res.status(500).json({ message: "message not delivered" })
+        return res.status(500).json({ message: "Status failed to change ❌" })
     }
 
 }

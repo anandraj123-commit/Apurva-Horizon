@@ -20,7 +20,7 @@ const Sidebar = function(){
                 </li>
                 
                 <li className="sidebar-item">
-                    <a className="sidebar-link" href="./asset/static/pages-profile.html">
+                    <a className="sidebar-link" href="/admin/category-type/list">
                         <i className="align-middle" data-feather="user"></i> <span className="align-middle">Category</span>
                     </a>
                 </li>

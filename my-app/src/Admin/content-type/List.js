@@ -11,12 +11,7 @@ import {
     SearchField,
     SelectField,
 } from '@aws-amplify/ui-react';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
-import Sidebar from '../common/Sidebar';
-import './css/pagination.css'
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
+import Notification from '../../Modules/Notification';
 
 const theme: Theme = {
     name: 'table-theme',
@@ -53,9 +48,12 @@ const List = () => {
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
+    // for loading
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(
                     `http://localhost:5000/api/content-type/users?page=${page + 1}&limit=${rowsPerPage}`,
@@ -76,6 +74,11 @@ const List = () => {
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
+            finally {
+                setTimeout(() => {
+                    setLoading(false);  // Hide loader after a delay
+                }, 400);
+            }
         };
 
         fetchData();
@@ -88,11 +91,20 @@ const List = () => {
                 method: "GET",
             })
 
+            const data =await response.json()
+            // console.log(data);
+            
+            if(response.ok){
+                if(data.type==="info")Notification.info(data.message)
+                else Notification.success(data.message)
+            }
+
         } catch (error) {
-            console.log(error);
+            Notification.error("Some backend error ❌")
         }
 
     }
+    // console.log("list is rendered");
 
     // Filter list based on search query
     const filteredList = list.filter((entry) =>
@@ -133,157 +145,160 @@ const List = () => {
     };
 
     return (
-        <div className="wrapper">
-            <Sidebar />
-            <div className="main">
-                <Header />
-                <main className="content">
-                    <Breadcrumbs aria-label="breadcrumb">
-                        <Link underline="hover" color="inherit" href="/admin/content-type">
-                            Content - Type
-                        </Link>
-                    </Breadcrumbs>
-                    <div className="container d-flex flex-row justify-content-between align-self-center">
-                        <p className="text-primary display-6">Types of Content</p>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={() => navigate('/admin/content-type/add')}
-                        >
-                            Add New &nbsp;+
-                        </button>
-                    </div>
+        <>
+            {loading ? <div className="modal">
+                <div className="loader"></div>
+            </div> :<>
 
-                    <ThemeProvider theme={theme} colorMode="light">
-                        <Table highlightOnHover variation="striped">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell as="th" >
-                                        S.No
-                                        <i
-                                            className="fas fa-sort-up m-2 cursor-pointer"
-                                            onClick={toggleOrder}
-                                        ></i>
-                                    </TableCell>
-                                    <TableCell as="th">Id
-                                        <SearchField
-                                            label="Search"
-                                            placeholder="Search"
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="w-75"
-                                            hasSearchButton={false}
-                                            onClear={() => setSearchQuery('')}
-                                        />
-                                    </TableCell>
-                                    <TableCell as="th">Title
-                                        <SearchField
-                                            label="Search"
-                                            placeholder="Search"
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="w-75"
-                                            hasSearchButton={false}
-                                            onClear={() => setSearchQuery('')}
-                                        />
-                                    </TableCell>
-                                    <TableCell as="th">Image</TableCell>
-                                    <TableCell as="th">Status
-                                        <SelectField
-                                            className="w-100"
-                                            onChange={(e) => setStatusFilter(e.target.value)}
-                                            name="status"
-                                            value={statusFilter}
-                                        >
-                                            <option value="">All</option>
-                                            <option value="true">Active</option>
-                                            <option value="false">Inactive</option>
-                                        </SelectField>
-                                    </TableCell>
-                                    <TableCell as="th">Created At
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            value={searchDate}
-                                            onChange={handleDateChange}
-                                        />
-                                    </TableCell>
-                                    <TableCell as="th">Delete</TableCell>
-                                    <TableCell as="th">Update</TableCell>
-                                    <TableCell as="th">View</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            {finalList.map((entry, index) => (
-                                <TableRow key={entry._id}>
-                                    <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
-                                    <TableCell>{entry._id}</TableCell>
-                                    <TableCell>{entry.title}</TableCell>
-                                    <TableCell>
-                                        <img src="https://picsum.photos/id/1/200/100" alt="content" />
-                                    </TableCell>
-                                    <TableCell className="text-center">{entry.status ? 'active' : 'inactive'}</TableCell>
-                                    <TableCell>
-                                        {new Intl.DateTimeFormat('en-US', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric',
-                                        }).format(new Date(entry.createdAt))}
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <button type="button" className="btn"
-                                            onClick={() => { deleteHandler(entry._id) }}
-                                        >
-                                            <i
-                                                className="fa-solid fa-trash fs-2"
-                                                style={{ color: '#d71919' }}
-                                            ></i>
-                                        </button>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <button
-                                            type="button"
-                                            className="btn"
-                                            onClick={() =>
-                                                navigate(`/admin/content-type/update/${entry._id}`)
-                                            }
-                                        >
-                                            <i
-                                                className="fa-solid fa-pen-nib fs-2"
-                                                style={{ color: '#FFD43B' }}
-                                            ></i>
-                                        </button>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <button
-                                            type="button"
-                                            className="btn"
-                                            onClick={() =>
-                                                navigate(`/admin/content-type/view/${entry._id}`)
-                                            }
-                                        >
-                                            <i
-                                                className="fa-solid fa-eye fs-2"
-                                                style={{ color: '#63E6BE' }}
-                                            ></i>
-                                        </button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </Table>
-                        <TablePagination
-                            component="div"
-                            count={totalCount}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            rowsPerPage={rowsPerPage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            className='mt-3'
-                        />
-                    </ThemeProvider>
-                </main>
-                <Footer />
+            <div className="container d-flex flex-row justify-content-between align-self-center">
+                <p className="text-primary display-6" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>Types of Content</p>
+                <buttonCONTENT
+                                    type="button"
+                                    className="btn btn-success"
+                                    onClick={() => {
+                                        setLoading(true);
+                                        {
+                                            loading ? <div className="modal">
+                                                <div className="loader"></div>
+                                            </div> : (navigate('/admin/content-type/add'))
+                                        }
+                                    }}
+                                >
+                                    ADD&nbsp;+
+                                </buttonCONTENT>
             </div>
-        </div>
+
+            <ThemeProvider theme={theme} colorMode="light">
+                <Table highlightOnHover variation="striped">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell as="th" >
+                                S.No
+                                <i
+                                    className="fas fa-sort-up m-2 cursor-pointer"
+                                    onClick={toggleOrder}
+                                ></i>
+                            </TableCell>
+                            <TableCell as="th">Id
+                                <SearchField
+                                    label="Search"
+                                    placeholder="Search"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-75"
+                                    hasSearchButton={false}
+                                    onClear={() => setSearchQuery('')}
+                                />
+                            </TableCell>
+                            <TableCell as="th">Title
+                                <SearchField
+                                    label="Search"
+                                    placeholder="Search"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-75"
+                                    hasSearchButton={false}
+                                    onClear={() => setSearchQuery('')}
+                                />
+                            </TableCell>
+                            <TableCell as="th">Image</TableCell>
+                            <TableCell as="th">Status
+                                <SelectField
+                                    className="w-100"
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    name="status"
+                                    value={statusFilter}
+                                >
+                                    <option value="">All</option>
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </SelectField>
+                            </TableCell>
+                            <TableCell as="th">Created At
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    value={searchDate}
+                                    onChange={handleDateChange}
+                                />
+                            </TableCell>
+                            <TableCell as="th">Delete</TableCell>
+                            <TableCell as="th">Update</TableCell>
+                            <TableCell as="th">View</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    {finalList.map((entry, index) => (
+                        <TableRow key={entry._id}>
+                            <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
+                            <TableCell>{entry._id}</TableCell>
+                            <TableCell>{entry.title}</TableCell>
+                            <TableCell>
+                                <img src="https://picsum.photos/id/1/200/100" alt="content" />
+                            </TableCell>
+                            <TableCell className="text-center">{entry.status ? 'active' : 'inactive'}</TableCell>
+                            <TableCell>
+                                {new Intl.DateTimeFormat('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                }).format(new Date(entry.createdAt))}
+                            </TableCell>
+                            <TableCell className="text-center">
+                                <button type="button" className="btn"
+                                    onClick={() => { deleteHandler(entry._id) }}
+                                >
+                                    <i
+                                        className="fa-solid fa-trash fs-2"
+                                        style={{ color: '#d71919' }}
+                                    ></i>
+                                </button>
+                            </TableCell>
+                            <TableCell className="text-center">
+                                <button
+                                    type="button"
+                                    className="btn"
+                                    onClick={() =>
+                                        navigate(`/admin/content-type/update/${entry._id}`)
+                                    }
+                                >
+                                    <i
+                                        className="fa-solid fa-pen-nib fs-2"
+                                        style={{ color: '#FFD43B' }}
+                                    ></i>
+                                </button>
+                            </TableCell>
+                            <TableCell className="text-center">
+                                <button
+                                    type="button"
+                                    className="btn"
+                                    onClick={() =>
+                                        navigate(`/admin/content-type/view/${entry._id}`)
+                                    }
+                                >
+                                    <i
+                                        className="fa-solid fa-eye fs-2"
+                                        style={{ color: '#63E6BE' }}
+                                    ></i>
+                                </button>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </Table>
+                <TablePagination
+                    component="div"
+                    count={totalCount}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    className='mt-3'
+                />
+            </ThemeProvider>
+            </>
+            }
+        </>
+
+
     );
 };
 
