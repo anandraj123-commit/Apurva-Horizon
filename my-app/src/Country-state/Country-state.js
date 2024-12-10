@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import Sidebar from '../Admin//common/Sidebar';
+import Header from '../Admin//common/Header';
+import Footer from '../Admin/common/Footer';
 
 const CountryState = () => {
   const [countries, setCountries] = useState([]);
@@ -77,7 +80,11 @@ const CountryState = () => {
   }, [selectedState]);
 
   return (
-    <div>
+    <div className="wrapper">
+    <Sidebar />
+    <div className="main">
+        <Header />
+        <main className="content">
       <h1>Country, State, and City Selector</h1>
 
       {/* Country Dropdown */}
@@ -132,7 +139,10 @@ const CountryState = () => {
           </select>
         </>
       )}
-    </div>
+      </main>
+                        <Footer />
+                    </div>
+                </div>
   );
 };
 

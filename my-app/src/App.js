@@ -14,12 +14,13 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={<CountryState />} />
+          <Route path="/" element={<Web />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/content-type" element={<List />} />
           <Route path="/admin/content-type/add" element={<Add />} />
           <Route path="/admin/content-type/view/:id" element={<View />} />
           <Route path="/admin/content-type/update/:id" element={<Update />} />
+          <Route path="/admin/Country-state" element={<CountryState />} />
         </Routes>
       </Router>
     </div>

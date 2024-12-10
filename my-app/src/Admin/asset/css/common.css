@@ -51,19 +51,19 @@
 }
 
 .sidebar-item.active .sidebar-link {
-    background-color: #495057; /* Highlight background */
-    color: #fff; /* Highlight text */
+    background-color: #495057; 
+    color: #fff;
   }
   
   .sidebar-item.active i {
-    color: #fff; /* Highlight icon */
+    color: #fff; 
   }
   
   .sidebar-item .sidebar-link:hover {
-    background-color: #6c757d; /* Hover background for inactive items */
+    background-color: #6c757d; 
     color: #fff;
   }
-  /* last  */
+ 
 /* Active and hover states */
 .sidebar-item.active .sidebar-link,
 .sidebar-link:hover {
@@ -76,7 +76,7 @@
     color: #ffffff;
 }
 
-/* Section headers styling */
+
 .sidebar-header {
     font-size: 1.05rem;
     font-weight: bold;
@@ -89,14 +89,14 @@
 /* ------------------ header section css ------------------------*/
 
 
-/* Navbar base styling */
+
 .navbar {
     background:  #4b6cb7; /* Gradient */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     padding: 0.75rem 1rem;
 }
 
-.sidebar-toggle {
+/* .sidebar-toggle {
     color: #fff;
     font-size: 1.5rem;
     cursor: pointer;
@@ -106,9 +106,9 @@
 
 .sidebar-toggle:hover {
     color: #adb5bd;
-}
+} */
 
-/* Navbar icons and avatar */
+
 .nav-icon {
     color: #ffffff;
     font-size: 1.5rem;
@@ -144,7 +144,7 @@
     font-weight: 500;
 }
 
-/* Dropdown menu */
+
 .dropdown-menu {
     background-color: #ffffff;
     border-radius: 0.5rem;
@@ -165,21 +165,21 @@
 /* ---------------- notification section dropdown ------------*/
 
 .dropdown-menu {
-    max-width: 150px; /* Adjust the width to be narrower */
-    max-height: 300px; /* Limit the height */
-    overflow-y: auto; /* Adds scroll for overflow */
-    padding: 0.3rem; /* Adjust padding around the dropdown */
+    max-width: 150px; 
+    max-height: 300px; 
+    overflow-y: auto; 
+    padding: 0.3rem; 
 }
 .list-group-item {
-    padding: 0.20rem 0.3rem; /* Adjust padding within each notification */
+    padding: 0.20rem 0.3rem; 
 }
 .dropdown-menu .text-dark {
-    font-size: 0.8rem; /* Decrease the title font size */
+    font-size: 0.8rem; 
 }
 .dropdown-menu .text-muted {
-    font-size: 0.70rem; /* Decrease the description and timestamp font size */
+    font-size: 0.70rem; 
 }
 .dropdown-menu i {
-    font-size: 0.85rem; /* Decrease the icon size */
+    font-size: 0.85rem; 
 }
 
