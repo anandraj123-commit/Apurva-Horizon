@@ -1,7 +1,7 @@
 import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Admin from './Admin/Admin';
+import Admin from './Admin/admin';
 import Web from './web/web';
 import Add from './Admin/content-type/Add';
 import List from './Admin/content-type/List';
