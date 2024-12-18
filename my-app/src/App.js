@@ -11,6 +11,9 @@ import CategoryForm from './Admin/category/CategoryForm';
 import CategoryList from './Admin/category/CategoryList';
 import CategoryView from './Admin/category/CategoryView';
 import CategoryUpdate from './Admin/category/CategoryUpdate';
+import NewsForm from './Admin/news/NewsForm';
+import NewsList from './Admin/news/NewsList';
+import NewsView from './Admin/news/NewsView';
 
 
 function App() {
@@ -22,6 +25,9 @@ function App() {
           <Route path="/" element={<Web />} />
           <Route path="/admin" element={<Admin />} >
             <Route path="content-type" element={<List />} />
+            <Route path="news/add" element={<NewsForm />} />
+            <Route path="news/list" element={<NewsList />} />
+            <Route path="news/view/:id" element={<NewsView />} />
             <Route path="content-type/add" element={<Add />} />
             <Route path="content-type/view/:id" element={<View />} />
             <Route path="content-type/update/:id" element={<Update />} />

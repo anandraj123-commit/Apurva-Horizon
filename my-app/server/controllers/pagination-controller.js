@@ -38,8 +38,6 @@ function paginatedResults(collectionName) {
 }
 
 const paginationController = (req, res) => {
-    // console.log("hello");
-    
     res.json(res.paginatedResults)
 }
 

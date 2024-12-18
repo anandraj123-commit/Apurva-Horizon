@@ -10,9 +10,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Switch } from '@mui/material';
 import { TableSortLabel } from '@mui/material';
-// import SwapVertIcon from '@mui/icons-material/SwapVert';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+
 
 import {
     Table,
@@ -62,8 +62,7 @@ const theme: Theme = {
     },
 };
 
-const List = () => {
-    const navigate = useNavigate();
+const NewsList = () => {
     const [list, setList] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
@@ -72,8 +71,11 @@ const List = () => {
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
+    const navigate = useNavigate();
     // for loading
     const [loading, setLoading] = useState(false);
+
+    
 
     // const [sortKey, setSortKey] = useState('');
     // const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
@@ -84,7 +86,7 @@ const List = () => {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://localhost:5000/api/category-type/users?page=${page + 1}&limit=${rowsPerPage}`,
+                    `http://localhost:5000/api/news/users?page=${page + 1}&limit=${rowsPerPage}`,
                     {
                         method: 'GET',
                         headers: {
@@ -122,7 +124,7 @@ const List = () => {
             return; // Exit if the user cancels
         }
         try {
-            const response = await fetch(`http://localhost:5000/api/category-type/delete/${id}`, {
+            const response = await fetch(`http://localhost:5000/api/news/delete/${id}`, {
                 method: "DELETE", // Use DELETE instead of GET
             });
 
@@ -141,10 +143,6 @@ const List = () => {
 
     }
 
-    // const toggleSortByTitle = () => {
-    //     setIsSorted(!isSorted);
-    //     setSortDirection(isSorted ? 'asc' : 'desc'); // Toggle sort direction
-    // };
 
     // Filter list based on search query
     const filteredList = list.filter((entry) =>
@@ -196,7 +194,7 @@ const List = () => {
                 <>
                     <CustomSeparator />
                     <div className="container d-flex flex-row justify-content-between align-self-center">
-                        <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>Category</p>
+                        <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>News</p>
                         <buttonCONTENT
                             type="button"
                             className="btn btn-success"
@@ -205,7 +203,7 @@ const List = () => {
                                 {
                                     loading ? <div className="modal">
                                         <div className="loader"></div>
-                                    </div> : (navigate('/admin/category-type/add'))
+                                    </div> : (navigate('/admin/news/add'))
                                 }
                             }}
                         >
@@ -251,6 +249,65 @@ const List = () => {
                                             </div>
 
 
+                                        </TableCell>
+
+                                        <TableCell as="th">
+                                            <div className="sorting_button" >
+                                                Type
+
+                                                {isReversed ? (
+                                                    <UnfoldLessIcon
+                                                        fontSize="small"
+                                                        onClick={toggleOrder}
+                                                        className="cursor-pointer cursor-pointer icon-spacing"
+                                                    />
+                                                ) : (
+                                                    <UnfoldMoreIcon
+                                                        fontSize="small"
+                                                        onClick={toggleOrder}
+                                                        className="cursor-pointer cursor-pointer icon-spacing"
+                                                    />)}</div>
+                                            <ReactSearchBox
+                                                placeholder="Search"
+                                                onChange={(value) => setSearchQuery(value)}
+                                                onClear={() => setSearchQuery('')}
+                                                className="w-75"
+                                                style={{
+                                                    marginTop: '200px',
+                                                    padding: '4px',
+                                                    height: '40px',
+                                                    width: '30px',
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell as="th">
+                                            <div className="sorting_button" >
+                                                Subcategory
+
+                                                {isReversed ? (
+                                                    <UnfoldLessIcon
+                                                        fontSize="small"
+                                                        onClick={toggleOrder}
+                                                        className="cursor-pointer cursor-pointer icon-spacing"
+                                                    />
+                                                ) : (
+                                                    <UnfoldMoreIcon
+                                                        fontSize="small"
+                                                        onClick={toggleOrder}
+                                                        className="cursor-pointer cursor-pointer icon-spacing"
+                                                    />)}</div>
+                                            <ReactSearchBox
+                                                placeholder="Search"
+                                                onChange={(value) => setSearchQuery(value)}
+                                                onClear={() => setSearchQuery('')}
+                                                className="w-75"
+                                                style={{
+                                                    marginTop: '200px',
+                                                    padding: '4px',
+                                                    height: '40px',
+                                                    width: '30px',
+                                                }}
+                                            />
                                         </TableCell>
                                         <TableCell as="th">
                                             <div className="sorting_button" >
@@ -334,6 +391,8 @@ const List = () => {
                                         <TableRow key={entry._id}>
                                             <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
                                             <TableCell>{entry._id}</TableCell>
+                                            <TableCell>{entry.type}</TableCell>
+                                            <TableCell>{entry.subcategory}</TableCell>
                                             <TableCell>{entry.title}</TableCell>
                                             <TableCell>{entry.description}</TableCell>
 
@@ -354,13 +413,13 @@ const List = () => {
                                                         type="button"
                                                         className="btn"
                                                         onClick={() => { deleteHandler(entry._id) }}
+
                                                     >
                                                         <i
                                                             className="fa-solid fa-trash fs-5"
                                                             style={{ color: '#d71919' }}
                                                         ></i>
                                                     </button>
-
                                                     <button
                                                         type="button"
                                                         className="btn"
@@ -375,7 +434,7 @@ const List = () => {
                                                     <button
                                                         type="button"
                                                         className="btn"
-                                                        onClick={() => navigate(`/admin/category-type/view/${entry._id}`)}
+                                                        onClick={() => navigate(`/admin/news/view/${entry._id}`)}
                                                     >
                                                         <i
                                                             className="fa-solid fa-eye fs-3"
@@ -410,4 +469,4 @@ const List = () => {
     );
 };
 
-export default List;
+export default NewsList;

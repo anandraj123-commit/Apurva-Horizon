@@ -65,4 +65,22 @@ const deleteItem = async(req,res)=>{
 
 }
 
-module.exports={addCategory,viewListItem,deleteItem,updateCategory}
+//fetching for listing it out on news form 
+const fetchAllCategoryData = async(req,res)=>{
+    const collectionName = "category-type" 
+    const model = await connectDB();
+    const data = await model.collection(collectionName).find().toArray()
+    // console.log(data); 
+    return res.send(data)
+}
+
+const fetchSubtype = async(req,res)=>{
+    const category = req.query.category
+    // console.log();
+    
+    const collectionName = "category-type" 
+    const model = await connectDB();
+    const data = await model.collection(collectionName).find({title:category}).toArray()
+    return res.send(data)
+}
+module.exports={addCategory,viewListItem,deleteItem,updateCategory,fetchAllCategoryData,fetchSubtype}

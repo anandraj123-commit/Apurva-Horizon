@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Select from '@mui/material/Select';
-import Sidebar from '../common/Sidebar';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
 import { Button, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router-dom'
@@ -28,12 +25,41 @@ export default function CategoryForm() {
     // const [contentType, setContentType] = useState(0)
 
     // adding subtype logic begin
+    const [ContentType, setContentType] = useState([]);
     const [items, setItems] = useState([]); // State to hold the list of items
     const [newTitle, setNewTitle] = useState(''); // State to hold the title field
     const [newDescription, setNewDescription] = useState(''); // State to hold the description field
     const [editingIndex, setEditingIndex] = useState(null); // Track which item is being edited
 
+    useEffect(() => {
+        const fetchAllContentType = async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:5000/api/content-type/fetchAll`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                if (response.ok) {
+                    const data = await response.json();
+                    // console.log(data);
+                    // console.log(data.results);
+                    setContentType(data)
+                    // setList(data.results);
+                    // setTotalCount(data.totalCount); // Update totalCount from API
+                } else {
+                    console.error('Failed to fetch item data');
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
 
+        };
+        fetchAllContentType();
+    },[])
     //handler to add new item value in title and desctiption of top level
     const handleChangeInTopTitleDesc = (e) => {
         const { name, value } = e.target;
@@ -116,7 +142,7 @@ export default function CategoryForm() {
                 },
                 body: JSON.stringify(ListItem)
             })
-            const data = await response.json()
+            // const data = await response.json()
             if (response.ok) {
                 // console.log("successfully posted");
                 Notification.success("successfully added")
@@ -147,15 +173,19 @@ export default function CategoryForm() {
                         labelId="demo-select-small-label"
                         id="demo-select-small"
                         value={ListItem.ContentType}
-                        label="Type"
+                        label="Type"    
                         onChange={handleChangeInTopTitleDesc}
-                        // className='w-50'
                         style={{ width: '40%' }}
                         name="ContentType"
                     >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                    {
+                        ContentType.map((values,index)=>{
+                            return <MenuItem value={values.title}>{values.title}</MenuItem>
+                        })
+                    }
+
+                        {/* <MenuItem value={20}>Twenty</MenuItem>
+                        <MenuItem value={30}>Thirty</MenuItem> */}
                     </Select>
                     <TextField id="filled-hidden-label-small"
                         style={{ flex: 1 }}
