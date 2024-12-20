@@ -182,13 +182,7 @@ const List = () => {
             {loading ? <div className="modal">
                 <div className="loader"></div>
             </div> :
-                /* <div className="wrapper">
-
-                   
-                    <div className="main">
-                        
-                        {/* <main className="content" >  */}
-                {       <div>
+                       <div>
                             < CustomSeparator />
                             <div className="container d-flex flex-row justify-content-between align-self-center">
                                 <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>TYPES OF CONTENT</p>

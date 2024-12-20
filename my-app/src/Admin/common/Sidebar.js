@@ -21,8 +21,9 @@ const Sidebar = ({ isActive }) => {
     { id: "dashboard", label: "Dashboard", icon: <AiFillDashboard />, link: "/admin" },
     { id: "content-type", label: "Content-Type", icon: <LuFileType />, link: "/admin/content-type" },
     { id: "category", label: "Category", icon: <BiCategory />, link: "/admin/category-type/list" },
-    { id: "user", label: "User", icon: <FaRegUserCircle />, link: "/admin/news/list" },
-   
+    { id: "news", label: "news", icon: <FaRegUserCircle />, link: "/admin/news/list" },
+    { id: "user", label: "User", icon: <FaRegUserCircle />, link: "#" },
+    { id: "user", label: "User", icon: <FaRegUserCircle />, link: "#" }
 
   ];
 

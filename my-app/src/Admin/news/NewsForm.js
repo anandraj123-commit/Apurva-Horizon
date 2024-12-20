@@ -47,7 +47,6 @@ export default function NewsForm() {
 
     fetchContentTypes();
   }, []);
-
   // Handle form field changes
   const handleFormChange = async (e) => {
     const { name, value } = e.target;
@@ -92,9 +91,6 @@ export default function NewsForm() {
               </MenuItem>
             ))}
           </Select>
-
-          {/* Subcategory */}
-          {/* <InputLabel id="subcategory-select-label">Subcategory</InputLabel> */}
           {
             subcategoryOptions.length===0?null:<Select
             labelId="subcategory-select-label"
@@ -111,8 +107,6 @@ export default function NewsForm() {
             ))}
           </Select>
           }
-          
-
           {/* Title */}
           <TextField
             label="Title"
@@ -123,7 +117,6 @@ export default function NewsForm() {
             onChange={handleFormChange}
             fullWidth
           />
-
           {/* Short Description */}
           <label htmlFor="short-description" className="mt-3">Short Description</label>
           <Editor
@@ -131,7 +124,6 @@ export default function NewsForm() {
             value={formData.shortDescription}
             onChange={handleEditorChange}
           />
-
           {/* Description */}
           <TextField
             label="Description"
@@ -144,7 +136,6 @@ export default function NewsForm() {
             rows={4}
             fullWidth
           />
-
           {/* Status */}
           {/* <InputLabel id="status-select-label">Status</InputLabel> */}
           <Select
@@ -166,7 +157,6 @@ export default function NewsForm() {
             type="file"
             onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
           />
-
           {/* Display Time */}
           <label htmlFor="DisplayTime" className="d-inline">Display Time</label>
           <input
@@ -175,14 +165,13 @@ export default function NewsForm() {
             name="DisplayTime"
             className="fs-4 d-inline w-50"
           />
-
           <Button
             variant="contained"
             color="success"
             endIcon={<SendIcon />}
             onClick={() => console.log('Submit form', formData)}
           >
-            Submit
+          Submit
           </Button>
         </FormControl>
       </CardContent>
