@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Flex, Input, Label, SelectField, Card, ThemeProvider, Theme, TextAreaField } from '@aws-amplify/ui-react';
-import Sidebar from '../common/Sidebar';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
 import { useNavigate, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import ImageUpload from '../Imageupload';
 import CustomSeparator from '../common/Breadcrumbs';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import Notification from '../../Modules/Notification';
 const theme: Theme = {
     name: 'card-theme',
     tokens: {
@@ -47,12 +47,13 @@ const Update = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
+                    // console.log(data);
+                    // console.log(data);
 
                     setListItem({
-                        title: data[0].title,
-                        status: data[0].status,
-                        description: data[0].description,
+                        title: data.title,
+                        status: data.status,
+                        description: data.description,
                     });
                 } else {
                     console.error("Failed to fetch item data");
@@ -96,9 +97,9 @@ const Update = () => {
                 },
                 body: JSON.stringify(ListItem),
             });
-
             if (response.ok) {
-                alert('Successfully updated content type');
+                const ResponseData = await response.json()
+                Notification.success(ResponseData.message)
                 navigate('/admin/content-type'); // Redirect after update
             } else {
                 alert('Failed to update content type');
@@ -113,11 +114,12 @@ const Update = () => {
          {/* { loading ? <div className="modal">
             <div className="loader"></div>
         </div> :  */}
-        <div className="wrapper">
+        {/* <div className="wrapper">
             <Sidebar />
             <div className="main">
                 <Header />
-                <main className="content">
+                <main className="content"> */}
+                <div>
                 <CustomSeparator/>
                     <ThemeProvider theme={theme} colorMode="light">
                         <Card variation="elevated" className="container py-5 mx-auto" style={{ width: '500px', height: '700px' }}>
@@ -184,11 +186,8 @@ const Update = () => {
                             </Flex>
                         </Card>
                     </ThemeProvider>
-                </main>
-                <Footer />
-            </div>
-        </div>
-        {/* } */}
+                    </div>
+       
     </>
     
     );

@@ -1,23 +1,18 @@
 const ContentType = require("../models/content-type-model")
+const { response } = require('express');
 const connectDB = require('../utils/db');
 const { ObjectId } = require('mongodb');
 
-const listOut = async (req, res) => {
-    try {
-        const Response = await ContentType.find({});
-        return res.status(200).json(Response)
-    } catch (error) {
-        return res.status(500).json({ message: "message not delivered" })
-    }
-}
 
 const addList = async (req, res) => {
     try {
         const listItem = req.body;
-        await ContentType.create(listItem);
-        return res.status(200).json({ message: "new list item is successfully added" })
+        const dbo =await connectDB()
+        // console.log(dbo);
+        await dbo.collection("content-type").insertOne(listItem)
+        return res.status(200).json({ message: "Successfully added ✅" ,type:"success",timeout:3000})
     } catch (error) {
-        return res.status(500).json({ message: "message not delivered" })
+        return res.status(500).json({ message: "Failed to add this item ❌" ,type:"success",timeout:3000})
     }
 }
 
@@ -26,57 +21,64 @@ const updateList = async(req, res) => {
     const { title, status ,description } = req.body; // Get updated data from the request body
 
     try {
-        const updatedContentType = await ContentType.findByIdAndUpdate(
-            id, 
-            { title, status ,description}, // Fields to update
-            { new: true } // Return the updated document
+        const dbo =await connectDB()
+        
+        const updatedContentType = await dbo.collection("content-type").updateOne(
+            { _id: new ObjectId(id) }, 
+            { $set: { title,status,description} }
         );
 
         if (!updatedContentType) {
             return res.status(404).json({ message: 'Content type not found' });
         }
 
-        res.json({ message: 'Content type updated successfully', data: updatedContentType });
+        res.json({ message: 'Successfully Updated ✅', data: updatedContentType });
     } catch (error) {
-        console.error('Error updating content type:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        // console.error('Error updating content type:', error);
+        res.status(500).json({ message: 'Internal server error ❌' });
     }
 }
 
 const viewListItem = async(req,res)=>{
     const { id } = req.params;
     try {
-        const Response = await ContentType.find({_id:id});
+        const dbo =await connectDB()
+        const Response = await dbo.collection("content-type").findOne({ _id: new ObjectId(id) });
         return res.status(200).json(Response)
     } catch (error) {
-        return res.status(500).json({ message: "message not delivered" })
+        return res.status(500).json({ message: "Internal server error ❌" })
     }
 
 }
 
-const deleteItem = async (req, res) => {
+const deleteItem = async(req,res)=>{
     const { id } = req.params;
-
     try {
-        const contentType = await ContentType.findById(id);
-
-        if (!contentType) {
-            return res.status(404).json({ message: "Content type not found" });
+        const dbo =await connectDB()
+        const Response = await dbo.collection("content-type").findOne({ _id: new ObjectId(id) });
+        if(!Response.status){
+            return res.status(200).json({ message: "Status is already Inactive ⚠️",type:"info"})
         }
-
-        // Toggle the status field
-        contentType.status = !contentType.status;
-        const updatedContentType = await contentType.save();
-
-        return res.status(200).json({
-            message: "Content type status toggled successfully",
-            data: updatedContentType, // Include updated content
-        });
+        // const data = await Response.json()
+        // console.log(Response.status);
+        
+        const updatedContentType = await dbo.collection("content-type").updateOne(
+            { _id: new ObjectId(id) }, 
+            { $set: { status :false } }
+        );
+        return res.status(200).json({ message: "Status changed to Inactive ✅",type:"success"})
     } catch (error) {
-        console.error(`Error toggling status for content type ID ${id}:`, error);
-        return res.status(500).json({ message: "Failed to toggle content type status" });
+        return res.status(500).json({ message: "Status failed to change ❌" })
     }
-};
 
+}
+//fetching for listing it out on category form 
+const fetchAllContentType = async(req,res)=>{
+    const collectionName = "content-type" 
+    const model = await connectDB();
+    const data = await model.collection(collectionName).find().toArray()
+    // console.log(data); 
+    return res.send(data)
+}
 
-module.exports = { listOut, addList, updateList,viewListItem,deleteItem};
+module.exports = { addList, updateList,viewListItem,deleteItem,fetchAllContentType};

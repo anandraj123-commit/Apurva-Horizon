@@ -1,105 +1,77 @@
-import React,{useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
 import {
-    Card,
-    View,
-    Heading,
-    Flex,
-    useTheme,
-    Badge,
-    Text,
-    Divider,
-    Button,
+  Card,
+  View,
+  Heading,
+  Flex,
+  useTheme,
 } from '@aws-amplify/ui-react';
 import { useLocation } from 'react-router-dom';
-import { useList } from './store/contentcontext';
 import Sidebar from '../common/Sidebar';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
-import CustomSeparator from '../common/Breadcrumbs';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
 
 export default function ViewPage() {
-    
-  const navigate = useNavigate();
-    const { tokens } = useTheme();
-    const { list } = useList();
-    const location = useLocation();
-    const [loading, setloading] = useState(false);
-    const pathAfterView = location.pathname.split('/view/')[1];
+  const [document, setDocument] = useState({})
+  const { tokens } = useTheme();
+  const location = useLocation();
+  const pathAfterView = location.pathname.split('/view/')[1];
 
-    const document = list.find((item) => item._id === pathAfterView);
-    // setloading(true);
-    // if (loading) {
-    //     try{
-    //     <div className="modal">
-    //     <div className="loader"></div>
-    // </div> ; // Render a loading indicator
-    //     }catch (error) {
-    //         console.error('Error fetching data:', error);
-    //     } 
-    //     finally {
-    //         setTimeout(() => {
-    //             setLoading(false);  // Hide loader after a delay
-    //         }, 400);
-    //     }
-    // }
-    return (
-      <div className="wrapper">
-      <Sidebar />
-      <div className="main">
-          <Header />
-          <main className="content">
-          <CustomSeparator/>
-        <View
-            backgroundColor={tokens.colors.background.primary}
-            padding={tokens.space.large}
-        >
-            <Card
-                variation="elevated"
-                backgroundColor={tokens.colors.background.secondary}
-                padding={tokens.space.large}
-                style={{ maxWidth: '600px', margin: '0 auto' }}
-            >
-                <Flex direction="column" alignItems="stretch" gap={tokens.space.medium}>
-                    <Heading level={3} style={{ textAlign: 'center' }}>
-                        Document Details
-                    </Heading>
-                    <Divider />
-                    <Flex direction="row" gap={tokens.space.medium}>
-                        <Text fontWeight="bold">ID:</Text>
-                        <Text>{pathAfterView}</Text>
-                    </Flex>
-                    <Flex direction="row" gap={tokens.space.medium}>
-                        <Text fontWeight="bold">Title:</Text>
-                        <Text>{document.title}</Text>
-                    </Flex>
-                    <Flex direction="row" gap={tokens.space.medium}>
-                        <Text fontWeight="bold">Description:</Text>
-                        <Text>{document.description}</Text>
-                    </Flex>
-                    <Flex direction="row" gap={tokens.space.medium} alignItems="center">
-                        <Text fontWeight="bold">Status:</Text>
-                        <Badge
-                            size="small"
-                            variation={document.status ? 'success' : 'error'}
-                        >
-                            {document.status ? 'Active' : 'Inactive'}
-                        </Badge>
-                    </Flex>
-                    <Divider />
-                    {/* <Flex justifyContent="center" gap={tokens.space.medium}>
-                        <Button variation="primary" onClick={() =>
-                                                navigate(`/admin/content-type/update/${document._id}`)
-                                            }>UPDATE</Button>
-                        <Button variation="link">DELETE</Button>
-                    </Flex> */}
-                </Flex>
-            </Card>
-        </View>
-        </main>
-                <Footer />
-            </div>
-        </div>
+  useEffect(() => {
+    const fetchSingleItem = async () => {
+      const response = await fetch(`http://localhost:5000/api/content-type/view/${pathAfterView}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      if (response.ok) {
+        const data = await response.json()
+        // console.log(data);
+        setDocument(data)
         
-    );
+      
+      }
+    }
+    fetchSingleItem();
+  }, [])
+
+  return (
+    <View
+        backgroundColor={tokens.colors.background.secondary}
+        padding={tokens.space.medium}
+      >
+        <Card variation="elevated">
+          <div className="container mt-5">
+            {/* Content Type */}
+              <div className="col text-end">
+                <p className="text-success fw-bold">Id: {document._id}</p>
+              </div>
+
+
+            {/* Title */}
+            <div className="mb-3">
+              <h6 className="fw-bold">Title - <span className="text-secondary">{document.title}</span></h6>
+            </div>
+
+            {/* Description */}
+            <div className="mb-4">
+              <h6 className="fw-bold">Description - <span className="text-secondary">{document.description}</span></h6>
+            </div>
+            <div className="mb-4">
+              <h6 className="fw-bold">Status - <span className="text-secondary">{document.status?"Active":"Inactive"}</span></h6>
+            </div>
+            <div className="mb-4">
+              <h6 className="fw-bold">Description - <span className="text-secondary">{new Intl.DateTimeFormat('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                }).format(new Date(document.createdAt))}</span></h6>
+            </div>
+          </div>
+        </Card>
+      </View>
+  )
 }

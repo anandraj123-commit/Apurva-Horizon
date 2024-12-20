@@ -36,6 +36,7 @@ import '../asset/css/Loader.css';
 import '../asset/css/common.css';
 import './css/List.css';
 import Input from '../Inputcomponent/Inputs.js';
+import Notification from '../../Modules/Notification';
 
 const theme: Theme = {
 
@@ -113,43 +114,27 @@ const List = () => {
         fetchData();
     }, [page, rowsPerPage]);
 
-    // const handleSort = (key) => {
-    //     const isAsc = sortKey === key && sortDirection === 'asc';
-    //     setSortDirection(isAsc ? 'desc' : 'asc');
-    //     setSortKey(key);
-
-    //     const sortedList = [...list].sort((a, b) => {
-    //         if (a[key] < b[key]) return isAsc ? 1 : -1;
-    //         if (a[key] > b[key]) return isAsc ? -1 : 1;
-    //         return 0;
-    //     });
-
-    //     setList(sortedList);
-    // };
-
+    //delete handler 
     const deleteHandler = async (id) => {
         try {
             const response = await fetch(`http://localhost:5000/api/content-type/delete/${id}`, {
-                method: "GET", // Use DELETE instead of GET
-            });
+                method: "GET",
+            })
 
-            if (!response.ok) {
-                throw new Error('Failed to delete item');
+            const data = await response.json()
+            // console.log(data);
+
+            if (response.ok) {
+                if (data.type === "info") Notification.info(data.message)
+                else Notification.success(data.message)
             }
 
-            const result = await response.json();
-            console.log(result.message);
-
         } catch (error) {
-            console.log(error);
+            Notification.error("Some backend error ❌")
         }
 
     }
-
-    // const toggleSortByTitle = () => {
-    //     setIsSorted(!isSorted);
-    //     setSortDirection(isSorted ? 'asc' : 'desc'); // Toggle sort direction
-    // };
+    // console.log("list is rendered");
 
     // Filter list based on search query
     const filteredList = list.filter((entry) =>
@@ -197,13 +182,14 @@ const List = () => {
             {loading ? <div className="modal">
                 <div className="loader"></div>
             </div> :
-                <div className="wrapper">
+                /* <div className="wrapper">
 
-                    <Sidebar />
+                   
                     <div className="main">
-                        <Header />
-                        <main className="content" >
-                            <CustomSeparator />
+                        
+                        {/* <main className="content" >  */}
+                {       <div>
+                            < CustomSeparator />
                             <div className="container d-flex flex-row justify-content-between align-self-center">
                                 <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>TYPES OF CONTENT</p>
                                 <button
@@ -223,9 +209,7 @@ const List = () => {
 
                             </div>
                             <br></br>
-                            {/* { loading ?<div className="modal">
-            <div className="loader"></div>
-        </div>: ( */}
+                            
                             <ThemeProvider theme={theme} colorMode="light">
                                 <div class="table-responsive">
                                     <Table highlightOnHover variation="striped" className="table-container">
@@ -400,13 +384,7 @@ const List = () => {
                                     className='mt-3'
                                 />
                             </ThemeProvider>
-                            {/* )} */}
-
-
-                        </main>
-                        <Footer />
-                    </div>
-                </div>
+                       </div>     
             }
         </>
     );

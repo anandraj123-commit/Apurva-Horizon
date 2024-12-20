@@ -1,14 +1,19 @@
-function paginatedResults(model) {
+const connectDB = require('../utils/db')
+
+function paginatedResults(collectionName) {
     return async (req, res, next) => {
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
+        
 
         const startIndex = (page - 1) * limit
         const endIndex = page * limit
 
         const results = {}
-
-        if (endIndex < await model.countDocuments().exec()) {
+        const model = await connectDB();
+        // console.log(model);
+        
+        if (endIndex < await model.collection(collectionName).countDocuments()) {
             results.next = {
                 page: page + 1,
                 limit: limit
@@ -22,8 +27,8 @@ function paginatedResults(model) {
             }
         }
         try {
-            results.results = await model.find().limit(limit).skip(startIndex).exec()
-            results.totalCount = await model.countDocuments().exec();
+            results.results = await model.collection(collectionName).find().limit(limit).skip(startIndex).toArray()
+            results.totalCount = await model.collection(collectionName).countDocuments();
             res.paginatedResults = results
             next()
         } catch (e) {

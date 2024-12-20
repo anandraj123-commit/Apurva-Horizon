@@ -182,4 +182,10 @@
 .dropdown-menu i {
     font-size: 0.85rem; /* Decrease the icon size */
 }
+.MuiTablePagination-input{
+    margin-top: -1rem;
+}
+.MuiTablePagination-actions{
+    margin-top: -1rem;
 
+}

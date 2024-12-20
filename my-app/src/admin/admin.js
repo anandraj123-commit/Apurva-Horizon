@@ -2,8 +2,11 @@ import './asset/css/app.css';
 import Sidebar from './common/Sidebar';
 import Footer from './common/Footer';
 import Header from './common/Header';
-import ImageUpload from './Imageupload';
-import FileUpload from './Fileupload';
+import Notification from '../Modules/Notification';
+import { ToastContainer } from 'react-toastify';
+import { Link, Outlet, Route, Routes } from 'react-router-dom';
+import { List } from '@mui/material';
+import Add from './content-type/Add';
 function Admin() {
     return (
         <div className="wrapper">
@@ -11,11 +14,9 @@ function Admin() {
             <div className="main">
                 <Header />
                 <main className="content">
-                    <p>Admin Panel</p>
-                    image
-                    <ImageUpload/>
-                    file
-                    <FileUpload/>
+                    
+                    <ToastContainer />
+                    <Outlet />
                 </main>
                 <Footer />
             </div>

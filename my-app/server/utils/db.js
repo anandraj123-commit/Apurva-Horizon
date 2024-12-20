@@ -1,18 +1,19 @@
-const mongoose = require('mongoose');
+const {MongoClient} =require('mongodb');
 
-// const URI="mongodb://127.0.0.1:27017/mern_admin";
+const URI = process.env.MONGODB_URI;
+let dbo;
 
-const URI=process.env.MONGODB_URI;
 
-
-const connectDb=async()=>{
+const connectDb = async () => {
+    if(dbo)return dbo;
     try {
-        await mongoose.connect(URI)
-        console.log("connected successfully");
+        const client = await MongoClient.connect(URI);
+        dbo = client.db("arihantjain");
+        return dbo;
+
     } catch (error) {
-        console.error("database connection failed");
-        process.exit(0);
+        console.log(error);
     }
 }
 
-module.exports=connectDb;
+module.exports = connectDb;

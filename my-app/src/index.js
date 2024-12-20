@@ -8,6 +8,7 @@ import '@aws-amplify/ui-react/styles/reset.layer.css' // global CSS reset
 import '@aws-amplify/ui-react/styles/base.layer.css' // base styling needed for Amplify UI
 import '@aws-amplify/ui-react/styles/button.layer.css' // component specific styles
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ListProvider>
