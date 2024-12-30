@@ -12,7 +12,12 @@ const Sidebar = function(){
                         <i className="align-middle" data-feather="sliders"></i> <span className="align-middle">Dashboard</span>
                     </a>
                 </li>
-
+                <li className="sidebar-item">
+                    <a className="sidebar-link" href="/admin/apurvaHorizon">
+                        <i className="align-middle" data-feather="sliders"></i> <span className="align-middle">Apurva Horizon</span>
+                    </a>
+                </li>
+{/* 
                 <li className="sidebar-item">
                     <a className="sidebar-link" href="/admin/content-type">
                         <i className="align-middle" data-feather="user"></i> <span className="align-middle">Content-Type</span>
@@ -28,7 +33,7 @@ const Sidebar = function(){
                     <a className="sidebar-link" href="/admin/news/list">
                         <i className="align-middle" data-feather="user"></i> <span className="align-middle">News</span>
                     </a>
-                </li>
+                </li> */}
                 
             </ul>
         </div>

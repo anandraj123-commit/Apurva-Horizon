@@ -14,6 +14,8 @@ import CategoryUpdate from './Admin/category/CategoryUpdate';
 import NewsForm from './Admin/news/NewsForm';
 import NewsList from './Admin/news/NewsList';
 import NewsView from './Admin/news/NewsView';
+import ApurvaHorizon from './Admin/pages/ApurvaHorizon';
+import RegionList from './Admin/regional/RegionList';
 
 
 function App() {
@@ -25,6 +27,7 @@ function App() {
           <Route path="/" element={<Web />} />
           <Route path="/admin" element={<Admin />} >
             <Route path="content-type" element={<List />} />
+            <Route path="apurvaHorizon" element={<ApurvaHorizon />} />
             <Route path="news/add" element={<NewsForm />} />
             <Route path="news/list" element={<NewsList />} />
             <Route path="news/view/:id" element={<NewsView />} />
@@ -35,6 +38,7 @@ function App() {
             <Route path="category-type/list" element={<CategoryList />} />
             <Route path="category-type/view/:id" element={<CategoryView />} />
             <Route path="category-type/update/:id" element={<CategoryUpdate />} />
+            <Route path="regional-news/list" element={<RegionList />} />
           </Route>
         </Routes>
       </Router>

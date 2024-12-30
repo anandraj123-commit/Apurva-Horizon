@@ -65,7 +65,7 @@ const theme: Theme = {
 
 
 
-const NewsList = () => {
+const RegionalList = () => {
     const [list, setList] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
@@ -411,4 +411,4 @@ const NewsList = () => {
     );
 };
 
-export default NewsList;
+export default RegionalList;
