@@ -3,6 +3,8 @@ import { BiCategory } from "react-icons/bi";
 import { AiFillDashboard } from "react-icons/ai";
 import { FaRegUserCircle } from "react-icons/fa";
 import { LuFileType } from "react-icons/lu";
+import ApurvaHorizon from "../pages/ApurvaHorizon"
+import { GoOrganization } from "react-icons/go";
 
 import "../asset/css/common.css";
 
@@ -19,10 +21,10 @@ const Sidebar = ({ isActive }) => {
   // Menu items array
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <AiFillDashboard />, link: "/admin" },
-    { id: "content-type", label: "Content-Type", icon: <LuFileType />, link: "/admin/content-type" },
-    { id: "category", label: "Category", icon: <BiCategory />, link: "/admin/category-type/list" },
-    { id: "news", label: "news", icon: <FaRegUserCircle />, link: "/admin/news/list" },
-    { id: "user", label: "User", icon: <FaRegUserCircle />, link: "#" },
+    { id: "apurvaHorizon", label: "Apurva Horizon", icon: <GoOrganization/>, link: "/admin/apurva-horizon" },
+    // { id: "content-type", label: "Content-Type", icon: <LuFileType />, link: "/admin/content-type" },
+    // { id: "category", label: "Category", icon: <BiCategory />, link: "/admin/category-type/list" },
+    // { id: "news", label: "news", icon: <FaRegUserCircle />, link: "/admin/news/list" },
     { id: "user", label: "User", icon: <FaRegUserCircle />, link: "#" }
 
   ];

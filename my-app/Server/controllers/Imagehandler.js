@@ -1,6 +1,6 @@
 const multer = require('multer');
 const path = require('path');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const File = require("../models/content-type-model") // Ensure you have a File model in place
 
 // Configure multer for file storage

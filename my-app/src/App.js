@@ -28,7 +28,7 @@ function App() {
           {/* <Route path="/" element={<CountryState />} /> */}
           <Route path="/admin" element={<Admin />} >
             <Route path="content-type" element={<List />} />
-            <Route path="apurvaHorizon" element={<ApurvaHorizon />} />
+            <Route path="apurva-horizon" element={<ApurvaHorizon />} />
             <Route path="news/add" element={<NewsForm />} />
             <Route path="news/list" element={<NewsList />} />
             <Route path="news/view/:id" element={<NewsView />} />
