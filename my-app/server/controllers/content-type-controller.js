@@ -1,7 +1,7 @@
+const ContentType = require("../models/content-type-model")
 const { response } = require('express');
 const connectDB = require('../utils/db');
 const { ObjectId } = require('mongodb');
-
 
 
 const addList = async (req, res) => {

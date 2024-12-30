@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TablePagination from '@mui/material/TablePagination';
+import ReactSearchBox from "react-search-box";
+import Button from '@mui/material/Button';
+import { MdModeEditOutline } from "react-icons/md";
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { RiDeleteBinLine } from "react-icons/ri";
+import { Switch } from '@mui/material';
+import { TableSortLabel } from '@mui/material';
+// import SwapVertIcon from '@mui/icons-material/SwapVert';
+import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+
 import {
     Table,
     TableHead,
@@ -10,10 +23,23 @@ import {
     Theme,
     SearchField,
     SelectField,
+    Loader,
+    Breadcrumbs,
 } from '@aws-amplify/ui-react';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
+import Sidebar from '../common/Sidebar';
+import './css/pagination.css';
+import { Badge } from '@mui/material';
+import CustomSeparator from "../common/Breadcrumbs";
+import '../asset/css/Loader.css';
+import '../asset/css/common.css';
+import './css/List.css';
+import Input from '../Inputcomponent/Inputs.js';
 import Notification from '../../Modules/Notification';
 
 const theme: Theme = {
+
     name: 'table-theme',
     tokens: {
         components: {
@@ -50,6 +76,10 @@ const List = () => {
     const [statusFilter, setStatusFilter] = useState('');
     // for loading
     const [loading, setLoading] = useState(false);
+
+    // const [sortKey, setSortKey] = useState('');
+    // const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -91,11 +121,11 @@ const List = () => {
                 method: "GET",
             })
 
-            const data =await response.json()
+            const data = await response.json()
             // console.log(data);
-            
-            if(response.ok){
-                if(data.type==="info")Notification.info(data.message)
+
+            if (response.ok) {
+                if (data.type === "info") Notification.info(data.message)
                 else Notification.success(data.message)
             }
 
@@ -124,6 +154,9 @@ const List = () => {
         return createdAtDate === searchDate;
     });
 
+    // const toggleSortByTitle = () => {
+    //     setIsReversed(!isReversed);
+    // };
     // Reverse order logic
     const toggleOrder = () => {
         setIsReversed(!isReversed);
@@ -148,11 +181,12 @@ const List = () => {
         <>
             {loading ? <div className="modal">
                 <div className="loader"></div>
-            </div> :<>
-
-            <div className="container d-flex flex-row justify-content-between align-self-center">
-                <p className="text-primary display-6" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>Types of Content</p>
-                <buttonCONTENT
+            </div> :
+                       <div>
+                            < CustomSeparator />
+                            <div className="container d-flex flex-row justify-content-between align-self-center">
+                                <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>TYPES OF CONTENT</p>
+                                <button
                                     type="button"
                                     className="btn btn-success"
                                     onClick={() => {
@@ -165,141 +199,190 @@ const List = () => {
                                     }}
                                 >
                                     ADD&nbsp;+
-                                </buttonCONTENT>
-            </div>
+                                </button>
 
-            <ThemeProvider theme={theme} colorMode="light">
-                <Table highlightOnHover variation="striped">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell as="th" >
-                                S.No
-                                <i
-                                    className="fas fa-sort-up m-2 cursor-pointer"
-                                    onClick={toggleOrder}
-                                ></i>
-                            </TableCell>
-                            <TableCell as="th">Id
-                                <SearchField
-                                    label="Search"
-                                    placeholder="Search"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-75"
-                                    hasSearchButton={false}
-                                    onClear={() => setSearchQuery('')}
+                            </div>
+                            <br></br>
+                            
+                            <ThemeProvider theme={theme} colorMode="light">
+                                <div class="table-responsive">
+                                    <Table highlightOnHover variation="striped" className="table-container">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell as="th" >
+                                                    <div className="sorting_button">
+                                                        S.No
+                                                        {isReversed ? (
+                                                            <UnfoldLessIcon
+                                                                fontSize="small"
+                                                                onClick={toggleOrder}
+                                                                className="cursor-pointer cursor-pointer icon-spacing"
+                                                            />
+                                                        ) : (
+                                                            <UnfoldMoreIcon
+                                                                fontSize="small"
+                                                                onClick={toggleOrder}
+                                                                className="cursor-pointer cursor-pointer icon-spacing"
+                                                            />
+                                                        )}
+                                                    </div>
+
+
+                                                </TableCell>
+                                                <TableCell as="th">Id
+                                                <div style={{ marginTop: '5px', height: '40px', }}>
+            <ReactSearchBox
+                placeholder="Search"
+                onChange={(value) => setSearchQuery(value)}
+                onClear={() => setSearchQuery('')}
+                className="w-75"
+            />
+        </div>
+
+                                                    
+                                                </TableCell>
+                                                <TableCell as="th">
+                                                    <div className="sorting_button" >
+                                                        Title
+
+                                                        {isReversed ? (
+                                                            <UnfoldLessIcon
+                                                                fontSize="small"
+                                                                onClick={toggleOrder}
+                                                                className="cursor-pointer cursor-pointer icon-spacing"
+                                                            />
+                                                        ) : (
+                                                            <UnfoldMoreIcon
+                                                                fontSize="small"
+                                                                onClick={toggleOrder}
+                                                                className="cursor-pointer cursor-pointer icon-spacing"
+                                                            />)}</div>
+                                                            {/* <div style={{ marginTop: '10px', width: '90px', height: '40px', padding: '4px' }}> */}
+                                                    <ReactSearchBox
+                                                        placeholder="Search"
+                                                        onChange={(value) => setSearchQuery(value)}
+                                                        onClear={() => setSearchQuery('')}
+                                                        className="w-75"
+                                                        style={{
+                                                            marginTop: '200px',
+                                                            padding: '4px',
+                                                            height: '40px',
+                                                            width: '30px',
+                                                        }}
+                                                    />
+                                                    {/* </div> */}
+                                                </TableCell>
+                                                <TableCell as="th">Image</TableCell>
+                                                <TableCell as="th">Status
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-filter-select"
+                                                        value={statusFilter}
+                                                        label="status"
+                                                        className="status_icon"
+                                                        displayEmpty
+                                                        onChange={(e) => setStatusFilter(e.target.value)}
+                                                    >
+                                                        <MenuItem value="">All</MenuItem>
+                                                        <MenuItem value="true">Active</MenuItem>
+                                                        <MenuItem value="false">Inactive</MenuItem>
+                                                    </Select>
+                                                </TableCell>
+                                                <TableCell as="th">Created At
+                                                    <Input
+                                                        type="date"
+                                                        className="form-control"
+                                                        value={searchDate}
+                                                        onChange={handleDateChange}
+                                                        style={{
+                                                            fontSize: '12px', // Reduce font size
+                                                            padding: '4px',   // Reduce padding
+                                                            height: '40px',
+                                                            width: '70px',   // Adjust widt
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                                <TableCell as="th" colSpan={3} style={{ textAlign: 'center', fontSize: '15px' }}>Activity</TableCell>
+
+                                            </TableRow>
+                                        </TableHead>
+                                        <tbody>
+                                            {finalList.map((entry, index) => (
+                                                <TableRow key={entry._id}>
+                                                    <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
+                                                    <TableCell>{entry._id}</TableCell>
+                                                    <TableCell>{entry.title}</TableCell>
+                                                    <TableCell>
+                                                        <img src="https://picsum.photos/id/1/200/100" alt="content" />
+                                                    </TableCell>
+                                                    <TableCell className="text-center">
+
+                                                        {entry.status ? 'active' : 'inactive'}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {new Intl.DateTimeFormat('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                        }).format(new Date(entry.createdAt))}
+                                                    </TableCell>
+                                                    <TableCell className="text-center" colSpan={3} >
+                                                        <div className="d-flex justify-content-center gap-3">
+                                                            <button
+                                                                type="button"
+                                                                className="btn"
+                                                                onClick={() => { deleteHandler(entry._id) }}
+                                                            >
+                                                                <i
+                                                                    className="fa-solid fa-trash fs-5"
+                                                                    style={{ color: '#d71919' }}
+                                                                ></i>
+                                                            </button>
+
+                                                            <button
+                                                                type="button"
+                                                                className="btn"
+                                                                onClick={() => navigate(`/admin/content-type/update/${entry._id}`)}
+                                                            >
+                                                                <i
+                                                                    className="fa-solid fa-pen-nib fs-4"
+                                                                    style={{ color: '#FFD43B' }}
+                                                                ></i>
+                                                            </button>
+
+                                                            <button
+                                                                type="button"
+                                                                className="btn"
+                                                                onClick={() => navigate(`/admin/content-type/view/${entry._id}`)}
+                                                            >
+                                                                <i
+                                                                    className="fa-solid fa-eye fs-3"
+                                                                    style={{ color: '#63E6BE' }}
+                                                                ></i>
+                                                            </button>
+                                                        </div>
+                                                    </TableCell>
+
+                                                </TableRow>
+                                            ))}
+                                        </tbody>
+                                    </Table>
+                                </div>
+                                <TablePagination
+                                    component="div"
+                                    count={totalCount} // Use totalCount from API
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    rowsPerPage={rowsPerPage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    className='mt-3'
                                 />
-                            </TableCell>
-                            <TableCell as="th">Title
-                                <SearchField
-                                    label="Search"
-                                    placeholder="Search"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-75"
-                                    hasSearchButton={false}
-                                    onClear={() => setSearchQuery('')}
-                                />
-                            </TableCell>
-                            <TableCell as="th">Image</TableCell>
-                            <TableCell as="th">Status
-                                <SelectField
-                                    className="w-100"
-                                    onChange={(e) => setStatusFilter(e.target.value)}
-                                    name="status"
-                                    value={statusFilter}
-                                >
-                                    <option value="">All</option>
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
-                                </SelectField>
-                            </TableCell>
-                            <TableCell as="th">Created At
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    value={searchDate}
-                                    onChange={handleDateChange}
-                                />
-                            </TableCell>
-                            <TableCell as="th">Delete</TableCell>
-                            <TableCell as="th">Update</TableCell>
-                            <TableCell as="th">View</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    {finalList.map((entry, index) => (
-                        <TableRow key={entry._id}>
-                            <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
-                            <TableCell>{entry._id}</TableCell>
-                            <TableCell>{entry.title}</TableCell>
-                            <TableCell>
-                                <img src="https://picsum.photos/id/1/200/100" alt="content" />
-                            </TableCell>
-                            <TableCell className="text-center">{entry.status ? 'active' : 'inactive'}</TableCell>
-                            <TableCell>
-                                {new Intl.DateTimeFormat('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                }).format(new Date(entry.createdAt))}
-                            </TableCell>
-                            <TableCell className="text-center">
-                                <button type="button" className="btn"
-                                    onClick={() => { deleteHandler(entry._id) }}
-                                >
-                                    <i
-                                        className="fa-solid fa-trash fs-2"
-                                        style={{ color: '#d71919' }}
-                                    ></i>
-                                </button>
-                            </TableCell>
-                            <TableCell className="text-center">
-                                <button
-                                    type="button"
-                                    className="btn"
-                                    onClick={() =>
-                                        navigate(`/admin/content-type/update/${entry._id}`)
-                                    }
-                                >
-                                    <i
-                                        className="fa-solid fa-pen-nib fs-2"
-                                        style={{ color: '#FFD43B' }}
-                                    ></i>
-                                </button>
-                            </TableCell>
-                            <TableCell className="text-center">
-                                <button
-                                    type="button"
-                                    className="btn"
-                                    onClick={() =>
-                                        navigate(`/admin/content-type/view/${entry._id}`)
-                                    }
-                                >
-                                    <i
-                                        className="fa-solid fa-eye fs-2"
-                                        style={{ color: '#63E6BE' }}
-                                    ></i>
-                                </button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </Table>
-                <TablePagination
-                    component="div"
-                    count={totalCount}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    rowsPerPage={rowsPerPage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    className='mt-3'
-                />
-            </ThemeProvider>
-            </>
+                            </ThemeProvider>
+                       </div>     
             }
         </>
-
-
     );
 };
 
 export default List;
+

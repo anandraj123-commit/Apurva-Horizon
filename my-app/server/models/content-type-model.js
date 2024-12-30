@@ -1,20 +1,29 @@
-const {Schema , model}=require("mongoose")
+// const {Schema , model}=require("mongoose")
 
-const contentTypeSchema=new Schema({
-    title:{
-        type: String,
-        require : true
-    },
-    description:{
-        type: String,
-        require : true
-    },
-    status:{
-        type: Boolean,
-        require : true
-    }
-},
-{timestamps:true})
+// const contentTypeSchema=new Schema({
+//     title:{
+//         type: String,
+//         required : true
+//     },
+//     description:{
+//         type: String,
+//         required : true
+//     },
+//     status:{
+//         type: Boolean,
+//         required : true
+//     },
+//     imagefile:{
+//         type: String,
+//         // uploadDate: { type: Date, default: Date.now },
+//         required : true
+//     },
+//     uploadDate: { 
+//       type: Date, 
+//       default: Date.now 
+//     },
+// },
+// {timestamps:true})
 
-const ContentType=new model("ContentType",contentTypeSchema);
-module.exports=ContentType;
+// const ContentType=new model("ContentType",contentTypeSchema);
+// module.exports=ContentType;

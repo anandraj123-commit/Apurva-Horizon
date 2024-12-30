@@ -10,7 +10,6 @@ const viewListItem = async(req,res)=>{
     } catch (error) {
         return res.status(500).json({ message: "Internal Server Error ❌" })
     }
-
 }
 
 const fetchAllNews= async(req,res)=>{

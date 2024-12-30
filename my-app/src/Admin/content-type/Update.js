@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Flex, Input, Label, SelectField, Card, ThemeProvider, Theme, TextAreaField } from '@aws-amplify/ui-react';
 import { useNavigate, useParams } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import ImageUpload from '../Imageupload';
+import CustomSeparator from '../common/Breadcrumbs';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Notification from '../../Modules/Notification';
-
 const theme: Theme = {
     name: 'card-theme',
     tokens: {
@@ -35,6 +37,7 @@ const Update = () => {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(`http://localhost:5000/api/content-type/view/${id}`, {
                     method: "GET",
@@ -44,6 +47,7 @@ const Update = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
+                    // console.log(data);
                     // console.log(data);
 
                     setListItem({
@@ -56,8 +60,10 @@ const Update = () => {
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
-            } finally {
-                setLoading(false); // Set loading to false after fetch
+            }  finally {
+                setTimeout(() => {
+                    setLoading(false);  // Hide loader after a delay
+                }, 400);
             }
         };
 
@@ -66,7 +72,9 @@ const Update = () => {
 
 
     if (loading) {
-        return <p>Loading...</p>; // Render a loading indicator
+        return <div className="modal">
+        <div className="loader"></div>
+    </div> ; // Render a loading indicator
     }
 
     // Handle input changes
@@ -103,60 +111,85 @@ const Update = () => {
 
     return (
         <>
+         {/* { loading ? <div className="modal">
+            <div className="loader"></div>
+        </div> :  */}
+        {/* <div className="wrapper">
+            <Sidebar />
+            <div className="main">
+                <Header />
+                <main className="content"> */}
+                <div>
+                <CustomSeparator/>
+                    <ThemeProvider theme={theme} colorMode="light">
+                        <Card variation="elevated" className="container py-5 mx-auto" style={{ width: '500px', height: '700px' }}>
+                            <div className="container">
+                                <p className="text-primary display-6 text-center fw-medium" style={{
+                                    fontSize: '2rem',  // Adjust the font size
+                                    fontWeight: '500'  // Lighter font weight
+                                }}>UPDATE CONTENT TYPE</p>
+                            </div>
+                            <Flex as="form" direction="column" width="20rem" onSubmit={submitHandler} className="container">
+                                <Flex direction="column" gap="small">
+                                    {/* <Label htmlFor="title">Content-Title</Label> */}
+                                    {/* <Input
+                                        id="title"
+                                        type="text"
+                                        name="title"
+                                        isRequired
+                                        onChange={inputHandler}
+                                        value={ListItem.title}
+                                    /> */}
+                                    <TextField id="title" name='title' label="Content-Title" variant="outlined" isRequired onChange={inputHandler} value={ListItem.title} />
+                                </Flex>
+                                <Flex direction="column" gap="small">
+                                    {/* <TextAreaField
+                                        label="Description"
+                                        name="description"
+                                        placeholder="Enter a description"
+                                        isRequired 
+                                        onChange={inputHandler} 
+                                        value={ListItem.description} 
+                                        rows={3} /> */}
+                                    <TextField
+                                        id="outlined-multiline-static"
 
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" href="/admin/content-type">
-                    Content - Type
-                </Link>
-                <Link underline="hover" color="inherit" href={`/admin/content-type/update/${id}`}>
-                    Update
-                </Link>
-            </Breadcrumbs>
-            <ThemeProvider theme={theme} colorMode="light">
-                <Card variation="elevated" className="container w-50 py-5 mx-auto">
-                    <div className="container">
-                        <p className="text-primary display-6 text-center fw-medium">Update Content Type</p>
+                                        name="description"
+                                        placeholder="Enter a description"
+                                        isRequired
+                                        onChange={inputHandler}
+                                        value={ListItem.description}
+                                        label="Description"
+                                        multiline
+                                        rows={4}
+                                    />
+                                </Flex>
+                                <Flex direction="column" gap="small">
+                                    <SelectField
+                                        label="Status"
+                                        descriptiveText="Should your title be Active or Inactive?"
+                                        onChange={inputHandler}
+                                        name="status"
+                                        value={ListItem.status}
+                                    >
+                                        <option value={true}>Active</option>
+                                        <option value={false}>Inactive</option>
+                                    </SelectField>
+                                    <Flex direction="column" gap="small">
+                                        <Label htmlFor="title">Upload Image</Label>
+                                        <div style={{ minHeight: '100px' }}> {/* Reserve space for previews */}
+                                            <ImageUpload />
+                                        </div>
+                                    </Flex>
+                                </Flex>
+                                <button type="submit" className="btn btn-primary">Submit</button>
+                            </Flex>
+                        </Card>
+                    </ThemeProvider>
                     </div>
-                    <Flex as="form" direction="column" width="20rem" onSubmit={submitHandler} className="container">
-                        <Flex direction="column" gap="small">
-                            <Label htmlFor="title">Content-Title</Label>
-                            <Input
-                                id="title"
-                                type="text"
-                                name="title"
-                                isRequired
-                                onChange={inputHandler}
-                                value={ListItem.title}
-                            />
-                        </Flex>
-                        <Flex direction="column" gap="small">
-                            <TextAreaField
-                                label="Description"
-                                name="description"
-                                placeholder="Enter a description"
-                                isRequired
-                                onChange={inputHandler}
-                                value={ListItem.description}
-                                rows={3} />
-                        </Flex>
-                        <Flex direction="column" gap="small">
-                            <SelectField
-                                label="Status"
-                                descriptiveText="Should your title be Active or Inactive?"
-                                onChange={inputHandler}
-                                name="status"
-                                value={ListItem.status}
-                            >
-                                <option value={true}>Active</option>
-                                <option value={false}>Inactive</option>
-                            </SelectField>
-                        </Flex>
-                        <Button type="submit">Update</Button>
-                    </Flex>
-                </Card>
-            </ThemeProvider>
-        </>
-
+       
+    </>
+    
     );
 };
 

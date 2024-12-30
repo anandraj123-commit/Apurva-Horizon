@@ -1,44 +1,56 @@
-const Sidebar = function(){
-    return(
-        <nav id="sidebar" className="sidebar js-sidebar">
-        <div className="sidebar-content js-simplebar">
-            <a className="sidebar-brand" href="index.html">
-                <span className="align-middle">Apurva Horizon</span>
-            </a>
+import React, { useState, useEffect } from "react";
+import { BiCategory } from "react-icons/bi";
+import { AiFillDashboard } from "react-icons/ai";
+import { FaRegUserCircle } from "react-icons/fa";
+import { LuFileType } from "react-icons/lu";
 
-            <ul className="sidebar-nav">
-                <li className="sidebar-item active">
-                    <a className="sidebar-link" href="index.html">
-                        <i className="align-middle" data-feather="sliders"></i> <span className="align-middle">Dashboard</span>
-                    </a>
-                </li>
-                <li className="sidebar-item">
-                    <a className="sidebar-link" href="/admin/apurvaHorizon">
-                        <i className="align-middle" data-feather="sliders"></i> <span className="align-middle">Apurva Horizon</span>
-                    </a>
-                </li>
-{/* 
-                <li className="sidebar-item">
-                    <a className="sidebar-link" href="/admin/content-type">
-                        <i className="align-middle" data-feather="user"></i> <span className="align-middle">Content-Type</span>
-                    </a>
-                </li>
-                
-                <li className="sidebar-item">
-                    <a className="sidebar-link" href="/admin/category-type/list">
-                        <i className="align-middle" data-feather="user"></i> <span className="align-middle">Category</span>
-                    </a>
-                </li>
-                <li className="sidebar-item">
-                    <a className="sidebar-link" href="/admin/news/list">
-                        <i className="align-middle" data-feather="user"></i> <span className="align-middle">News</span>
-                    </a>
-                </li> */}
-                
-            </ul>
-        </div>
+import "../asset/css/common.css";
+
+const Sidebar = ({ isActive }) => {
+  const [activeItem, setActiveItem] = useState(
+    localStorage.getItem("activeItem") || "dashboard"
+  );
+
+  useEffect(() => {
+    localStorage.setItem("activeItem", activeItem);
+  }, [activeItem]);
+
+
+  // Menu items array
+  const menuItems = [
+    { id: "dashboard", label: "Dashboard", icon: <AiFillDashboard />, link: "/admin" },
+    { id: "content-type", label: "Content-Type", icon: <LuFileType />, link: "/admin/content-type" },
+    { id: "category", label: "Category", icon: <BiCategory />, link: "/admin/category-type/list" },
+    { id: "news", label: "news", icon: <FaRegUserCircle />, link: "/admin/news/list" },
+    { id: "user", label: "User", icon: <FaRegUserCircle />, link: "#" },
+    { id: "user", label: "User", icon: <FaRegUserCircle />, link: "#" }
+
+  ];
+
+  return (
+    <nav id="sidebar" className={`sidebar ${isActive ? "active" : "inactive"}`}>
+      <div className="sidebar-content js-simplebar">
+        <a className="sidebar-brand" href="/">
+          <span className="align-middle">Apurva Horizon</span>
+        </a>
+
+        <ul className="sidebar-nav">
+          {menuItems.map((item) => (
+            <li
+              key={item.id}
+              className={`sidebar-item ${activeItem === item.id ? "active" : ""}`}
+              onClick={() => setActiveItem(item.id)} // Update active state on click
+            >
+              <a className="sidebar-link" href={item.link}>
+                <i className="align-middle">{item.icon}</i>{" "}
+                <span className="align-middle">{item.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
-    )
-}
+  );
+};
 
 export default Sidebar;
