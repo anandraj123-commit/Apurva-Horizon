@@ -15,16 +15,19 @@ import CategoryUpdate from './Admin/category/CategoryUpdate';
 import NewsForm from './Admin/news/NewsForm';
 import NewsList from './Admin/news/NewsList';
 import NewsView from './Admin/news/NewsView';
-
-
+import FileUpload from './Admin/Imageupload';
+import VideoList from './Admin/Uploads/Videouploadlist';
+import Addvideo from './Admin/Uploads/Videoaddupload';
+import Updatevideo from './Admin/Uploads/Videoupdatepage';
+import Viewvideo from './Admin/Uploads/Videoview';
 function App() {
   return (
     <div>
       <Router>
         <Routes>
           <Route path="/" element={<Web />} />
-          {/* <Route path="/" element={<CountryState />} /> */}
           <Route path="/admin" element={<Admin />} >
+          <Route path="country-state" element={<CountryState />} />
             <Route path="content-type" element={<List />} />
             <Route path="news/add" element={<NewsForm />} />
             <Route path="news/list" element={<NewsList />} />
@@ -36,7 +39,12 @@ function App() {
             <Route path="category-type/list" element={<CategoryList />} />
             <Route path="category-type/view/:id" element={<CategoryView />} />
             <Route path="category-type/update/:id" element={<CategoryUpdate />} />
-          </Route>
+            <Route path="upload" element={<FileUpload />} />
+            <Route path="video-upload/list" element={<VideoList />} />
+            <Route path="video-upload/addvideo" element={<Addvideo />} />
+            <Route path="video-upload/update/:id" element={<Updatevideo />} />
+            <Route path="video-upload/view/:id" element={<Viewvideo />} />
+          </Route>          
         </Routes>
       </Router>
     </div>

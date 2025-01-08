@@ -7,6 +7,7 @@ import CustomSeparator from '../common/Breadcrumbs';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Notification from '../../Modules/Notification';
+
 const theme: Theme = {
     name: 'card-theme',
     tokens: {
@@ -25,7 +26,7 @@ const theme: Theme = {
 };
 
 const Update = () => {
-    const { id } = useParams(); // Get the ID of the item to update
+    const { id } = useParams();
     const navigate = useNavigate();
     const [ListItem, setListItem] = useState({
         title: "",
@@ -70,13 +71,11 @@ const Update = () => {
         fetchData();
     }, [id]);
 
-
     if (loading) {
         return <div className="modal">
         <div className="loader"></div>
     </div> ; // Render a loading indicator
     }
-
     // Handle input changes
     const inputHandler = (event) => {
         const { name, value } = event.target;
@@ -186,10 +185,8 @@ const Update = () => {
                             </Flex>
                         </Card>
                     </ThemeProvider>
-                    </div>
-       
+                    </div>      
     </>
-    
     );
 };
 

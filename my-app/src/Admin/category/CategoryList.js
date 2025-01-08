@@ -13,7 +13,6 @@ import { TableSortLabel } from '@mui/material';
 // import SwapVertIcon from '@mui/icons-material/SwapVert';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-
 import {
     Table,
     TableHead,
@@ -141,11 +140,6 @@ const List = () => {
 
     }
 
-    // const toggleSortByTitle = () => {
-    //     setIsSorted(!isSorted);
-    //     setSortDirection(isSorted ? 'asc' : 'desc'); // Toggle sort direction
-    // };
-
     // Filter list based on search query
     const filteredList = list.filter((entry) =>
         entry.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -164,9 +158,6 @@ const List = () => {
         return createdAtDate === searchDate;
     });
 
-    // const toggleSortByTitle = () => {
-    //     setIsReversed(!isReversed);
-    // };
     // Reverse order logic
     const toggleOrder = () => {
         setIsReversed(!isReversed);
@@ -284,7 +275,6 @@ const List = () => {
                                         <TableCell as="th">
                                             <div className="sorting_button" >
                                                 Description
-
                                                 {isReversed ? (
                                                     <UnfoldLessIcon
                                                         fontSize="small"
@@ -401,8 +391,6 @@ const List = () => {
                         />
                     </ThemeProvider>
                     {/* )} */}
-
-
                 </>
 
             }

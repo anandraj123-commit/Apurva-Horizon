@@ -1,9 +1,10 @@
 const multer = require('multer');
 const path = require('path');
-const mongoose = require('mongoose');
-const File = require("../models/content-type-model") // Ensure you have a File model in place
 
+// const mongoose = require('mongoose');
+// const File = require("../models/content-type-model") // Ensure you have a File model in place
 // Configure multer for file storage
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.mimetype === 'application/pdf') {
@@ -11,7 +12,6 @@ const storage = multer.diskStorage({
     } else if (['image/jpeg', 'image/jpg', 'image/png', 'image/gif'].includes(file.mimetype)) {
       cb(null, './uploads/images');
     } else {
-      cb(new Error('Invalid file type. Only images and PDFs are allowed.'));
     }
   },
   filename: (req, file, cb) => {
@@ -50,10 +50,8 @@ const uploadFile = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-
     const file = new File({ fileName: req.file.filename });
     await file.save();
-
     res.status(200).json({
       message: 'File uploaded successfully',
       filePath: `/uploads/${req.file.filename}`,
@@ -66,5 +64,4 @@ const uploadFile = async (req, res) => {
     res.status(500).json({ message: 'Failed to upload file' });
   }
 };
-
 module.exports = { upload , uploadFile };

@@ -3,7 +3,6 @@ const {MongoClient} =require('mongodb');
 const URI = process.env.MONGODB_URI;
 let dbo;
 
-
 const connectDb = async () => {
     if(dbo)return dbo;
     try {
