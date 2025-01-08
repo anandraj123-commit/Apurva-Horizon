@@ -35,6 +35,7 @@ import '../asset/css/Loader.css';
 import '../asset/css/common.css';
 import './css/List.css';
 import Input from '../Inputcomponent/Inputs.js';
+import { useList } from '../content-type/store/contentcontext.js';
 
 const theme: Theme = {
 
@@ -62,6 +63,8 @@ const theme: Theme = {
     },
 };
 
+
+
 const NewsList = () => {
     const [list, setList] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
@@ -70,51 +73,22 @@ const NewsList = () => {
     const [searchDate, setSearchDate] = useState(''); // State for "Created At" filter
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [statusFilter, setStatusFilter] = useState('');
+    // const [statusFilter, setStatusFilter] = useState('');
+    const [filters, setFilters] = useState({});  // <-- Add this line
+
+    const [sortOrder, setSortOrder] = useState({
+        "title": 0,
+        "type": 0,
+        "subcategory": 0,
+        "description": 0,
+        "_id": 0
+    });
     const navigate = useNavigate();
+
     // for loading
     const [loading, setLoading] = useState(false);
 
-    
-
-    // const [sortKey, setSortKey] = useState('');
-    // const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(
-                    `http://localhost:5000/api/news/users?page=${page + 1}&limit=${rowsPerPage}`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-                if (response.ok) {
-                    const data = await response.json();
-                    // console.log(data);
-
-                    setList(data.results);
-                    setTotalCount(data.totalCount); // Update totalCount from API
-                } else {
-                    console.error('Failed to fetch item data');
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            finally {
-                setTimeout(() => {
-                    setLoading(false);  // Hide loader after a delay
-                }, 400);
-            }
-        };
-
-        fetchData();
-    }, [page, rowsPerPage]);
+    const { fetchData } = useList()
 
 
     const deleteHandler = async (id) => {
@@ -133,10 +107,6 @@ const NewsList = () => {
             }
 
             const result = await response.json();
-            // console.log(result.message);
-            console.log(result);
-
-
         } catch (error) {
             console.log(error);
         }
@@ -144,45 +114,93 @@ const NewsList = () => {
     }
 
 
-    // Filter list based on search query
-    const filteredList = list.filter((entry) =>
-        entry.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        entry._id.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const searchHandler = async (value, name) => {
+        const updatedFilters = {
+            ...filters,  // Maintain existing filters
+            [name]: value // Update field dynamically
+        };
+        setFilters(updatedFilters);  // Store for pagination
+    };
 
-    const filteredListByStatus = filteredList.filter((entry) => {
-        if (statusFilter === '') return true;
-        const filterValue = statusFilter === 'true';
-        return entry.status === filterValue;
-    });
-
-    const filteredListByDate = filteredListByStatus.filter((entry) => {
-        if (!searchDate) return true;
-        const createdAtDate = new Date(entry.createdAt).toISOString().split('T')[0];
-        return createdAtDate === searchDate;
-    });
-
-    // const toggleSortByTitle = () => {
-    //     setIsReversed(!isReversed);
-    // };
-    // Reverse order logic
     const toggleOrder = () => {
         setIsReversed(!isReversed);
     };
 
-    const finalList = isReversed ? [...filteredListByDate].reverse() : filteredListByDate;
+    // const finalList = isReversed ? [...list].reverse() : list;
 
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = async (event, newPage) => {
         setPage(newPage);
     };
+
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0); // Reset to the first page
     };
 
-    const handleDateChange = (event) => {
-        setSearchDate(event.target.value);
+
+    const SortSymbol = ({ sortOrder }) => {
+        if (sortOrder % 3 === 0) {
+            return <i class="fa-solid fa-sort"></i>
+        }
+        else if (sortOrder % 3 === 1) {
+            return <i class="fa-solid fa-sort-up"></i>
+        }
+        else if (sortOrder % 3 === 2) {
+            return <i class="fa-solid fa-sort-down"></i>
+        }
+    }
+    
+    // useEffect(() => {
+    //     const fetchDataAsync = async () => {
+    //         try {
+    //             // Default fetch with empty filters and no sorting
+    //             const result = await fetchData("news", filters, page, rowsPerPage, sortOrder);                
+    //             setList(result.results);  // Populate the list with data
+    //             setTotalCount(result.totalCount);  // Set total count for pagination
+    //         } catch (error) {
+    //             console.error("Error fetching data:", error);
+    //         }
+    //     };
+    
+    //     fetchDataAsync();
+    // }, [page, rowsPerPage]);
+
+    useEffect(() => {
+        const fetchDataAsync = async () => {
+            try {
+                const activeSort = getActiveSort(sortOrder);
+                const result = await fetchData("news", filters, page, rowsPerPage, activeSort);
+                setList(result.results);  // Populate the list with data
+                setTotalCount(result.totalCount);  // Set total count for pagination
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+    
+        fetchDataAsync();
+    }, [page, rowsPerPage, sortOrder, filters]); // Ensure to include sortOrder and filters as dependencies
+    
+    const getActiveSort = (sortOrder) => {
+        const activeSort = {};
+    
+        // Iterate through the sortOrder object and build activeSort
+        for (const [key, value] of Object.entries(sortOrder)) {
+            if (value === 1) activeSort[key] = 1;  // Ascending
+            if (value === 2) activeSort[key] = -1; // Descending
+            // No need to add the key if value === 0 (no sorting for this field)
+        }
+    
+        return activeSort;
+    };
+
+    const changeSortOrder = async (field) => {
+        const updatedSortOrder = {
+            ...sortOrder,
+            [field]: (sortOrder[field] + 1) % 3
+        };
+
+        setSortOrder(updatedSortOrder);  // Update sort state
     };
 
     return (
@@ -221,19 +239,7 @@ const NewsList = () => {
                                         <TableCell as="th" >
                                             <div className="sorting_button">
                                                 S.No
-                                                {isReversed ? (
-                                                    <UnfoldLessIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />
-                                                ) : (
-                                                    <UnfoldMoreIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />
-                                                )}
+
                                             </div>
 
 
@@ -242,36 +248,21 @@ const NewsList = () => {
                                             <div style={{ marginTop: '5px', height: '40px', }}>
                                                 <ReactSearchBox
                                                     placeholder="Search"
-                                                    onChange={(value) => setSearchQuery(value)}
-                                                    onClear={() => setSearchQuery('')}
+                                                    onChange={(value) => searchHandler(value, "_id")}
+                                                    onClear={() => searchHandler("", "_id")} name="id"
                                                     className="w-75"
                                                 />
                                             </div>
-
-
                                         </TableCell>
-
                                         <TableCell as="th">
-                                            <div className="sorting_button" >
+                                            <div className="sorting_button" onClick={() => changeSortOrder("type")} style={{ cursor: 'pointer' }}>
                                                 Type
-
-                                                {isReversed ? (
-                                                    <UnfoldLessIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />
-                                                ) : (
-                                                    <UnfoldMoreIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />)}</div>
+                                                <SortSymbol sortOrder={sortOrder.type} />
+                                            </div>
                                             <ReactSearchBox
                                                 placeholder="Search"
-                                                onChange={(value) => setSearchQuery(value)}
-                                                onClear={() => setSearchQuery('')}
-                                                className="w-75"
+                                                onChange={(value) => searchHandler(value, "type")}
+                                                onClear={() => searchHandler("", "type")} className="w-75"
                                                 style={{
                                                     marginTop: '200px',
                                                     padding: '4px',
@@ -281,25 +272,14 @@ const NewsList = () => {
                                             />
                                         </TableCell>
                                         <TableCell as="th">
-                                            <div className="sorting_button" >
+                                            <div className="sorting_button" onClick={() => changeSortOrder("subcategory")} style={{ cursor: 'pointer' }}>
                                                 Subcategory
-
-                                                {isReversed ? (
-                                                    <UnfoldLessIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />
-                                                ) : (
-                                                    <UnfoldMoreIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />)}</div>
+                                                <SortSymbol sortOrder={sortOrder.subcategory} />
+                                            </div>
                                             <ReactSearchBox
                                                 placeholder="Search"
-                                                onChange={(value) => setSearchQuery(value)}
-                                                onClear={() => setSearchQuery('')}
+                                                onChange={(value) => searchHandler(value, "subcategory")}
+                                                onClear={() => searchHandler("", "subcategory")}
                                                 className="w-75"
                                                 style={{
                                                     marginTop: '200px',
@@ -310,25 +290,14 @@ const NewsList = () => {
                                             />
                                         </TableCell>
                                         <TableCell as="th">
-                                            <div className="sorting_button" >
+                                            <div className="sorting_button" onClick={() => changeSortOrder("title")} style={{ cursor: 'pointer' }}>
                                                 Title
-
-                                                {isReversed ? (
-                                                    <UnfoldLessIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />
-                                                ) : (
-                                                    <UnfoldMoreIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />)}</div>
+                                                <SortSymbol sortOrder={sortOrder.title} />
+                                            </div>
                                             <ReactSearchBox
                                                 placeholder="Search"
-                                                onChange={(value) => setSearchQuery(value)}
-                                                onClear={() => setSearchQuery('')}
+                                                onChange={(value) => searchHandler(value, "title")}
+                                                onClear={() => searchHandler("", "title")}
                                                 className="w-75"
                                                 style={{
                                                     marginTop: '200px',
@@ -339,25 +308,14 @@ const NewsList = () => {
                                             />
                                         </TableCell>
                                         <TableCell as="th">
-                                            <div className="sorting_button" >
+                                            <div className="sorting_button" onClick={() => changeSortOrder("description")} style={{ cursor: 'pointer' }}>
                                                 Description
-
-                                                {isReversed ? (
-                                                    <UnfoldLessIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />
-                                                ) : (
-                                                    <UnfoldMoreIcon
-                                                        fontSize="small"
-                                                        onClick={toggleOrder}
-                                                        className="cursor-pointer cursor-pointer icon-spacing"
-                                                    />)}</div>
+                                                <SortSymbol sortOrder={sortOrder.description} />
+                                            </div>
                                             <ReactSearchBox
                                                 placeholder="Search"
-                                                onChange={(value) => setSearchQuery(value)}
-                                                onClear={() => setSearchQuery('')}
+                                                onChange={(value) => searchHandler(value, "description")}
+                                                onClear={() => searchHandler("", "description")}
                                                 className="w-75"
                                                 style={{
                                                     marginTop: '200px',
@@ -367,27 +325,11 @@ const NewsList = () => {
                                                 }}
                                             />
                                         </TableCell>
-
-                                        {/* <TableCell as="th">Created At
-                                                    <Input
-                                                        type="date"
-                                                        className="form-control"
-                                                        value={searchDate}
-                                                        onChange={handleDateChange}
-                                                        style={{
-                                                            fontSize: '12px', // Reduce font size
-                                                            padding: '4px',   // Reduce padding
-                                                            height: '40px',
-                                                            width: '70px',   // Adjust widt
-                                                        }}
-                                                    />
-                                                </TableCell> */}
                                         <TableCell as="th" colSpan={3} style={{ textAlign: 'center', fontSize: '15px' }}>Activity</TableCell>
-
                                     </TableRow>
                                 </TableHead>
                                 <tbody>
-                                    {finalList.map((entry, index) => (
+                                    {list.map((entry, index) => (
                                         <TableRow key={entry._id}>
                                             <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
                                             <TableCell>{entry._id}</TableCell>

@@ -20,6 +20,10 @@ import VideoList from './Admin/Uploads/Videouploadlist';
 import Addvideo from './Admin/Uploads/Videoaddupload';
 import Updatevideo from './Admin/Uploads/Videoupdatepage';
 import Viewvideo from './Admin/Uploads/Videoview';
+import ApurvaHorizon from './Admin/pages/ApurvaHorizon';
+import RegionList from './Admin/regional/RegionList';
+
+
 function App() {
   return (
     <div>
@@ -29,6 +33,7 @@ function App() {
           <Route path="/admin" element={<Admin />} >
           <Route path="country-state" element={<CountryState />} />
             <Route path="content-type" element={<List />} />
+            <Route path="apurva-horizon" element={<ApurvaHorizon />} />
             <Route path="news/add" element={<NewsForm />} />
             <Route path="news/list" element={<NewsList />} />
             <Route path="news/view/:id" element={<NewsView />} />
@@ -44,7 +49,9 @@ function App() {
             <Route path="video-upload/addvideo" element={<Addvideo />} />
             <Route path="video-upload/update/:id" element={<Updatevideo />} />
             <Route path="video-upload/view/:id" element={<Viewvideo />} />
-          </Route>          
+          {/* </Route>           */}
+            <Route path="regional-news/list" element={<RegionList />} />
+          </Route>
         </Routes>
       </Router>
     </div>
