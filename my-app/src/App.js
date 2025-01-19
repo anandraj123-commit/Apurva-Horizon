@@ -7,7 +7,7 @@ import Add from './Admin/content-type/Add';
 import List from './Admin/content-type/List';
 import View from './Admin/content-type/View';
 import Update from './Admin/content-type/Update';
-import CountryState from './Country-state/Country-state'; // Import CountryState
+import CountryState from './Country-state/Country-state'; 
 import CategoryForm from './Admin/category/CategoryForm';
 import CategoryList from './Admin/category/CategoryList';
 import CategoryView from './Admin/category/CategoryView';

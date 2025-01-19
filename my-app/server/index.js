@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const contentType = require('./routers/content-type-router');
 const categoryType = require('./routers/category-type-router');
-const fileUploadRouter = require('./routers/file-upload-router');
+// const fileUploadRouter = require('./routers/file-upload-router');
 const newsRouter = require('./routers/news-router');
 const searchRouter = require('./routers/search-router');
 const path = require('path');
@@ -21,7 +21,7 @@ app.use(cors(corsOption));
 app.use(express.json())
 app.use('/uploads/videos', express.static(path.join(__dirname, 'uploads', 'videos')));
 app.use('/api/content-type', contentType)
-app.use('/api/file', fileUploadRouter);
+// app.use('/api/file', fileUploadRouter);
 app.use('/api/category-type', categoryType)
 app.use('/api/news', newsRouter)
 app.use('/api/search', searchRouter);
