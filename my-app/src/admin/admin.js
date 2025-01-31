@@ -14,7 +14,7 @@ function Admin() {
             <div className="main">
                 <Header />
                 <main className="content">
-                    
+                    {/* <h1> admin page </h1> */}
                     <ToastContainer />
                     <Outlet />
                 </main>

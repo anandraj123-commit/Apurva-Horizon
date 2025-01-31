@@ -2,7 +2,7 @@ const express = require("express")
 const contentTypeController = require("../controllers/content-type-controller")
 const {paginationController} = require("../controllers/pagination-controller")
 const {paginatedResults} = require('../controllers/pagination-controller')
-const contentType = require('../models/content-type-model')
+// const contentType = require('../models/content-type-model')
 // const { upload, uploadFile } = require('../controllers/Imagehandler');
 
 const router = express.Router()

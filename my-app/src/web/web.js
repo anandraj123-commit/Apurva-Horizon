@@ -1,7 +1,7 @@
 function Web() {
     return (
      <div className="web">
-         <h1>Website</h1>
+         <h1>this is Website</h1>
      </div>
     );
   }

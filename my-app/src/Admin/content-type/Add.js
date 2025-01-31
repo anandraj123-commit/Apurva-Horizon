@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import { Button, Flex, Input, Label, SelectField, Card, ThemeProvider, Theme, TextAreaField } from '@aws-amplify/ui-react';
-import Sidebar from '../common/Sidebar';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
 import { useNavigate } from 'react-router-dom';
 import ImageUpload from '../Imageupload';
+// import VideoUpload from '../Videoupload';
 import TextField from '@mui/material/TextField';
 import CustomSeparator from '../common/Breadcrumbs';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
@@ -45,6 +43,7 @@ const Add = () => {
         imagefile: null
     });
     const [loading, setLoading] = useState(false);
+
     const inputHandler = (event) => {
         const { name, value } = event.target;
         setListItem((prevValue) => ({
@@ -53,13 +52,16 @@ const Add = () => {
         }));
     };
 
+    // const imageUploadHandler = (file) => {
+    //     setListItem((prevValue) => ({
+    //         ...prevValue,
+    //         imagefile: file,
+    //     }));
+    // };
     const imageUploadHandler = (file) => {
-        setListItem((prevValue) => ({
-            ...prevValue,
-            imagefile: file,
-        }));
-    };
-   
+        console.log('Uploaded File:', file);
+        setListItem((prevValue) => ({ ...prevValue, imagefile: file }));
+      };
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -67,10 +69,11 @@ const Add = () => {
             alert('Title and Description are required!');
             return; // Prevent form submission if validation fails
         }
-        if(!ListItem.ImageUpload)
-        {
-            alert('please upload Image');
-        }
+        console.log('Current ListItem.imagefile:', ListItem.imagefile);
+        // if (!ListItem.imagefile) {
+        //     alert('Please upload an image');
+        //     return; // Prevent form submission if the image is not uploaded
+        // }        
         try {
             //adding date also in records
             const response = await fetch("http://localhost:5000/api/content-type/add", {
@@ -82,7 +85,6 @@ const Add = () => {
             })
             const data = await response.json()
             if (response.ok) {
-                alert('Successfully added content type');
                 // setListItem({ title: "", status: true, description: "" });
                 setListItem({ title: "", status: true, description: "" });
                 Notification.success(data.message)
@@ -136,6 +138,13 @@ const Add = () => {
                             <option value={false}>Inactive</option>
 
                         </SelectField>
+
+                    </Flex>
+                    <Flex direction="column" gap="small">
+                                    <Label htmlFor="title">Upload Image</Label>
+                                    <div style={{ minHeight: '100px' }}> {/* Reserve space for previews */}
+                                        <ImageUpload onImageUpload={imageUploadHandler} />
+                                    </div>
                     </Flex>
                     <Button type="submit">Submit</Button>
                 </Flex>
@@ -145,11 +154,7 @@ const Add = () => {
         </ThemeProvider>
 
 
-                {/* </main>
-                <Footer />
-            </div>
-        </div>
-        } */}
+               
         </>
 
     )

@@ -8,6 +8,7 @@ import List from './Admin/content-type/List';
 import View from './Admin/content-type/View';
 import Update from './Admin/content-type/Update';
 // import CountryState from './Country-state/Country-state'; // Import CountryState
+import CountryState from './Country-state/Country-state'; 
 import CategoryForm from './Admin/category/CategoryForm';
 import CategoryList from './Admin/category/CategoryList';
 import CategoryView from './Admin/category/CategoryView';
@@ -15,6 +16,11 @@ import CategoryUpdate from './Admin/category/CategoryUpdate';
 import NewsForm from './Admin/news/NewsForm';
 import NewsList from './Admin/news/NewsList';
 import NewsView from './Admin/news/NewsView';
+import FileUpload from './Admin/Imageupload';
+import VideoList from './Admin/Uploads/Videouploadlist';
+import Addvideo from './Admin/Uploads/Videoaddupload';
+import Updatevideo from './Admin/Uploads/Videoupdatepage';
+import Viewvideo from './Admin/Uploads/Videoview';
 import ApurvaHorizon from './Admin/pages/ApurvaHorizon';
 import RegionAdd from './Admin/regional/RegionAdd'
 import RegionList from './Admin/regional/RegionList';
@@ -30,8 +36,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Web />} />
-          {/* <Route path="/" element={<CountryState />} /> */}
           <Route path="/admin" element={<Admin />} >
+          <Route path="country-state" element={<CountryState />} />
             <Route path="content-type" element={<List />} />
             <Route path="apurva-horizon" element={<ApurvaHorizon />} />
             <Route path="news/add" element={<NewsForm />} />
@@ -45,6 +51,12 @@ function App() {
             <Route path="category-type/view/:id" element={<CategoryView />} />
             <Route path="category-type/update/:id" element={<CategoryUpdate />} />
             <Route path="regional-news/add" element={<RegionAdd />} />
+            <Route path="upload" element={<FileUpload />} />
+            <Route path="video-upload/list" element={<VideoList />} />
+            <Route path="video-upload/addvideo" element={<Addvideo />} />
+            <Route path="video-upload/update/:id" element={<Updatevideo />} />
+            <Route path="video-upload/view/:id" element={<Viewvideo />} />
+          {/* </Route>           */}
             <Route path="regional-news/list" element={<RegionList />} />
             <Route path="regional-news/view/:id" element={<RegionView />} />
             <Route path="regional-news/update/:id" element={<RegionUpdate />} />

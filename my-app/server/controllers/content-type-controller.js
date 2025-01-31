@@ -1,4 +1,4 @@
-const ContentType = require("../models/content-type-model")
+// const ContentType = require("../models/content-type-model")
 const { response } = require('express');
 const connectDB = require('../utils/db');
 const { ObjectId } = require('mongodb');
@@ -72,6 +72,7 @@ const deleteItem = async(req,res)=>{
     }
 
 }
+
 //fetching for listing it out on category form 
 const fetchAllContentType = async(req,res)=>{
     const collectionName = "content-type" 
