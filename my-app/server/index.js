@@ -5,7 +5,9 @@ const contentType = require('./routers/content-type-router');
 const categoryType = require('./routers/category-type-router');
 const fileUploadRouter = require('./routers/file-upload-router');
 const newsRouter = require('./routers/news-router');
+const regionalNewsRouter = require('./routers/regional-news-router');
 const searchRouter = require('./routers/search-router');
+const sensorshipRouter = require('./routers/sensorship-router');
 
 const cors = require('cors');
 const connectDb = require('./utils/db');
@@ -25,7 +27,9 @@ app.use('/api/content-type', contentType)
 app.use('/api/file', fileUploadRouter);
 app.use('/api/category-type', categoryType)
 app.use('/api/news', newsRouter)
+app.use('/api/regional-news', regionalNewsRouter)
 app.use('/api/search', searchRouter)
+app.use('/api/sensorship-news', sensorshipRouter)
 
 
 

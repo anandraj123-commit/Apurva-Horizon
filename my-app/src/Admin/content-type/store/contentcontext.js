@@ -9,7 +9,7 @@ export const ListProvider = ({ children }) => {
     
     const fetchData = async (collectionName, filters = {}, page = 1, limit = 10, sort = {}) => {
         try {
-            console.log(sort);
+            // console.log(sort);
             
             const response = await fetch(
                 `http://localhost:5000/api/search/${collectionName}?page=${page+1}&limit=${limit}&sort=${JSON.stringify(sort)}&filters=${JSON.stringify(filters)}`,
@@ -26,7 +26,7 @@ export const ListProvider = ({ children }) => {
             }
     
             const data = await response.json();
-            console.log(sort);  // Debugging response
+            // console.log(sort);  // Debugging response
     
             return data;
         } catch (error) {

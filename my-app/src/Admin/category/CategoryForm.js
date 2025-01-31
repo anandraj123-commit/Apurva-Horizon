@@ -151,7 +151,7 @@ export default function CategoryForm() {
         } catch (error) {
             console.log(error);
         }
-    }
+    }   
 
     return (
 

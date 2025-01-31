@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 // import {NavLink} from 'react-router-dom;
 // import { Navigate } from 'react-router-dom';
-import { NavLink } from 'react-router-dom'; 
+import { NavLink } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
@@ -20,11 +20,12 @@ const useStyles = makeStyles({
   },
 });
 
-export default function MediaCard({url,redirectTo,title}) {
+export default function MediaCard({ url, redirectTo, title }) {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root} className="w-25">
+    <Card className="w-25">
+      <NavLink to={redirectTo} >
         <CardMedia
           className={classes.media}
           image={url}
@@ -38,14 +39,8 @@ export default function MediaCard({url,redirectTo,title}) {
             Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
             across all continents except Antarctica
           </Typography> */}
-        </CardContent>  
-      <CardActions>
-      <NavLink to={redirectTo}>
-        <Button size="small" color="primary">
-          Open
-        </Button>
+        </CardContent>
       </NavLink>
-      </CardActions>
     </Card>
   );
 }

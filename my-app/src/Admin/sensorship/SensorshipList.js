@@ -65,7 +65,7 @@ const theme: Theme = {
 
 
 
-const NewsList = () => {
+const SensorshipList = () => {
     const [list, setList] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
@@ -155,7 +155,7 @@ const NewsList = () => {
         const fetchDataAsync = async () => {
             try {
                 const activeSort = getActiveSort(sortOrder);
-                const result = await fetchData("news", filters, page, rowsPerPage, activeSort);
+                const result = await fetchData("sensorship-news", filters, page, rowsPerPage, activeSort);
                 setList(result.results);  // Populate the list with data
                 setTotalCount(result.totalCount);  // Set total count for pagination
             } catch (error) {
@@ -229,8 +229,8 @@ const NewsList = () => {
                 <>
                     <CustomSeparator />
                     <div className="container d-flex flex-row justify-content-between align-self-center">
-                        <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>News</p>
-                        <buttonCONTENT
+                        <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>Sensorship</p>
+                        {/* <buttonCONTENT
                             type="button"
                             className="btn btn-success"
                             onClick={() => {
@@ -243,8 +243,7 @@ const NewsList = () => {
                             }}
                         >
                             ADD&nbsp;+
-                        </buttonCONTENT>
-
+                        </buttonCONTENT> */}    
                     </div>
                     <br></br>
 
@@ -368,47 +367,30 @@ const NewsList = () => {
                                                     </TableCell> */}
                                             <TableCell className="text-center" colSpan={3} >
                                                 <div className="d-flex justify-content-center gap-3">
+                                                <button
+                                                        type="button"
+                                                        className="btn"
+                                                        onClick={() => navigate(`/admin/sensorship-news/view/${entry._id}`)}
+                                                    >
+                                                        <i
+                                                            className="fa-solid fa-eye fs-3"
+                                                            style={{ color: '#63E6BE' }}
+                                                        ></i>
+                                                    </button>
                                                     <button
                                                         type="button"
                                                         className="btn"
                                                         onClick={() => { requestHandler(entry._id) }}
 
                                                     >
-                                                        <i class="fa-solid fa-code-pull-request" 
-                                                        // style={{ color: "grey" }}
-                                                        ></i>
+                                                        <i class="fa-solid fa-xmark" style={{color: "#f52d0a"}}></i>
                                                     </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => { deleteHandler(entry._id) }}
-
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-trash fs-5"
-                                                            style={{ color: '#d71919' }}
-                                                        ></i>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => navigate(`/admin/category-type/update/${entry._id}`)}
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-pen-nib fs-4"
-                                                            style={{ color: '#FFD43B' }}
-                                                        ></i>
-                                                    </button>
-
                                                     <button
                                                         type="button"
                                                         className="btn"
                                                         onClick={() => navigate(`/admin/news/view/${entry._id}`)}
                                                     >
-                                                        <i
-                                                            className="fa-solid fa-eye fs-3"
-                                                            style={{ color: '#63E6BE' }}
-                                                        ></i>
+                                                        <i class="fa-solid fa-check" style={{color: "#63E6BE"}}></i>
                                                     </button>
                                                 </div>
                                             </TableCell>
@@ -438,4 +420,4 @@ const NewsList = () => {
     );
 };
 
-export default NewsList;
+export default SensorshipList;

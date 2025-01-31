@@ -7,7 +7,7 @@ import Add from './Admin/content-type/Add';
 import List from './Admin/content-type/List';
 import View from './Admin/content-type/View';
 import Update from './Admin/content-type/Update';
-import CountryState from './Country-state/Country-state'; // Import CountryState
+// import CountryState from './Country-state/Country-state'; // Import CountryState
 import CategoryForm from './Admin/category/CategoryForm';
 import CategoryList from './Admin/category/CategoryList';
 import CategoryView from './Admin/category/CategoryView';
@@ -16,7 +16,12 @@ import NewsForm from './Admin/news/NewsForm';
 import NewsList from './Admin/news/NewsList';
 import NewsView from './Admin/news/NewsView';
 import ApurvaHorizon from './Admin/pages/ApurvaHorizon';
+import RegionAdd from './Admin/regional/RegionAdd'
 import RegionList from './Admin/regional/RegionList';
+import RegionView from './Admin/regional/RegionView';
+import RegionUpdate from './Admin/regional/RegionUpdate';
+import SensorshipList from './Admin/sensorship/SensorshipList';
+import SensorshipView from './Admin/sensorship/SensorshipView';
 
 
 function App() {
@@ -39,7 +44,12 @@ function App() {
             <Route path="category-type/list" element={<CategoryList />} />
             <Route path="category-type/view/:id" element={<CategoryView />} />
             <Route path="category-type/update/:id" element={<CategoryUpdate />} />
+            <Route path="regional-news/add" element={<RegionAdd />} />
             <Route path="regional-news/list" element={<RegionList />} />
+            <Route path="regional-news/view/:id" element={<RegionView />} />
+            <Route path="regional-news/update/:id" element={<RegionUpdate />} />
+            <Route path="sensorship-news/list" element={<SensorshipList />} />
+            <Route path="sensorship-news/view/:id" element={<SensorshipView />} />
           </Route>
         </Routes>
       </Router>
