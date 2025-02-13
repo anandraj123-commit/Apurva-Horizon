@@ -5,10 +5,15 @@ const {paginatedResults} = require('../controllers/pagination-controller')
 const router = express.Router()
 
 
-// router.route('/add').post(contentTypeController.addList)
-// router.route('/update/:id').put(contentTypeController.updateList)
+router.route('/add').post(newsController.addNews)
+// router.route('/update/:id').put(newsController.updateList)
+router.route('/suggest/:id').put(newsController.suggestUpdate)
+router.route('/approve/:id').put(newsController.approvedUpdate)
+router.route('/reject/:id').put(newsController.rejectedUpdate)
+router.route('/update/sensorship/:id').put(newsController.updateSensorship)
 router.route('/view/:id').get(newsController.viewListItem)
 router.route('/delete/:id').delete(newsController.deleteItem)
+router.route('/changeStatus/:id').put(newsController.ActiveToInactiveReadyQueue)
 router.route('/fetchall').get(newsController.fetchAllNews)
 router.route('/users').get(paginatedResults("news"), paginationController)
 

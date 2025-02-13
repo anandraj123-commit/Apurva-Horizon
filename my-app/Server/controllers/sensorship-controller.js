@@ -4,39 +4,30 @@ const connectDB = require('../utils/db');
 const { ObjectId } = require('mongodb');
 
 
-const requestController = async (req, res) => {
+
+
+const updateList = async(req, res) => {
+    const { id } = req.params; // Get the ID from the route
+    const { title, status ,description } = req.body; // Get updated data from the request body
+
     try {
-        const listItem = req.body;
         const dbo =await connectDB()
-        await dbo.collection("sensorship-news").insertOne(listItem)
-        return res.status(200).json({ message: "Successfully requested ✅" ,type:"success",timeout:3000})
+        
+        const updatedContentType = await dbo.collection("content-type").updateOne(
+            { _id: new ObjectId(id) }, 
+            { $set: { title,status,description} }
+        );
+
+        if (!updatedContentType) {
+            return res.status(404).json({ message: 'Content type not found' });
+        }
+
+        res.json({ message: 'Successfully Updated ✅', data: updatedContentType });
     } catch (error) {
-        return res.status(500).json({ message: "Failed to request this item ❌" ,type:"success",timeout:3000})
+        // console.error('Error updating content type:', error);
+        res.status(500).json({ message: 'Internal server error ❌' });
     }
 }
-
-// const updateList = async(req, res) => {
-//     const { id } = req.params; // Get the ID from the route
-//     const { title, status ,description } = req.body; // Get updated data from the request body
-
-//     try {
-//         const dbo =await connectDB()
-        
-//         const updatedContentType = await dbo.collection("content-type").updateOne(
-//             { _id: new ObjectId(id) }, 
-//             { $set: { title,status,description} }
-//         );
-
-//         if (!updatedContentType) {
-//             return res.status(404).json({ message: 'Content type not found' });
-//         }
-
-//         res.json({ message: 'Successfully Updated ✅', data: updatedContentType });
-//     } catch (error) {
-//         // console.error('Error updating content type:', error);
-//         res.status(500).json({ message: 'Internal server error ❌' });
-//     }
-// }
 
 // const viewListItem = async(req,res)=>{
 //     const { id } = req.params;
@@ -80,4 +71,4 @@ const fetchAllContentType = async(req,res)=>{
     return res.send(data)
 }
 
-module.exports = { requestController };
+// module.exports = { requestController };

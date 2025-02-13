@@ -29,7 +29,12 @@ const searchFunctionality = async (req, res) => {
         for (const [field, value] of Object.entries(parsedFilters)) {
             if (field === '_id' && ObjectId.isValid(value)) {
                 matchStage.$match[field] = new ObjectId(value);
-            } else {
+            } 
+            else if (typeof value === 'boolean') {
+                // Handle boolean values
+                matchStage.$match[field] = value;
+            } 
+            else {
                 matchStage.$match[field] = { $regex: value, $options: 'i' };
             }
         }

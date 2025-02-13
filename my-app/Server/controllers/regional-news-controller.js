@@ -83,5 +83,98 @@ const fetchAllCategoryData = async(req,res)=>{
     return res.send(data)
 }
 
+const updateSensorship = async (req, res) => {
+    const { id } = req.params; // Extract the ID from the route parameter
+    try {
+        const dbo = await connectDB(); // Connect to the database
 
-module.exports={addRegionalNews,viewRegionalNews,deleteRegionalNews,updateRegionalNews,fetchAllCategoryData}
+        // Update the main content and subtypes
+        const updatedToPending = await dbo.collection("regional-news").updateOne(
+            { _id: new ObjectId(id) }, // Match the document by ID
+            {
+                $set: {
+                    sensorship: { stage: "pending", feedback: null }
+                },
+            }
+        );
+        res.status(200).json({ message: 'Sent for approval ✅'});
+    } catch (error) {
+        // console.error('Error updating category:', error);
+        res.status(500).json({ message: 'Failed to send for approval ❌' });
+    }
+};
+
+//sensorship things
+
+const suggestUpdate = async (req, res) => {
+    const { id } = req.params;
+  const { suggestion } = req.body; // Getting suggestion from the request body
+
+  try {
+      const dbo = await connectDB(); // Connect to the database
+    // Find the news item by ID
+
+    const updatedToPending = await dbo.collection("regional-news").updateOne(
+        { _id: new ObjectId(id) }, // Match the document by ID
+        {
+            $set: {
+                sensorship: { stage: "review", feedback: suggestion }
+            },
+        }
+    );
+
+    res.status(200).json({ message: 'Suggestion updated successfully ✅'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error, failed to update suggestion ❌' });
+  }
+};
+const approvedUpdate = async (req, res) => {
+    const { id } = req.params;
+  const { suggestion } = req.body; // Getting suggestion from the request body
+
+  try {
+      const dbo = await connectDB(); // Connect to the database
+    // Find the news item by ID
+
+    const updatedToPending = await dbo.collection("regional-news").updateOne(
+        { _id: new ObjectId(id) }, // Match the document by ID
+        {
+            $set: {
+                sensorship: { stage: "approved", feedback: null }
+            },
+        }
+    );
+
+    res.status(200).json({ message: 'Suggestion updated successfully ✅'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error, failed to update suggestion ❌' });
+  }
+};
+const rejectedUpdate = async (req, res) => {
+    const { id } = req.params;
+  const { reason } = req.body; // Getting suggestion from the request body
+
+  try {
+      const dbo = await connectDB(); // Connect to the database
+    // Find the news item by ID
+
+    const updatedToPending = await dbo.collection("regional-news").updateOne(
+        { _id: new ObjectId(id) }, // Match the document by ID
+        {
+            $set: {
+                sensorship: { stage: "rejected", feedback: reason }
+            },
+        }
+    );
+
+    res.status(200).json({ message: 'Suggestion updated successfully ✅'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error, failed to update suggestion ❌' });
+  }
+};
+
+
+module.exports={addRegionalNews,viewRegionalNews,deleteRegionalNews,updateRegionalNews,fetchAllCategoryData,suggestUpdate,approvedUpdate,rejectedUpdate,updateSensorship}

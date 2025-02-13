@@ -117,6 +117,14 @@ export default function RegionView() {
                             <td style={styles.valueColumn}>{document.selectedCity || "N/A"}</td>
                         </tr>
                         <tr>
+                            <td style={styles.titleColumn}>Sensorship Stage</td>
+                            <td style={styles.valueColumn}>{document.sensorship?.stage}</td>
+                        </tr>
+                        <tr>
+                            <td style={styles.titleColumn}>Sensorship Feedback</td>
+                            <td style={styles.valueColumn}>{document.sensorship?.feedback}</td>
+                        </tr>
+                        <tr>
                             <td style={styles.titleColumn}>Image</td>
                             <td style={styles.valueColumn}>
                                 <img

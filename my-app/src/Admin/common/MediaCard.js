@@ -1,31 +1,27 @@
 import React from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
-// import Card from '@material-ui/core/Card';
-// import CardActionArea from '@material-ui/core/CardActionArea';
-// Replace all @material-ui/core imports with these:
-import { Card, CardActionArea, CardActions, CardContent, CardMedia } from '@mui/material';
-import Button from '@mui/material/Button';
+import { Card, CardContent, CardMedia } from '@mui/material';
 import Typography from '@mui/material/Typography';
-// For makeStyles, use:
-import { makeStyles } from '@mui/styles'; // Ensure @mui/styles is installed
-
-// import CardActions from '@material-ui/core/CardActions';
-// import CardContent from '@material-ui/core/CardContent';
-// import CardMedia from '@material-ui/core/CardMedia';
-// import Button from '@material-ui/core/Button';
-// import Typography from '@material-ui/core/Typography';
-
-
-// import {NavLink} from 'react-router-dom;
-// import { Navigate } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    minWidth: 345,
+    width: "25%",
+    transition: 'transform 0.3s ease-in-out', // Smooth zoom effect
+    '&:hover': {
+      transform: 'scale(1.05)', // Zoom effect
+    },
   },
   media: {
     height: 300,
+  },
+  navLink: {
+    '&:hover': {
+      textDecoration: 'none', // Zoom effect
+    },
+    color: 'inherit', // Maintain text color
+    display: 'block', // Ensure the whole card is clickable
   },
 });
 
@@ -33,21 +29,13 @@ export default function MediaCard({ url, redirectTo, title }) {
   const classes = useStyles();
 
   return (
-    <Card className="w-25">
-      <NavLink to={redirectTo} >
-        <CardMedia
-          className={classes.media}
-          image={url}
-          title="Contemplative Reptile"
-        />
+    <Card className={classes.root}>
+      <NavLink to={redirectTo} className={classes.navLink}>
+        <CardMedia className={classes.media} image={url} title={title} />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {title}
           </Typography>
-          {/* <Typography variant="body2" color="textSecondary" component="p">
-            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-            across all continents except Antarctica
-          </Typography> */}
         </CardContent>
       </NavLink>
     </Card>

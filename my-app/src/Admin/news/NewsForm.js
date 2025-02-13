@@ -24,6 +24,10 @@ export default function NewsForm() {
     shortDescription: '',
     description: '',
     status: '',
+    sensorship: {
+      status: 'request',
+      feedback: null
+    },
     image: null,
   });
   const [contentTypes, setContentTypes] = useState([]);
@@ -68,22 +72,48 @@ export default function NewsForm() {
     setFormData((prev) => ({ ...prev, shortDescription: e.target.value }));
   };
 
+  const submitHandler = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/news/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      })
+      // const data = await response.json()
+      if (response.ok) {
+        // console.log("successfully posted");
+        Notification.success("successfully added")
+        navigate('/admin/news/list')
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
   return (
     <Card sx={{ minWidth: 275 }} className="w-lg-75 w-md-80 w-sm-100 mx-auto">
       <CardContent className="p-lg-7 p-md-5 p-sm-4 container">
         <h1 className="fs-1 fw-bold font-monospace">Add News</h1>
 
-        <FormControl fullWidth size="small" style={{ gap: '15px' }}>
+        <FormControl fullWidth size="small" style={{ gap: '20px' }}>
           {/* Type */}
           {/* <InputLabel id="type-select-label">Type</InputLabel> */}
           {/* <label htmlFor='type-select'>Type</label> */}
+
+          {/* seperating some code */}
+          <>
+          <InputLabel id="demo-select-small-label">Type</InputLabel>
           <Select
-            labelId="type-select-label"
-            id="type-select"
+            labelId="demo-select-small-label"
+            id="demo-select-small"
             value={formData.type}
+            label="Type"
             onChange={handleFormChange}
             name="type"
-            // label="Type"
           >
             {contentTypes.map((type, index) => (
               <MenuItem key={index} value={type.title}>
@@ -91,21 +121,59 @@ export default function NewsForm() {
               </MenuItem>
             ))}
           </Select>
-          {
-            subcategoryOptions.length===0?null:<Select
-            labelId="subcategory-select-label"
-            id="subcategory-select"
-            value={formData.subcategory}
+
+          </>
+          {/* seperating some code */}
+          {/* <Select
+            labelId="type-select-label"
+            id="type-select"
+            value={formData.type}
             onChange={handleFormChange}
-            name="subcategory"
-            // label="Subcategory"
+            name="type"
+          // label="Type"
           >
-            {subcategoryOptions.map((subcategory, index) => (
-              <MenuItem key={index} value={subcategory.name}>
-                {subcategory.name}
+            {contentTypes.map((type, index) => (
+              <MenuItem key={index} value={type.title}>
+                {type.title}
               </MenuItem>
             ))}
+          </Select> */}
+          {/* seperating some code */}
+
+          {
+            subcategoryOptions.length === 0 ? null :
+              <>
+              <InputLabel id="select-subcategory-label">Subcategory</InputLabel>
+          <Select
+            labelId="select-subcategory-label"
+            id="demo-select-small"
+            value={formData.subcategory}
+            label="Subcategory"
+            onChange={handleFormChange}
+            name="subcategory"
+          >
+            {subcategoryOptions.map((subcategory, index) => (
+                    <MenuItem key={index} value={subcategory.name}>
+                      {subcategory.name}
+                    </MenuItem>
+                  ))}
           </Select>
+                {/* <InputLabel id="subcategory-select-label">Subcategory</InputLabel>
+                <Select
+                  labelId="subcategory-select-label"
+                  id="subcategory-select"
+                  value={formData.subcategory}
+                  onChange={handleFormChange}
+                  name="subcategory"
+                  label="Subcategory"
+                >
+                  {subcategoryOptions.map((subcategory, index) => (
+                    <MenuItem key={index} value={subcategory.name}>
+                      {subcategory.name}
+                    </MenuItem>
+                  ))}
+                </Select> */}
+              </>
           }
           {/* Title */}
           <TextField
@@ -137,14 +205,14 @@ export default function NewsForm() {
             fullWidth
           />
           {/* Status */}
-          {/* <InputLabel id="status-select-label">Status</InputLabel> */}
+          <InputLabel id="status-select-label">Status</InputLabel>
           <Select
             labelId="status-select-label"
-            id="status-select"
+            // id="status-select"
             value={formData.status}
             onChange={handleFormChange}
             name="status"
-            // label="Status"
+          label="Status"
           >
             <MenuItem value="active">Active</MenuItem>
             <MenuItem value="inactive">Inactive</MenuItem>
@@ -169,9 +237,9 @@ export default function NewsForm() {
             variant="contained"
             color="success"
             endIcon={<SendIcon />}
-            onClick={() => console.log('Submit form', formData)}
+            onClick={submitHandler}
           >
-          Submit
+            Submit
           </Button>
         </FormControl>
       </CardContent>

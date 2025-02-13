@@ -144,9 +144,9 @@ export default function CategoryUpdate() {
                         style={{ width: '40%' }}
                         name="ContentType"
                     >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        <MenuItem value={ListItem.ContentType}>{ListItem.ContentType}</MenuItem>
+                        {/* <MenuItem value={20}>Twenty</MenuItem>
+                        <MenuItem value={30}>Thirty</MenuItem> */}
                     </Select>
                     <TextField
                         label="Title"
@@ -227,8 +227,8 @@ export default function CategoryUpdate() {
                                     }}
                                 >
                                     <div>
-                                        <strong>{item.title}</strong>
-                                        <p style={{ margin: '5px 0' }}>{item.description}</p>
+                                        <strong>{item.name}</strong>
+                                        <p style={{ margin: '5px 0' }}>{item.value}</p>
                                     </div>
                                     <div style={{ display: 'flex', gap: '10px' }}>
                                         <Button

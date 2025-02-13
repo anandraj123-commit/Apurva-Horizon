@@ -73,7 +73,7 @@ const SensorshipList = () => {
     const [searchDate, setSearchDate] = useState(''); // State for "Created At" filter
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [filters, setFilters] = useState({});  // <-- Add this line
+    const [filters, setFilters] = useState({"sensorship.stage":"pending"});  // <-- Add this line
     // const [requestDocument, setRequestDocument] = useState({});  // <-- Add this line
 
     const [sortOrder, setSortOrder] = useState({
@@ -155,7 +155,7 @@ const SensorshipList = () => {
         const fetchDataAsync = async () => {
             try {
                 const activeSort = getActiveSort(sortOrder);
-                const result = await fetchData("sensorship-news", filters, page, rowsPerPage, activeSort);
+                const result = await fetchData("news", filters, page, rowsPerPage, activeSort);
                 setList(result.results);  // Populate the list with data
                 setTotalCount(result.totalCount);  // Set total count for pagination
             } catch (error) {
@@ -188,37 +188,7 @@ const SensorshipList = () => {
         setSortOrder(updatedSortOrder);  // Update sort state
     };
 
-    //request for approval button logic
-    const requestHandler = async (id) => {
-        try {
-            const response = await fetch(
-                `http://localhost:5000/api/news/view/${id}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            if (response.ok) {
-                const data = await response.json();                
-                const responseSensor = await fetch(
-                    `http://localhost:5000/api/sensorship-news/request`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body:JSON.stringify(data)
-                    }
-                );  
-                const responseData = await responseSensor.json()
-                console.log(responseData);   
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    
 
     return (
         <>
@@ -377,7 +347,9 @@ const SensorshipList = () => {
                                                             style={{ color: '#63E6BE' }}
                                                         ></i>
                                                     </button>
-                                                    <button
+                                                    {/* commenting reject and approve option for sensorship inl list */}
+                                                    
+                                                    {/* <button
                                                         type="button"
                                                         className="btn"
                                                         onClick={() => { requestHandler(entry._id) }}
@@ -391,7 +363,7 @@ const SensorshipList = () => {
                                                         onClick={() => navigate(`/admin/news/view/${entry._id}`)}
                                                     >
                                                         <i class="fa-solid fa-check" style={{color: "#63E6BE"}}></i>
-                                                    </button>
+                                                    </button> */}
                                                 </div>
                                             </TableCell>
 

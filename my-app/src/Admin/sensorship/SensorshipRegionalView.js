@@ -10,8 +10,9 @@ import Link from "@mui/material/Link";
 import { Button, Stack, Box, TextareaAutosize } from '@mui/material';
 import ReviewPopup from "./ReviewPopup";
 
-export default function SensorshipView() {
+export default function SensorshipRegionalView() {
   const [document, setDocument] = useState({});
+  const [displayUpdateForm, setDisplayUpdateForm] = useState(false); // New state for the suggestion form
   const [suggestion, setSuggestion] = useState(""); // New state for the suggestion input
   const { tokens } = useTheme();
   const [open, setOpen] = useState(false);
@@ -20,14 +21,14 @@ export default function SensorshipView() {
   const [isReviewing, setIsReviewing] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
   const pathAfterView = location.pathname.split("/view/")[1];
-  
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const fetchSingleItem = async () => {
       const response = await fetch(
-        `http://localhost:5000/api/news/view/${pathAfterView}`,
+        `http://localhost:5000/api/regional-news/view/${pathAfterView}`,
         {
           method: "GET",
           headers: {
@@ -51,7 +52,7 @@ export default function SensorshipView() {
     setIsReviewing(true);
     // Logic to update the suggestion (API request, etc.)
     const response = await fetch(
-      `http://localhost:5000/api/news/suggest/${document._id}`,
+      `http://localhost:5000/api/regional-news/suggest/${document._id}`,
       {
         method: "PUT",
         headers: {
@@ -76,9 +77,9 @@ export default function SensorshipView() {
       setIsApproving(false);
       return;
     }
-  
+
     const response = await fetch(
-      `http://localhost:5000/api/news/approve/${document._id}`,
+      `http://localhost:5000/api/regional-news/approve/${document._id}`,
       {
         method: "PUT",
         headers: {
@@ -86,28 +87,28 @@ export default function SensorshipView() {
         },
       }
     );
-  
+
     if (response.ok) {
       alert("Approved successfully!");
       setDocument(prevDocument => ({ ...prevDocument, suggestion })); // Optionally update state
     } else {
       alert("Failed to approve.");
-      setIsApproving(false);
+      setIsApproving(true);
     }
   };
-  
+
 
   const handleRejectUpdate = async () => {
     setIsRejecting(true);
     const reason = prompt("Please enter the reason for rejection:");
     if (!reason) {
       alert("Rejection reason is required.");
-      setIsRejecting(false);
+    setIsRejecting(false);
       return;
     }
-  
+
     const response = await fetch(
-      `http://localhost:5000/api/news/reject/${document._id}`,
+      `http://localhost:5000/api/regional-news/reject/${document._id}`,
       {
         method: "PUT",
         headers: {
@@ -116,16 +117,16 @@ export default function SensorshipView() {
         body: JSON.stringify({ reason }), // Send rejection reason
       }
     );
-  
+
     if (response.ok) {
       alert("Rejected successfully!");
       // setDocument(prevDocument => ({ ...prevDocument, suggestion })); // Optionally update state
     } else {
       alert("Failed to reject.");
-      setIsRejecting(false);
+    setIsRejecting(false);
     }
   };
-  
+
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb" className="my-4">
@@ -151,31 +152,58 @@ export default function SensorshipView() {
           {document.type || "News Details"}
         </Heading>
 
-        <table style={{ width: "80%", borderCollapse: "collapse" }} border="0" className="mx-auto">
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            marginTop: "2rem",
+          }}
+          border="0"
+          className="mx-auto"
+        >
           <tbody>
+            {/* <tr>
+              <td style={{ ...styles.titleColumn, backgroundColor: "#f1f5f9" }}>News Title</td>
+              <td style={styles.valueColumn}>{document.newsTitle || "N/A"}</td>
+            </tr> */}
             <tr>
-              <td style={styles.titleColumn}>Type</td>
-              <td style={styles.valueColumn}>{document.type || "N/A"}</td>
+              <td style={{ ...styles.titleColumn, color: "#4CAF50" }}>ID</td>
+              <td style={styles.valueColumn} >
+                <span style={{ color: "#4CAF50", fontWeight: "bold" }}  >
+                  {document._id || "N/A"}
+                </span>
+              </td>
             </tr>
             <tr>
-              <td style={styles.titleColumn} className="text-success">ID</td>
-              <td style={styles.valueColumn} className="text-success">{document._id || "N/A"}</td>
+              <td style={styles.titleColumn}>News Description</td>
+              <td style={styles.valueColumn}>{document.newsDescription || "N/A"}</td>
             </tr>
             <tr>
-              <td style={styles.titleColumn}>Subcategory</td>
-              <td style={styles.valueColumn}>{document.subcategory || "N/A"}</td>
-            </tr>
-            <tr>
-              <td style={styles.titleColumn}>Short Description</td>
-              <td style={styles.valueColumn}>{document.shortDescription || "N/A"}</td>
-            </tr>
-            <tr>
-              <td style={styles.titleColumn}>Description</td>
-              <td style={styles.valueColumn}>{document.description || "No description provided."}</td>
+              <td style={styles.titleColumn}>Display Time</td>
+              <td style={styles.valueColumn}>
+                {document.displayTime ?
+                  new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  }).format(new Date(document.displayTime)) : "N/A"}
+              </td>
             </tr>
             <tr>
               <td style={styles.titleColumn}>Status</td>
-              <td style={styles.valueColumn}>{document.status ? 'active' : 'inactive' || "N/A"}</td>
+              <td style={styles.valueColumn}>{document.status ? "Active" : "Inactive"}</td>
+            </tr>
+            <tr>
+              <td style={styles.titleColumn}>Country</td>
+              <td style={styles.valueColumn}>{document.selectedCountry || "N/A"}</td>
+            </tr>
+            <tr>
+              <td style={styles.titleColumn}>State</td>
+              <td style={styles.valueColumn}>{document.selectedState || "N/A"}</td>
+            </tr>
+            <tr>
+              <td style={styles.titleColumn}>City</td>
+              <td style={styles.valueColumn}>{document.selectedCity || "N/A"}</td>
             </tr>
             <tr>
               <td style={styles.titleColumn}>Sensorship Stage</td>
@@ -192,7 +220,7 @@ export default function SensorshipView() {
                   src={document.imageUrl || "https://picsum.photos/100"}
                   alt="News"
                   style={{
-                    maxWidth: "100%",
+                    maxWidth: "100%", // Image fits the table width
                     height: "auto",
                     borderRadius: "4px",
                   }}
@@ -208,29 +236,29 @@ export default function SensorshipView() {
               variant="contained"
               color="success"
               fullWidth
-            onClick={handleApproveUpdate}
-            disabled={isApproving}
+              onClick={handleApproveUpdate}
+              disabled={isApproving}
             >
-             {isApproving ? "Approved" : "Approve"}
+              {isApproving ? "Approved" : "Approve"}
             </Button>
             <Button
               variant="contained"
               color="warning"
               fullWidth
-            onClick={handleOpen}
-            disabled={isReviewing}
+              onClick={handleOpen}
+              disabled={isReviewing}
             >
               {isReviewing ? "Reviewed" : "Review"}
             </Button>
-            <ReviewPopup open={open} handleClose={handleClose} 
-            handleSubmit={handleSuggestSubmit}
-             />
+            <ReviewPopup open={open} handleClose={handleClose}
+              handleSubmit={handleSuggestSubmit}
+            />
             <Button
               variant="contained"
               color="error"
               fullWidth
-            onClick={handleRejectUpdate}
-            disabled={isRejecting}
+              onClick={handleRejectUpdate}
+              disabled={isRejecting}
             >
               {isRejecting ? "Rejected" : "Reject"}
             </Button>

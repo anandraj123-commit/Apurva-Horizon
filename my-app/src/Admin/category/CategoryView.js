@@ -89,8 +89,8 @@ export default function CategoryView() {
                     document.subtype.map((entries, index) => (
                       <tr key={index}>
                         <td>{index + 1}</td>
-                        <td>{entries.title}</td>
-                        <td>{entries.description}</td>
+                        <td>{entries.name}</td>
+                        <td>{entries.value}</td>
                       </tr>
                     ))
                   }

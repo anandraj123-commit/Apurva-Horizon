@@ -2,18 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TablePagination from '@mui/material/TablePagination';
 import ReactSearchBox from "react-search-box";
-import Button from '@mui/material/Button';
-import { MdModeEditOutline } from "react-icons/md";
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { RiDeleteBinLine } from "react-icons/ri";
-import { Switch } from '@mui/material';
-import { TableSortLabel } from '@mui/material';
-import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
     Table,
     TableHead,
@@ -26,18 +16,13 @@ import {
     Loader,
     Breadcrumbs,
 } from '@aws-amplify/ui-react';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
-import Sidebar from '../common/Sidebar';
-import { Badge } from '@mui/material';
 import CustomSeparator from "../common/Breadcrumbs";
 import '../asset/css/Loader.css';
 import '../asset/css/common.css';
 import './css/List.css';
-import Input from '../Inputcomponent/Inputs.js';
 import { useList } from '../content-type/store/contentcontext.js';
 import Notification from '../../Modules/Notification.js';
-import { createTheme } from '@mui/material/styles';
+import Input from '../Inputcomponent/Inputs.js';
 
 
 const theme: Theme = {
@@ -68,13 +53,12 @@ const theme: Theme = {
 
 
 
-const NewsList = () => {
+const IndexingNews = () => {
     const [list, setList] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
     const [buttonClicked, setButtonClicked] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchDate, setSearchDate] = useState(''); // State for "Created At" filter
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filters, setFilters] = useState({});  // <-- Add this line
@@ -82,17 +66,16 @@ const NewsList = () => {
 
     const [sortOrder, setSortOrder] = useState({
         "title": 0,
-        "type": 0,
+        "name": 0,
         "subcategory": 0,
         "description": 0,
-        "_id": 0
+        "_id": 0,
+        "createdAt": 0
     });
     const navigate = useNavigate();
 
     // for loading
     const [loading, setLoading] = useState(false);
-
-    const { fetchData } = useList()
 
 
     const deleteHandler = async (id) => {
@@ -123,12 +106,14 @@ const NewsList = () => {
             ...filters,  // Maintain existing filters
             [name]: value // Update field dynamically
         };
+        // console.log(updatedFilters);
+
         setFilters(updatedFilters);  // Store for pagination
     };
 
-    const toggleOrder = () => {
-        setIsReversed(!isReversed);
-    };
+    // const toggleOrder = () => {
+    //     setIsReversed(!isReversed);
+    // };
 
     // const finalList = isReversed ? [...list].reverse() : list;
 
@@ -138,7 +123,7 @@ const NewsList = () => {
 
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(Number(event.target.value));
         setPage(0); // Reset to the first page
     };
 
@@ -156,10 +141,39 @@ const NewsList = () => {
     }
 
     useEffect(() => {
+        const fetchData = async (collectionName, filters = {}, page = 1, limit = 10, sort = {}) => {
+            try {
+                // console.log(sort);
+
+                const response = await fetch(
+                    `http://localhost:5000/api/news-indexing/list/${collectionName}?page=${page + 1}&limit=${limit}&sort=${JSON.stringify(sort)}&filters=${JSON.stringify(filters)}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+
+                const data = await response.json();
+                // console.log(sort);  // Debugging response
+
+                return data;
+            } catch (error) {
+                console.error("Error in fetchData:", error);
+                return { results: [], totalCount: 0 };
+            }
+        };
         const fetchDataAsync = async () => {
             try {
                 const activeSort = getActiveSort(sortOrder);
-                const result = await fetchData("news", filters, page, rowsPerPage, activeSort);
+                const result = await fetchData("category-type", filters, page, rowsPerPage, activeSort);
+                console.log(result.results);
+
                 setList(result.results);  // Populate the list with data
                 setTotalCount(result.totalCount);  // Set total count for pagination
             } catch (error) {
@@ -212,6 +226,7 @@ const NewsList = () => {
         }
     };
 
+
     const renderSensorshipStatus = (sensorship, id) => {
         switch (sensorship.stage) {
             case "request":
@@ -226,19 +241,19 @@ const NewsList = () => {
                 return <button className="btn btn-danger equal-btn">Rejected</button>;
             case "review":
                 return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
-                <button 
-                  className="btn btn-info" 
-                  style={{ height: "25px", width: "110px", display: "flex", alignItems: "center", justifyContent: "center",fontSize:"10px" }}
-                >
-                  Review
-                </button>
-                <button 
-                  className="btn" 
-                  style={{ height: "15px", width: "130px", backgroundColor: "purple", color: "white", display: "flex", alignItems: "center", justifyContent: "center",fontSize:"10px" }}
-                >
-                  Re-Request
-                </button>
-              </div>
+                    <button
+                        className="btn btn-info"
+                        style={{ height: "25px", width: "110px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}
+                    >
+                        Review
+                    </button>
+                    <button
+                        className="btn"
+                        style={{ height: "15px", width: "130px", backgroundColor: "purple", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}
+                    >
+                        Re-Request
+                    </button>
+                </div>
             case "pending":
                 return <button className="btn btn-warning equal-btn" style={{ cursor: "default" }}>Pending</button>;
             default:
@@ -254,22 +269,25 @@ const NewsList = () => {
 
                 <>
                     <CustomSeparator />
+                    <div className="container mt-4">
+                        <h3>Select a Date</h3>
+                        <div className="border p-3 rounded">
+                            <DatePicker
+                                selected={selectedDate}
+                                onChange={(date) => {
+                                    if (date) {
+                                        const formattedDate = date.toISOString().split("T")[0]; // Extracts YYYY-MM-DD
+                                        searchHandler(formattedDate, "createdAt"); // Send only the date part
+                                        setSelectedDate(date);
+                                    }
+                                }}
+                                inline
+                            />
+                        </div>
+                        <p className="mt-2">Selected Date: {selectedDate.toDateString()}</p>
+                    </div>
                     <div className="container d-flex flex-row justify-content-between align-self-center">
                         <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>News</p>
-                        <buttonCONTENT
-                            type="button"
-                            className="btn btn-success"
-                            onClick={() => {
-                                setLoading(true);
-                                {
-                                    loading ? <div className="modal">
-                                        <div className="loader"></div>
-                                    </div> : (navigate('/admin/news/add'))
-                                }
-                            }}
-                        >
-                            ADD&nbsp;+
-                        </buttonCONTENT>
 
                     </div>
                     <br></br>
@@ -300,12 +318,12 @@ const NewsList = () => {
                                         <TableCell as="th">
                                             <div className="sorting_button" onClick={() => changeSortOrder("type")} style={{ cursor: 'pointer' }}>
                                                 Type
-                                                <SortSymbol sortOrder={sortOrder.type} />
+                                                <SortSymbol sortOrder={sortOrder.title} />
                                             </div>
                                             <ReactSearchBox
                                                 placeholder="Search"
-                                                onChange={(value) => searchHandler(value, "type")}
-                                                onClear={() => searchHandler("", "type")} className="w-75"
+                                                onChange={(value) => searchHandler(value, "title")}
+                                                onClear={() => searchHandler("", "title")} className="w-75"
                                                 style={{
                                                     marginTop: '200px',
                                                     padding: '4px',
@@ -316,43 +334,7 @@ const NewsList = () => {
                                         </TableCell>
                                         <TableCell as="th">
                                             <div className="sorting_button" onClick={() => changeSortOrder("subcategory")} style={{ cursor: 'pointer' }}>
-                                                Subcategory
-                                                <SortSymbol sortOrder={sortOrder.subcategory} />
-                                            </div>
-                                            <ReactSearchBox
-                                                placeholder="Search"
-                                                onChange={(value) => searchHandler(value, "subcategory")}
-                                                onClear={() => searchHandler("", "subcategory")}
-                                                className="w-75"
-                                                style={{
-                                                    marginTop: '200px',
-                                                    padding: '4px',
-                                                    height: '40px',
-                                                    width: '30px',
-                                                }}
-                                            />
-                                        </TableCell>
-                                        <TableCell as="th">
-                                            <div className="sorting_button" onClick={() => changeSortOrder("title")} style={{ cursor: 'pointer' }}>
-                                                Title
-                                                <SortSymbol sortOrder={sortOrder.title} />
-                                            </div>
-                                            <ReactSearchBox
-                                                placeholder="Search"
-                                                onChange={(value) => searchHandler(value, "title")}
-                                                onClear={() => searchHandler("", "title")}
-                                                className="w-75"
-                                                style={{
-                                                    marginTop: '200px',
-                                                    padding: '4px',
-                                                    height: '40px',
-                                                    width: '30px',
-                                                }}
-                                            />
-                                        </TableCell>
-                                        <TableCell as="th">
-                                            <div className="sorting_button" onClick={() => changeSortOrder("description")} style={{ cursor: 'pointer' }}>
-                                                Description
+                                                description
                                                 <SortSymbol sortOrder={sortOrder.description} />
                                             </div>
                                             <ReactSearchBox
@@ -368,60 +350,83 @@ const NewsList = () => {
                                                 }}
                                             />
                                         </TableCell>
-                                        <TableCell as="th" style={{ textAlign: 'center', fontSize: '15px' }}>Sensorship</TableCell>
+                                        <TableCell as="th">
+                                            <div className="sorting_button" onClick={() => changeSortOrder("title")} style={{ cursor: 'pointer' }}>
+                                                Subtype
+                                                <SortSymbol sortOrder={sortOrder.name} />
+                                            </div>
+                                            <ReactSearchBox
+                                                placeholder="Search"
+                                                onChange={(value) => searchHandler(value, "subtypes.name")}
+                                                onClear={() => searchHandler("", "subtypes.name")}
+                                                className="w-75"
+                                                style={{
+                                                    marginTop: '200px',
+                                                    padding: '4px',
+                                                    height: '40px',
+                                                    width: '30px',
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell as="th">
+                                            <div className="sorting_button" onClick={() => changeSortOrder("createdAt")} style={{ cursor: 'pointer' }}>
+                                                Display date
+                                                <SortSymbol sortOrder={sortOrder.createdAt} />
+                                            </div>
+                                        </TableCell>
+
+                                        {/* <TableCell as="th" style={{ textAlign: 'center', fontSize: '15px' }}>Sensorship</TableCell> */}
                                         <TableCell as="th" colSpan={3} style={{ textAlign: 'center', fontSize: '15px' }}>Activity</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <tbody>
                                     {list.map((entry, index) => (
-                                        <TableRow key={entry._id}>
-                                            <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
+                                        <TableRow key={index}>
+                                            <TableCell className='text-center'>
+                                                {page * rowsPerPage + index + 1}
+                                            </TableCell>
                                             <TableCell>{entry._id}</TableCell>
-                                            <TableCell>{entry.type}</TableCell>
-                                            <TableCell>{entry.subcategory}</TableCell>
                                             <TableCell>{entry.title}</TableCell>
                                             <TableCell>{entry.description}</TableCell>
-                                            <TableCell className='d-flex justify-content-center'>
-                                                    {renderSensorshipStatus(entry.sensorship, entry._id)}
+                                            <TableCell>{entry.subtypes.name} ({entry.subtypes.value})</TableCell>
+                                            <TableCell>
+                                                {new Intl.DateTimeFormat('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                }).format(new Date(entry.createdAt))}
                                             </TableCell>
-                                            <TableCell className="text-center" colSpan={3} >
-
+                                            <TableCell className="text-center" colSpan={3}>
                                                 <div className="d-flex justify-content-center gap-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => { deleteHandler(entry._id) }}
+                                                    {entry.subtypes.used ? (
+                                                        <>
+                                                            <button
+                                                                type="button"
+                                                                className="btn"
+                                                                onClick={() => navigate(`/admin/category-type/update/${entry._id}`)}
+                                                            >
+                                                                <i className="fa-solid fa-pen-nib fs-4" style={{ color: '#FFD43B' }}></i>
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className="btn"
+                                                                onClick={() => navigate(`/admin/category-type/view/${entry._id}`)}
+                                                            >
+                                                                <i className="fa-solid fa-eye fs-3" style={{ color: '#63E6BE' }}></i>
+                                                            </button>
 
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-trash fs-5"
-                                                            style={{ color: '#d71919' }}
-                                                        ></i>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => navigate(`/admin/category-type/update/${entry._id}`)}
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-pen-nib fs-4"
-                                                            style={{ color: '#FFD43B' }}
-                                                        ></i>
-                                                    </button>
-
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => navigate(`/admin/news/view/${entry._id}`)}
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-eye fs-3"
-                                                            style={{ color: '#63E6BE' }}
-                                                        ></i>
-                                                    </button>
+                                                        </>
+                                                    ) : (
+                                                        <button
+                                                            type="button"
+                                                            className="btn"
+                                                            onClick={() => navigate(`/admin/category-type/update/${entry._id}`)}
+                                                        >
+                                                            <i className="fa-solid fa-plus" style={{ color: "#1920f0" }}></i>
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </TableCell>
-
                                         </TableRow>
                                     ))}
                                 </tbody>
@@ -447,4 +452,4 @@ const NewsList = () => {
     );
 };
 
-export default NewsList;
+export default IndexingNews;

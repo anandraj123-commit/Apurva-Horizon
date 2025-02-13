@@ -74,7 +74,6 @@ const theme: Theme = {
 
 const NewsList = () => {
     const [list, setList] = useState([]);
-    const [buttonClicked, setButtonClicked] = useState(false);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -82,7 +81,7 @@ const NewsList = () => {
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
     // const [statusFilter, setStatusFilter] = useState('');
-    const [filters, setFilters] = useState({});  // <-- Add this line
+    const [filters, setFilters] = useState({"sensorship.stage":"pending"});  // <-- Add this line
 
     const [sortOrder, setSortOrder] = useState({
         "newsTitle": 0,
@@ -152,7 +151,7 @@ const NewsList = () => {
         };
 
         fetchDataAsync();
-    }, [page, rowsPerPage, sortOrder, filters,buttonClicked]); // Ensure to include sortOrder and filters as dependencies
+    }, [page, rowsPerPage, sortOrder, filters]); // Ensure to include sortOrder and filters as dependencies
 
     const getActiveSort = (sortOrder) => {
         const activeSort = {};
@@ -200,61 +199,6 @@ const NewsList = () => {
           Notification.error("Some backend error ❌");
         }
       };
-
-     //request for approval button logic
-    const sendApprovalRequest = async (id) => {
-        try {
-            const response = await fetch(`http://localhost:5000/api/regional-news/update/sensorship/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-            });
-
-            const responseData = await response.json()
-            if (response.ok) {
-                Notification.success(responseData.message)
-                setButtonClicked(!buttonClicked);
-            } else {
-                console.error('Failed to update category');
-            }
-        } catch (error) {
-            console.error('Error updating category:', error);
-        }
-    };
-
-    const renderSensorshipStatus = (sensorship, id) => {
-        switch (sensorship.stage) {
-          case "request":
-            return (
-              <button className="btn btn-primary equal-btn" onClick={() => sendApprovalRequest(id)}>
-                Request
-              </button>
-            );
-          case "approved":
-            return <button className="btn btn-success equal-btn" style={{cursor:"default"}}>Approved</button>;
-          case "rejected":
-            return <button className="btn btn-danger equal-btn">Rejected</button>;
-          case "review":
-            return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
-            <button 
-              className="btn btn-info" 
-              style={{ height: "25px", width: "110px", display: "flex", alignItems: "center", justifyContent: "center",fontSize:"10px" }}
-            >
-              Review
-            </button>
-            <button 
-              className="btn" 
-              style={{ height: "15px", width: "130px", backgroundColor: "purple", color: "white", display: "flex", alignItems: "center", justifyContent: "center",fontSize:"10px" }}
-            >
-              Re-Request
-            </button>
-          </div>
-          case "pending":
-            return <button className="btn btn-warning equal-btn" style={{cursor:"default"}}>Pending</button>;
-          default:
-            return <button className="btn btn-secondary equal-btn" style={{cursor:"default"}}>Unknown</button>;
-        }
-      };
-      
       
 
     return (
@@ -267,20 +211,6 @@ const NewsList = () => {
                     <CustomSeparator />
                     <div className="container d-flex flex-row justify-content-between align-self-center">
                         <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>Regional News</p>
-                        <buttonCONTENT
-                            type="button"
-                            className="btn btn-success"
-                            onClick={() => {
-                                setLoading(true);
-                                {
-                                    loading ? <div className="modal">
-                                        <div className="loader"></div>
-                                    </div> : (navigate('/admin/regional-news/add'))
-                                }
-                            }}
-                        >
-                            ADD&nbsp;+
-                        </buttonCONTENT>
 
                     </div>
                     <br></br>
@@ -447,34 +377,10 @@ const NewsList = () => {
                                             
                                             <TableCell className="text-center" colSpan={3} >
                                                 <div className="d-flex justify-content-center gap-3">
-                                                {renderSensorshipStatus(entry.sensorship,entry._id)}
-
                                                     <button
                                                         type="button"
                                                         className="btn"
-                                                    onClick={() => { deleteHandler(entry._id) }}
-
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-trash fs-5"
-                                                            style={{ color: '#d71919' }}
-                                                        ></i>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => navigate(`/admin/regional-news/update/${entry._id}`)}
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-pen-nib fs-4"
-                                                            style={{ color: '#FFD43B' }}
-                                                        ></i>
-                                                    </button>
-
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => navigate(`/admin/regional-news/view/${entry._id}`)}
+                                                        onClick={() => navigate(`/admin/sensorship-regional-news/view/${entry._id}`)}
                                                     >
                                                         <i
                                                             className="fa-solid fa-eye fs-3"

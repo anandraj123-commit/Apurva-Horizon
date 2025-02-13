@@ -20,7 +20,7 @@ const RegionAdd = () => {
   const [newsDescription, setNewsDescription] = useState('');
   const [displayTime, setDisplayTime] = useState('');
   const [status, setStatus] = useState(true);
-  
+
   const navigate = useNavigate();
 
   const headers = new Headers();
@@ -87,6 +87,10 @@ const RegionAdd = () => {
       selectedCountry: selectedCountryName,
       selectedState: selectedStateName,
       selectedCity: selectedCityName,
+      sensorship: {
+        status: 'request',
+        feedback: null
+      },
     };
 
     try {

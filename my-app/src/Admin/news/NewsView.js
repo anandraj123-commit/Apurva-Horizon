@@ -29,6 +29,8 @@ export default function NewsView() {
       if (response.ok) {
         const data = await response.json();
         setDocument(data);
+        console.log(data);
+        
       }
     };
     fetchSingleItem();
@@ -60,22 +62,6 @@ export default function NewsView() {
         <Heading level={3} className="text-center mb-4">
           {document.title || "News Details"}
         </Heading>
-
-        {/* Image Section (Option 1: Image Centered with Viewport) */}
-        {/* <div className="text-center mb-4">
-          <img
-            src={document.imageUrl || "https://picsum.photos/200"} // Fallback image if no URL is provided
-            alt="News"
-            style={{
-              maxWidth: "50%", // Small size image
-              height: "auto",
-              borderRadius: "8px",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            }}
-          />
-        </div> */}
-
-        {/* Table Layout (Option 2: Image Fitting in the Table) */}
         <table style={{ width: "80%", borderCollapse: "collapse"}} border="0" className="mx-auto">
           <tbody>
             <tr>
@@ -100,7 +86,15 @@ export default function NewsView() {
             </tr>
             <tr>
               <td style={styles.titleColumn}>Status</td>
-              <td style={styles.valueColumn}>{document.status || "N/A"}</td>
+              <td style={styles.valueColumn}>{document.status ? "Active" : "Inactive"}</td>
+            </tr>
+            <tr>
+              <td style={styles.titleColumn}>Sensorship Stage</td>
+              <td style={styles.valueColumn}>{document.sensorship?.stage || "N/A"}</td>
+            </tr>
+            <tr>
+              <td style={styles.titleColumn}>Feedback</td>
+              <td style={styles.valueColumn}>{document.sensorship?.feedback || "N/A"}</td>
             </tr>
 
             {/* Optionally add the image inside the table */}

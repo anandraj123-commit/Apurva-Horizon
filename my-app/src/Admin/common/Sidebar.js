@@ -24,11 +24,11 @@ const Sidebar = ({ isActive }) => {
   // Menu items array
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <AiFillDashboard />, link: "/admin" },
-    { id: "content-type", label: "Content-Type", icon: <LuFileType />, link: "/admin/content-type" },
-    { id: "category", label: "Category", icon: <BiCategory />, link: "/admin/category-type/list" },
-    { id: "news", label: "News", icon: <FaRegNewspaper />, link: "/admin/news/list" },
-    { id: "user", label: "User", icon: <FaRegUserCircle />, link: "#" },
-    { id: "country", label: "Country", icon: <IoMdGlobe />, link: "/admin/country-state" },
+    // { id: "content-type", label: "Content-Type", icon: <LuFileType />, link: "/admin/content-type" },
+    // { id: "category", label: "Category", icon: <BiCategory />, link: "/admin/category-type/list" },
+    // { id: "news", label: "News", icon: <FaRegNewspaper />, link: "/admin/news/list" },
+    // { id: "user", label: "User", icon: <FaRegUserCircle />, link: "#" },
+    // { id: "country", label: "Country", icon: <IoMdGlobe />, link: "/admin/country-state" },
     { id: "vidupload", label: "Video-Upload", icon: <FaRegFileVideo />, link: "/admin/video-upload/list" },
     { id: "apurvaHorizon", label: "Apurva Horizon", icon: <GoOrganization/>, link: "/admin/apurva-horizon" },
     // { id: "content-type", label: "Content-Type", icon: <LuFileType />, link: "/admin/content-type" },

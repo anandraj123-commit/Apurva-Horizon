@@ -37,6 +37,7 @@ import './css/List.css';
 import Input from '../Inputcomponent/Inputs.js';
 import { useList } from '../content-type/store/contentcontext.js';
 import Notification from '../../Modules/Notification.js';
+import DatePicker from 'react-datepicker';
 
 const theme: Theme = {
 
@@ -77,8 +78,8 @@ const NewsList = () => {
     const [buttonClicked, setButtonClicked] = useState(false);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchDate, setSearchDate] = useState(''); // State for "Created At" filter
+        const [selectedDate, setSelectedDate] = useState(new Date());
+    
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
     // const [statusFilter, setStatusFilter] = useState('');
@@ -90,9 +91,9 @@ const NewsList = () => {
         "displayTime": 0,
         "status": 0,
         "_id": 0,
-        "selectedCountry":0,
-        "selectedState":0,
-        "selectedCity":0
+        "selectedCountry": 0,
+        "selectedState": 0,
+        "selectedCity": 0
     });
     const navigate = useNavigate();
 
@@ -152,7 +153,7 @@ const NewsList = () => {
         };
 
         fetchDataAsync();
-    }, [page, rowsPerPage, sortOrder, filters,buttonClicked]); // Ensure to include sortOrder and filters as dependencies
+    }, [page, rowsPerPage, sortOrder, filters, buttonClicked]); // Ensure to include sortOrder and filters as dependencies
 
     const getActiveSort = (sortOrder) => {
         const activeSort = {};
@@ -179,83 +180,31 @@ const NewsList = () => {
     const deleteHandler = async (id) => {
         // Confirmation prompt
         const isConfirmed = window.confirm("Are you sure you want to delete this item?");
-        
-        if (!isConfirmed) {
-          return; // If user cancels, exit the function
-        }
-      
-        try {
-          const response = await fetch(`http://localhost:5000/api/regional-news/delete/${id}`, {
-            method: "GET",
-          });
-      
-          const data = await response.json();
-      
-          if (response.ok) {
-            if (data.type === "info") Notification.info(data.message);
-            else Notification.success(data.message);
-          }
-      
-        } catch (error) {
-          Notification.error("Some backend error ❌");
-        }
-      };
 
-     //request for approval button logic
-    const sendApprovalRequest = async (id) => {
+        if (!isConfirmed) {
+            return; // If user cancels, exit the function
+        }
+
         try {
-            const response = await fetch(`http://localhost:5000/api/regional-news/update/sensorship/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+            const response = await fetch(`http://localhost:5000/api/regional-news/delete/${id}`, {
+                method: "GET",
             });
 
-            const responseData = await response.json()
+            const data = await response.json();
+
             if (response.ok) {
-                Notification.success(responseData.message)
-                setButtonClicked(!buttonClicked);
-            } else {
-                console.error('Failed to update category');
+                if (data.type === "info") Notification.info(data.message);
+                else Notification.success(data.message);
             }
+
         } catch (error) {
-            console.error('Error updating category:', error);
+            Notification.error("Some backend error ❌");
         }
     };
 
-    const renderSensorshipStatus = (sensorship, id) => {
-        switch (sensorship.stage) {
-          case "request":
-            return (
-              <button className="btn btn-primary equal-btn" onClick={() => sendApprovalRequest(id)}>
-                Request
-              </button>
-            );
-          case "approved":
-            return <button className="btn btn-success equal-btn" style={{cursor:"default"}}>Approved</button>;
-          case "rejected":
-            return <button className="btn btn-danger equal-btn">Rejected</button>;
-          case "review":
-            return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
-            <button 
-              className="btn btn-info" 
-              style={{ height: "25px", width: "110px", display: "flex", alignItems: "center", justifyContent: "center",fontSize:"10px" }}
-            >
-              Review
-            </button>
-            <button 
-              className="btn" 
-              style={{ height: "15px", width: "130px", backgroundColor: "purple", color: "white", display: "flex", alignItems: "center", justifyContent: "center",fontSize:"10px" }}
-            >
-              Re-Request
-            </button>
-          </div>
-          case "pending":
-            return <button className="btn btn-warning equal-btn" style={{cursor:"default"}}>Pending</button>;
-          default:
-            return <button className="btn btn-secondary equal-btn" style={{cursor:"default"}}>Unknown</button>;
-        }
-      };
-      
-      
+
+
+
 
     return (
         <>
@@ -265,23 +214,25 @@ const NewsList = () => {
 
                 <>
                     <CustomSeparator />
+                    <div className="container mt-4">
+                        <h3>Select a Date</h3>
+                        <div className="border p-3 rounded">
+                            <DatePicker
+                                selected={selectedDate}
+                                onChange={(date) => {
+                                    if (date) {
+                                        const formattedDate = date.toISOString().split("T")[0]; // Extracts YYYY-MM-DD
+                                        searchHandler(formattedDate, "createdAt"); // Send only the date part
+                                        setSelectedDate(date);
+                                    }
+                                }}
+                                inline
+                            />
+                        </div>
+                        <p className="mt-2">Selected Date: {selectedDate.toDateString()}</p>
+                    </div>
                     <div className="container d-flex flex-row justify-content-between align-self-center">
                         <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>Regional News</p>
-                        <buttonCONTENT
-                            type="button"
-                            className="btn btn-success"
-                            onClick={() => {
-                                setLoading(true);
-                                {
-                                    loading ? <div className="modal">
-                                        <div className="loader"></div>
-                                    </div> : (navigate('/admin/regional-news/add'))
-                                }
-                            }}
-                        >
-                            ADD&nbsp;+
-                        </buttonCONTENT>
-
                     </div>
                     <br></br>
 
@@ -319,24 +270,6 @@ const NewsList = () => {
                                                 placeholder="Search"
                                                 onChange={(value) => searchHandler(value, "newsTitle")}
                                                 onClear={() => searchHandler("", "newsTitle")} className="w-75"
-                                                style={{
-                                                    marginTop: '200px',
-                                                    padding: '4px',
-                                                    height: '40px',
-                                                    width: '30px',
-                                                }}
-                                            />
-                                        </TableCell>
-                                        <TableCell as="th">
-                                            <div className="sorting_button" onClick={() => changeSortOrder("displayTime")} style={{ cursor: 'pointer' }}>
-                                                Display Time
-                                                <SortSymbol sortOrder={sortOrder.displayTime} />
-                                            </div>
-                                            <ReactSearchBox
-                                                placeholder="Search"
-                                                onChange={(value) => searchHandler(value, "displayTime")}
-                                                onClear={() => searchHandler("", "displayTime")}
-                                                className="w-75"
                                                 style={{
                                                     marginTop: '200px',
                                                     padding: '4px',
@@ -417,6 +350,12 @@ const NewsList = () => {
                                                 }}
                                             /> */}
                                         </TableCell>
+                                        <TableCell as="th">
+                                            <div className="sorting_button" onClick={() => changeSortOrder("displayTime")} style={{ cursor: 'pointer' }}>
+                                                Display Time
+                                                <SortSymbol sortOrder={sortOrder.displayTime} />
+                                            </div>
+                                        </TableCell>
                                         <TableCell as="th" colSpan={3} style={{ textAlign: 'center', fontSize: '15px' }}>Activity</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -426,9 +365,17 @@ const NewsList = () => {
                                             <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
                                             <TableCell className='text-center'>
                                                 <img src="https://picsum.photos/200/300" alt="image" />                                            </TableCell>
-                                            <TableCell onClick={()=>{navigate(`/admin/regional-news/view/${entry._id}`)}} style={{cursor:"pointer"}}>{entry._id}</TableCell>
+                                            <TableCell onClick={() => { navigate(`/admin/regional-news/view/${entry._id}`) }} style={{ cursor: "pointer" }}>{entry._id}</TableCell>
                                             <TableCell>{entry.newsTitle}</TableCell>
                                             {/* <TableCell>{entry.newsDescription}</TableCell> */}
+                                            <TableCell>{entry.selectedCountry}</TableCell>
+                                            <TableCell>{entry.selectedState}</TableCell>
+                                            <TableCell>{entry.selectedCity}</TableCell>
+
+                                            <TableCell className="text-center">
+                                                {entry.status ? "Active" : "Inactive"}
+
+                                            </TableCell>
                                             <TableCell>
                                                 {new Intl.DateTimeFormat('en-US', {
                                                     year: 'numeric',
@@ -436,23 +383,13 @@ const NewsList = () => {
                                                     day: 'numeric',
                                                 }).format(new Date(entry.displayTime))}
                                             </TableCell>
-                                            <TableCell>{entry.selectedCountry}</TableCell>
-                                            <TableCell>{entry.selectedState}</TableCell>
-                                            <TableCell>{entry.selectedCity}</TableCell>
 
-                                            <TableCell className="text-center">
-                                                {entry.status?"Active":"Inactive"}
-
-                                            </TableCell>
-                                            
                                             <TableCell className="text-center" colSpan={3} >
                                                 <div className="d-flex justify-content-center gap-3">
-                                                {renderSensorshipStatus(entry.sensorship,entry._id)}
-
                                                     <button
                                                         type="button"
                                                         className="btn"
-                                                    onClick={() => { deleteHandler(entry._id) }}
+                                                        onClick={() => { deleteHandler(entry._id) }}
 
                                                     >
                                                         <i

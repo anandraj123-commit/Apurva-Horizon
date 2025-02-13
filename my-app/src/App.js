@@ -28,6 +28,12 @@ import RegionView from './Admin/regional/RegionView';
 import RegionUpdate from './Admin/regional/RegionUpdate';
 import SensorshipList from './Admin/sensorship/SensorshipList';
 import SensorshipView from './Admin/sensorship/SensorshipView';
+import ReadyQueueList from './Admin/ready-queue/ReadyQueueList';
+import SensorshipRegionalList from './Admin/sensorship/SensorshipRegionalList';
+import SensorshipPanel from './Admin/sensorship/SensorshipPanel';
+import SensorshipRegionalView from './Admin/sensorship/SensorshipRegionalView';
+import IndexingPanel from './Admin/indexing/IndexingPanel';
+import IndexingNews from './Admin/indexing/IndexingNews';
 
 
 function App() {
@@ -60,8 +66,15 @@ function App() {
             <Route path="regional-news/list" element={<RegionList />} />
             <Route path="regional-news/view/:id" element={<RegionView />} />
             <Route path="regional-news/update/:id" element={<RegionUpdate />} />
+            <Route path="sensorship-news/panel" element={<SensorshipPanel />} />
             <Route path="sensorship-news/list" element={<SensorshipList />} />
             <Route path="sensorship-news/view/:id" element={<SensorshipView />} />
+            <Route path="sensorship-regional-news/view/:id" element={<SensorshipRegionalView />} />
+            <Route path="sensorship-regional-news/list" element={<SensorshipRegionalList />} />
+            <Route path="ready-queue/list" element={<ReadyQueueList />} />
+            <Route path="indexing/panel" element={<IndexingPanel />} />
+            <Route path="indexing/news/list" element={<IndexingNews />} />
+            <Route path="indexing/regional-news/list" element={<IndexingNews />} />
           </Route>
         </Routes>
       </Router>

@@ -9,6 +9,10 @@ const router = express.Router()
 
 
 router.route('/add').post(regionalNewsController.addRegionalNews)
+router.route('/suggest/:id').put(regionalNewsController.suggestUpdate)
+router.route('/approve/:id').put(regionalNewsController.approvedUpdate)
+router.route('/reject/:id').put(regionalNewsController.rejectedUpdate)
+router.route('/update/sensorship/:id').put(regionalNewsController.updateSensorship)
 // router.route('/update/:id').put(contentTypeController.updateList)
 router.route('/view/:id').get(regionalNewsController.viewRegionalNews)
 router.route('/delete/:id').get(regionalNewsController.deleteRegionalNews)

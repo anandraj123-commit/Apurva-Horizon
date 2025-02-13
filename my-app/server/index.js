@@ -9,6 +9,7 @@ const newsRouter = require('./routers/news-router');
 const regionalNewsRouter = require('./routers/regional-news-router');
 const searchRouter = require('./routers/search-router');
 const sensorshipRouter = require('./routers/sensorship-router');
+const indexingRouter = require('./routers/indexing-router');
 
 const path = require('path');
 // const vidRouter = require('./routers/Videorouter');
@@ -30,6 +31,7 @@ app.use('/api/news', newsRouter)
 app.use('/api/regional-news', regionalNewsRouter)
 app.use('/api/search', searchRouter)
 app.use('/api/sensorship-news', sensorshipRouter)
+app.use('/api/news-indexing', indexingRouter)
 
 
 

@@ -4,6 +4,8 @@ import categoryImage from './images/Category-image.webp'
 import newsImage from './images/News-image.webp'
 import regionalImage from './images/Regional-image.webp'
 import sensorshipImage from './images/Sensorship-image.webp'
+import queueImage from './images/Queue-image.webp'
+import indexImage from './images/Index-image.webp'
 import MediaCard from '../common/MediaCard'
 
 export default function ApurvaHorizon() {
@@ -13,9 +15,9 @@ export default function ApurvaHorizon() {
         <MediaCard url={categoryImage} redirectTo={'/admin/category-type/list'} title={'Category Type'}/>
         <MediaCard url={newsImage} redirectTo={'/admin/news/list'} title={'News'}/>
         <MediaCard url={regionalImage} redirectTo={'/admin/regional-news/list'} title={'Regional News'}/>
-        <MediaCard url={sensorshipImage} redirectTo={'/admin/sensorship-news/list'} title={'Sensorship News'}/>
-        {/* <MediaCard url={contentImage} redirectTo={'/admin/content-type'} title={}/> */}
-        {/* <MediaCard url={contentImage} redirectTo={'/admin/content-type'} title={}/> */}
+        <MediaCard url={sensorshipImage} redirectTo={'/admin/sensorship-news/panel'} title={'Sensorship News'}/>
+        <MediaCard url={queueImage} redirectTo={'/admin/ready-queue/list'} title={'Ready Queue'}/>
+        <MediaCard url={indexImage} redirectTo={'/admin/indexing/panel'} title={'Indexing'}/>
     </div>
 )
 }

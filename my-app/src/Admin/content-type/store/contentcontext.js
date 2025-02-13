@@ -7,7 +7,7 @@ export const ListProvider = ({ children }) => {
 
     
     
-    const fetchData = async (collectionName, filters = {}, page = 1, limit = 10, sort = {}) => {
+    const fetchData = async (collectionName, filters ={}, page = 1, limit = 10, sort = {}) => {
         try {
             // console.log(sort);
             
