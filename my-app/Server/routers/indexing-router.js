@@ -8,7 +8,7 @@ const indexingController = require("../controllers/indexing-controller")
 const router = express.Router()
 
 router.route('/list/:collectionName').get(indexingController.indexingNews)
-router.route('/regional-news/list').get(indexingController.countryData)
+router.route('/regional-news/list/:collectionName').get(indexingController.countryData)
 
 // router.route('/add').post(contentTypeController.addList)
 // router.route('/update/:id').put(contentTypeController.updateList)

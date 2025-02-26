@@ -31,8 +31,8 @@ export default function ViewPage() {
         const data = await response.json()
         // console.log(data);
         setDocument(data)
-        
-      
+
+
       }
     }
     fetchSingleItem();
@@ -40,38 +40,39 @@ export default function ViewPage() {
 
   return (
     <View
-        backgroundColor={tokens.colors.background.secondary}
-        padding={tokens.space.medium}
-      >
-        <Card variation="elevated">
-          <div className="container mt-5">
-            {/* Content Type */}
-              <div className="col text-end">
-                <p className="text-success fw-bold">Id: {document._id}</p>
-              </div>
-
-
-            {/* Title */}
-            <div className="mb-3">
-              <h6 className="fw-bold">Title - <span className="text-secondary">{document.title}</span></h6>
-            </div>
-
-            {/* Description */}
-            <div className="mb-4">
-              <h6 className="fw-bold">Description - <span className="text-secondary">{document.description}</span></h6>
-            </div>
-            <div className="mb-4">
-              <h6 className="fw-bold">Status - <span className="text-secondary">{document.status?"Active":"Inactive"}</span></h6>
-            </div>
-            <div className="mb-4">
-              <h6 className="fw-bold">Description - <span className="text-secondary">{new Intl.DateTimeFormat('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                }).format(new Date(document.createdAt))}</span></h6>
-            </div>
+      backgroundColor={tokens.colors.background.secondary}
+      padding={tokens.space.medium}
+    >
+      <Card variation="elevated">
+        <div className="container mt-5">
+          {/* Content Type */}
+          <div className="col text-end">
+            <p className="text-success fw-bold">Id: {document._id}</p>
           </div>
-        </Card>
-      </View>
+
+
+          {/* Title */}
+          <div className="mb-3">
+            <h6 className="fw-bold">Title - <span className="text-secondary">{document.title}</span></h6>
+          </div>
+
+          {/* Description */}
+          <div className="mb-4">
+            <h6 className="fw-bold">Description - <span className="text-secondary">{document.description}</span></h6>
+          </div>
+          <div className="mb-4">
+            <h6 className="fw-bold">Status - <span className="text-secondary">{document.status ? "Active" : "Inactive"}</span></h6>
+          </div>
+          <div className="mb-4">
+            <h6 className="fw-bold">Created At - <span className="text-secondary"> {document.createdAt ?
+                                    new Intl.DateTimeFormat('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    }).format(new Date(document.createdAt)) : "N/A"}</span></h6>
+          </div>
+        </div>
+      </Card>
+    </View>
   )
 }

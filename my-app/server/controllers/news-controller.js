@@ -3,13 +3,27 @@ const { ObjectId } = require('mongodb');
 
 const addNews = async (req, res) => {
     try {
-        const listItem = req.body;
+        let listItem = req.body;
+        listItem.sensorship = JSON.parse(listItem.sensorship);
+        listItem.contentTypeImage= {
+            filename: req.file.filename,
+            type: req.file.mimetype,
+            size: req.file.size,
+            path: req.file.path,
+        }
         const dbo =await connectDB()
-        // console.log(dbo);
+
+        // Check if the uploaded file is an image
+        const allowedMimeTypes = ['image/jpeg', 'image/png'];
+
+        if (!allowedMimeTypes.includes(req.file.mimetype)) {
+            return res.status(400).send({ message: 'Only image files (JPEG, PNG) are allowed.'});
+        }
+
         await dbo.collection("news").insertOne(listItem)
-        return res.status(200).json({ message: "Successfully added ✅" ,type:"success",timeout:3000})
+        return res.status(201).send({ message: 'News added successfully ✅'});
     } catch (error) {
-        return res.status(500).json({ message: "Failed to add ❌" ,type:"error",timeout:3000})
+        return res.status(500).send({ error: 'Internal server error ❌', type: "error" });
     }
 }
 

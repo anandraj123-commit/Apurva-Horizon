@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Button, Flex, Input, Label, SelectField, Card, ThemeProvider, Theme, TextAreaField } from '@aws-amplify/ui-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
-import ImageUpload from '../Imageupload';
 import CustomSeparator from '../common/Breadcrumbs';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
@@ -177,7 +176,7 @@ const Update = () => {
                                     <Flex direction="column" gap="small">
                                         <Label htmlFor="title">Upload Image</Label>
                                         <div style={{ minHeight: '100px' }}> {/* Reserve space for previews */}
-                                            <ImageUpload />
+                                           
                                         </div>
                                     </Flex>
                                 </Flex>

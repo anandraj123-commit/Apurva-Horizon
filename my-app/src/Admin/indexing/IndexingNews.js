@@ -172,7 +172,7 @@ const IndexingNews = () => {
             try {
                 const activeSort = getActiveSort(sortOrder);
                 const result = await fetchData("category-type", filters, page, rowsPerPage, activeSort);
-                console.log(result.results);
+                // console.log(result.results);
 
                 setList(result.results);  // Populate the list with data
                 setTotalCount(result.totalCount);  // Set total count for pagination

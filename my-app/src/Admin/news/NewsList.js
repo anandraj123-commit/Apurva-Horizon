@@ -2,18 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TablePagination from '@mui/material/TablePagination';
 import ReactSearchBox from "react-search-box";
-import Button from '@mui/material/Button';
-import { MdModeEditOutline } from "react-icons/md";
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { RiDeleteBinLine } from "react-icons/ri";
-import { Switch } from '@mui/material';
-import { TableSortLabel } from '@mui/material';
-import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-
-
 import {
     Table,
     TableHead,
@@ -21,15 +9,7 @@ import {
     TableCell,
     ThemeProvider,
     Theme,
-    SearchField,
-    SelectField,
-    Loader,
-    Breadcrumbs,
 } from '@aws-amplify/ui-react';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
-import Sidebar from '../common/Sidebar';
-import { Badge } from '@mui/material';
 import CustomSeparator from "../common/Breadcrumbs";
 import '../asset/css/Loader.css';
 import '../asset/css/common.css';
@@ -38,6 +18,7 @@ import Input from '../Inputcomponent/Inputs.js';
 import { useList } from '../content-type/store/contentcontext.js';
 import Notification from '../../Modules/Notification.js';
 import { createTheme } from '@mui/material/styles';
+import useFetch from '../../hooks/useFetch.js';
 
 
 const theme: Theme = {
@@ -73,13 +54,13 @@ const NewsList = () => {
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
     const [buttonClicked, setButtonClicked] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchDate, setSearchDate] = useState(''); // State for "Created At" filter
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filters, setFilters] = useState({});  // <-- Add this line
     // const [requestDocument, setRequestDocument] = useState({});  // <-- Add this line
-
+    
+    // let activeSort = {}
+    
     const [sortOrder, setSortOrder] = useState({
         "title": 0,
         "type": 0,
@@ -88,16 +69,22 @@ const NewsList = () => {
         "_id": 0
     });
     const navigate = useNavigate();
-
+    
     // for loading
-    const [loading, setLoading] = useState(false);
-
-    const { fetchData } = useList()
-
-
+    // const [loading, setLoading] = useState(false);
+    
+    // const { fetchData } = useList()
+    
+    // setList(data.results);
+    // setTotalCount(data.totalCount);
+    
+    // console.log(data.results);
+    
+    
+    
     const deleteHandler = async (id) => {
         const isConfirmed = window.confirm("Are you sure you want to delete this item?");
-
+        
         if (!isConfirmed) {
             return; // Exit if the user cancels
         }
@@ -105,19 +92,19 @@ const NewsList = () => {
             const response = await fetch(`http://localhost:5000/api/news/delete/${id}`, {
                 method: "DELETE", // Use DELETE instead of GET
             });
-
+            
             if (!response.ok) {
                 throw new Error('Failed to delete item');
             }
-
+            
             const result = await response.json();
         } catch (error) {
             console.log(error);
         }
-
+        
     }
-
-
+    
+    
     const searchHandler = async (value, name) => {
         const updatedFilters = {
             ...filters,  // Maintain existing filters
@@ -125,24 +112,24 @@ const NewsList = () => {
         };
         setFilters(updatedFilters);  // Store for pagination
     };
-
+    
     const toggleOrder = () => {
         setIsReversed(!isReversed);
     };
-
+    
     // const finalList = isReversed ? [...list].reverse() : list;
-
+    
     const handleChangePage = async (event, newPage) => {
         setPage(newPage);
     };
-
-
+    
+    
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0); // Reset to the first page
     };
-
-
+    
+    
     const SortSymbol = ({ sortOrder }) => {
         if (sortOrder % 3 === 0) {
             return <i class="fa-solid fa-sort"></i>
@@ -155,43 +142,67 @@ const NewsList = () => {
         }
     }
 
+    // useEffect(() => {
+    //     setSortOrder(getActiveSort(sortOrder)); // Ensure activeSort updates
+    // }, [sortOrder]);
+
+    let activeSort={}
+    const BASE_URL = `http://localhost:5000/api/search/news?page=${page + 1}&limit=${rowsPerPage}&sort=${JSON.stringify(activeSort)}&filters=${JSON.stringify(filters)}`
+    
+    const { data, loading, error } = useFetch(BASE_URL)
     useEffect(() => {
-        const fetchDataAsync = async () => {
-            try {
-                const activeSort = getActiveSort(sortOrder);
-                const result = await fetchData("news", filters, page, rowsPerPage, activeSort);
-                setList(result.results);  // Populate the list with data
-                setTotalCount(result.totalCount);  // Set total count for pagination
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
-        fetchDataAsync();
-    }, [page, rowsPerPage, sortOrder, filters, buttonClicked]); // Ensure to include sortOrder and filters as dependencies
-
+        // setActiveSort(getActiveSort(sortOrder));
+        activeSort = getActiveSort(sortOrder);
+        if (data) {
+            // console.log(data);
+            
+            setList(data.results || []);
+            setTotalCount(data.totalCount || 0);
+        }
+    }, [data,page, rowsPerPage, sortOrder, filters, buttonClicked]); // Runs when `data` changes
+    
+    // useEffect(() => {
+        
+    //     // const fetchDataAsync = async () => {
+        //         //     try {
+    //             //         const activeSort = getActiveSort(sortOrder);
+    //             //         const result = await fetchData("news", filters, page, rowsPerPage, activeSort);
+    //             //         setList(result.results);  // Populate the list with data
+    //             //         setTotalCount(result.totalCount);  // Set total count for pagination
+    //     //     } catch (error) {
+    //     //         console.error("Error fetching data:", error);
+    //     //     }
+    //     // };
+    //     // console.log(data);
+        
+    //     // setList(data.results)
+    //     // setTotalCount(data.totalCount);
+        
+    //     // fetchDataAsync();
+    // }, [page, rowsPerPage, sortOrder, filters, buttonClicked]); // Ensure to include sortOrder and filters as dependencies
+    
     const getActiveSort = (sortOrder) => {
-        const activeSort = {};
-
-        // Iterate through the sortOrder object and build activeSort
+        const sortOrderObject = {};
+        
+        // Iterate through the sortOrder object and build sortOrder
         for (const [key, value] of Object.entries(sortOrder)) {
-            if (value === 1) activeSort[key] = 1;  // Ascending
-            if (value === 2) activeSort[key] = -1; // Descending
+            if (value === 1) sortOrderObject[key] = 1;  // Ascending
+            if (value === 2) sortOrderObject[key] = -1; // Descending
             // No need to add the key if value === 0 (no sorting for this field)
         }
-
-        return activeSort;
+        
+        return sortOrderObject;
     };
-
+    
     const changeSortOrder = async (field) => {
         const updatedSortOrder = {
             ...sortOrder,
             [field]: (sortOrder[field] + 1) % 3
         };
-
+        
         setSortOrder(updatedSortOrder);  // Update sort state
     };
-
+    
     //request for approval button logic
     const sendApprovalRequest = async (id) => {
         try {
@@ -199,7 +210,7 @@ const NewsList = () => {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
             });
-
+            
             const responseData = await response.json()
             if (response.ok) {
                 Notification.success(responseData.message)
@@ -211,7 +222,7 @@ const NewsList = () => {
             console.error('Error updating category:', error);
         }
     };
-
+    
     const renderSensorshipStatus = (sensorship, id) => {
         switch (sensorship.stage) {
             case "request":
@@ -220,25 +231,25 @@ const NewsList = () => {
                         Request
                     </button>
                 );
-            case "approved":
-                return <button className="btn btn-success equal-btn" style={{ cursor: "default" }}>Approved</button>;
-            case "rejected":
-                return <button className="btn btn-danger equal-btn">Rejected</button>;
-            case "review":
-                return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
-                <button 
-                  className="btn btn-info" 
-                  style={{ height: "25px", width: "110px", display: "flex", alignItems: "center", justifyContent: "center",fontSize:"10px" }}
-                >
-                  Review
-                </button>
-                <button 
-                  className="btn" 
-                  style={{ height: "15px", width: "130px", backgroundColor: "purple", color: "white", display: "flex", alignItems: "center", justifyContent: "center",fontSize:"10px" }}
-                >
-                  Re-Request
-                </button>
-              </div>
+                case "approved":
+                    return <button className="btn btn-success equal-btn" style={{ cursor: "default" }}>Approved</button>;
+                    case "rejected":
+                        return <button className="btn btn-danger equal-btn">Rejected</button>;
+                        case "review":
+                            return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
+                    <button
+                        className="btn btn-info"
+                        style={{ height: "25px", width: "110px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}
+                    >
+                        Review
+                    </button>
+                    <button
+                        className="btn"
+                        style={{ height: "15px", width: "130px", backgroundColor: "purple", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}
+                    >
+                        Re-Request
+                    </button>
+                </div>
             case "pending":
                 return <button className="btn btn-warning equal-btn" style={{ cursor: "default" }}>Pending</button>;
             default:
@@ -260,7 +271,7 @@ const NewsList = () => {
                             type="button"
                             className="btn btn-success"
                             onClick={() => {
-                                setLoading(true);
+                                // setLoading(true);
                                 {
                                     loading ? <div className="modal">
                                         <div className="loader"></div>
@@ -382,7 +393,7 @@ const NewsList = () => {
                                             <TableCell>{entry.title}</TableCell>
                                             <TableCell>{entry.description}</TableCell>
                                             <TableCell className='d-flex justify-content-center'>
-                                                    {renderSensorshipStatus(entry.sensorship, entry._id)}
+                                                {renderSensorshipStatus(entry.sensorship, entry._id)}
                                             </TableCell>
                                             <TableCell className="text-center" colSpan={3} >
 

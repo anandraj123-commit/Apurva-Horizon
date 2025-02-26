@@ -12,8 +12,6 @@ import { Switch } from '@mui/material';
 import { TableSortLabel } from '@mui/material';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-
-
 import {
     Table,
     TableHead,
@@ -141,10 +139,38 @@ const NewsList = () => {
     }
 
     useEffect(() => {
+        const fetchData = async (collectionName, filters = {}, page = 1, limit = 10, sort = {}) => {
+            try {
+                const response = await fetch(
+                    `http://localhost:5000/api/news-indexing/regional-news/list/${collectionName}?page=${page + 1}&limit=${limit}&sort=${JSON.stringify(sort)}&filters=${JSON.stringify(filters)}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+
+                const data = await response.json();
+                // console.log(data);
+                
+                return data;
+            } catch (error) {
+                console.error("Error in fetchData:", error);
+                return { results: [], totalCount: 0 };
+            }
+        };
         const fetchDataAsync = async () => {
             try {
                 const activeSort = getActiveSort(sortOrder);
-                const result = await fetchData("regional-news", filters, page, rowsPerPage, activeSort);
+                const result = await fetchData("countryStateCities", filters, page, rowsPerPage, activeSort);
+                // console.log(result);
+                
+
                 setList(result.results);  // Populate the list with data
                 setTotalCount(result.totalCount);  // Set total count for pagination
             } catch (error) {
@@ -366,7 +392,7 @@ const NewsList = () => {
                                             <TableCell className='text-center'>
                                                 <img src="https://picsum.photos/200/300" alt="image" />                                            </TableCell>
                                             <TableCell onClick={() => { navigate(`/admin/regional-news/view/${entry._id}`) }} style={{ cursor: "pointer" }}>{entry._id}</TableCell>
-                                            <TableCell>{entry.newsTitle}</TableCell>
+                                            <TableCell>{entry.used?"present":"absent"}</TableCell>
                                             {/* <TableCell>{entry.newsDescription}</TableCell> */}
                                             <TableCell>{entry.selectedCountry}</TableCell>
                                             <TableCell>{entry.selectedState}</TableCell>
@@ -376,13 +402,13 @@ const NewsList = () => {
                                                 {entry.status ? "Active" : "Inactive"}
 
                                             </TableCell>
-                                            <TableCell>
+                                            {/* <TableCell>
                                                 {new Intl.DateTimeFormat('en-US', {
                                                     year: 'numeric',
                                                     month: 'long',
                                                     day: 'numeric',
                                                 }).format(new Date(entry.displayTime))}
-                                            </TableCell>
+                                            </TableCell> */}
 
                                             <TableCell className="text-center" colSpan={3} >
                                                 <div className="d-flex justify-content-center gap-3">

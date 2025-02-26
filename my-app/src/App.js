@@ -16,7 +16,6 @@ import CategoryUpdate from './Admin/category/CategoryUpdate';
 import NewsForm from './Admin/news/NewsForm';
 import NewsList from './Admin/news/NewsList';
 import NewsView from './Admin/news/NewsView';
-import FileUpload from './Admin/Imageupload';
 import VideoList from './Admin/Uploads/Videouploadlist';
 import Addvideo from './Admin/Uploads/Videoaddupload';
 import Updatevideo from './Admin/Uploads/Videoupdatepage';
@@ -34,6 +33,7 @@ import SensorshipPanel from './Admin/sensorship/SensorshipPanel';
 import SensorshipRegionalView from './Admin/sensorship/SensorshipRegionalView';
 import IndexingPanel from './Admin/indexing/IndexingPanel';
 import IndexingNews from './Admin/indexing/IndexingNews';
+import FileUpload from './Admin/FileUpload';
 
 
 function App() {
