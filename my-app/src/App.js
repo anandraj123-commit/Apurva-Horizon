@@ -56,13 +56,12 @@ function App() {
             <Route path="category-type/list" element={<CategoryList />} />
             <Route path="category-type/view/:id" element={<CategoryView />} />
             <Route path="category-type/update/:id" element={<CategoryUpdate />} />
-            <Route path="regional-news/add" element={<RegionAdd />} />
             <Route path="upload" element={<FileUpload />} />
             <Route path="video-upload/list" element={<VideoList />} />
             <Route path="video-upload/addvideo" element={<Addvideo />} />
             <Route path="video-upload/update/:id" element={<Updatevideo />} />
             <Route path="video-upload/view/:id" element={<Viewvideo />} />
-          {/* </Route>           */}
+            <Route path="regional-news/add" element={<RegionAdd />} />
             <Route path="regional-news/list" element={<RegionList />} />
             <Route path="regional-news/view/:id" element={<RegionView />} />
             <Route path="regional-news/update/:id" element={<RegionUpdate />} />

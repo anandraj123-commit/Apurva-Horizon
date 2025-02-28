@@ -89,9 +89,9 @@ const NewsList = () => {
         "displayTime": 0,
         "status": 0,
         "_id": 0,
-        "selectedCountry": 0,
-        "selectedState": 0,
-        "selectedCity": 0
+        "name": 0,
+        "stateName": 0,
+        "cityName": 0
     });
     const navigate = useNavigate();
 
@@ -305,14 +305,14 @@ const NewsList = () => {
                                             />
                                         </TableCell>
                                         <TableCell as="th">
-                                            <div className="sorting_button" onClick={() => changeSortOrder("selectedCountry")} style={{ cursor: 'pointer' }}>
+                                            <div className="sorting_button" onClick={() => changeSortOrder("name")} style={{ cursor: 'pointer' }}>
                                                 Country
-                                                <SortSymbol sortOrder={sortOrder.selectedCountry} />
+                                                <SortSymbol sortOrder={sortOrder.name} />
                                             </div>
                                             <ReactSearchBox
                                                 placeholder="Search"
-                                                onChange={(value) => searchHandler(value, "selectedCountry")}
-                                                onClear={() => searchHandler("", "selectedCountry")}
+                                                onChange={(value) => searchHandler(value, "name")}
+                                                onClear={() => searchHandler("", "name")}
                                                 className="w-75"
                                                 style={{
                                                     marginTop: '200px',
@@ -323,14 +323,14 @@ const NewsList = () => {
                                             />
                                         </TableCell>
                                         <TableCell as="th">
-                                            <div className="sorting_button" onClick={() => changeSortOrder("selectedState")} style={{ cursor: 'pointer' }}>
+                                            <div className="sorting_button" onClick={() => changeSortOrder("stateName")} style={{ cursor: 'pointer' }}>
                                                 State
-                                                <SortSymbol sortOrder={sortOrder.selectedState} />
+                                                <SortSymbol sortOrder={sortOrder.stateName} />
                                             </div>
                                             <ReactSearchBox
                                                 placeholder="Search"
-                                                onChange={(value) => searchHandler(value, "selectedState")}
-                                                onClear={() => searchHandler("", "selectedState")}
+                                                onChange={(value) => searchHandler(value, "stateName")}
+                                                onClear={() => searchHandler("", "stateName")}
                                                 className="w-75"
                                                 style={{
                                                     marginTop: '200px',
@@ -341,14 +341,14 @@ const NewsList = () => {
                                             />
                                         </TableCell>
                                         <TableCell as="th">
-                                            <div className="sorting_button" onClick={() => changeSortOrder("selectedCity")} style={{ cursor: 'pointer' }}>
+                                            <div className="sorting_button" onClick={() => changeSortOrder("cityName")} style={{ cursor: 'pointer' }}>
                                                 City
-                                                <SortSymbol sortOrder={sortOrder.selectedCity} />
+                                                <SortSymbol sortOrder={sortOrder.cityName} />
                                             </div>
                                             <ReactSearchBox
                                                 placeholder="Search"
-                                                onChange={(value) => searchHandler(value, "selectedCity")}
-                                                onClear={() => searchHandler("", "selectedCity")}
+                                                onChange={(value) => searchHandler(value, "cityName")}
+                                                onClear={() => searchHandler("", "cityName")}
                                                 className="w-75"
                                                 style={{
                                                     marginTop: '200px',
@@ -394,56 +394,45 @@ const NewsList = () => {
                                             <TableCell onClick={() => { navigate(`/admin/regional-news/view/${entry._id}`) }} style={{ cursor: "pointer" }}>{entry._id}</TableCell>
                                             <TableCell>{entry.used?"present":"absent"}</TableCell>
                                             {/* <TableCell>{entry.newsDescription}</TableCell> */}
-                                            <TableCell>{entry.selectedCountry}</TableCell>
-                                            <TableCell>{entry.selectedState}</TableCell>
-                                            <TableCell>{entry.selectedCity}</TableCell>
+                                            <TableCell>{entry.name}</TableCell>
+                                            <TableCell>{entry.stateName}</TableCell>
+                                            <TableCell>{entry.cityName}</TableCell>
 
                                             <TableCell className="text-center">
                                                 {entry.status ? "Active" : "Inactive"}
 
                                             </TableCell>
-                                            {/* <TableCell>
-                                                {new Intl.DateTimeFormat('en-US', {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                }).format(new Date(entry.displayTime))}
-                                            </TableCell> */}
+                                            
 
                                             <TableCell className="text-center" colSpan={3} >
                                                 <div className="d-flex justify-content-center gap-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => { deleteHandler(entry._id) }}
+                                                {entry.used ? (
+                                                        <>
+                                                            <button
+                                                                type="button"
+                                                                className="btn"
+                                                                onClick={() => navigate(`/admin/category-type/update/${entry._id}`)}
+                                                            >
+                                                                <i className="fa-solid fa-pen-nib fs-4" style={{ color: '#FFD43B' }}></i>
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className="btn"
+                                                                onClick={() => navigate(`/admin/category-type/view/${entry._id}`)}
+                                                            >
+                                                                <i className="fa-solid fa-eye fs-3" style={{ color: '#63E6BE' }}></i>
+                                                            </button>
 
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-trash fs-5"
-                                                            style={{ color: '#d71919' }}
-                                                        ></i>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => navigate(`/admin/regional-news/update/${entry._id}`)}
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-pen-nib fs-4"
-                                                            style={{ color: '#FFD43B' }}
-                                                        ></i>
-                                                    </button>
-
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() => navigate(`/admin/regional-news/view/${entry._id}`)}
-                                                    >
-                                                        <i
-                                                            className="fa-solid fa-eye fs-3"
-                                                            style={{ color: '#63E6BE' }}
-                                                        ></i>
-                                                    </button>
+                                                        </>
+                                                    ) : (
+                                                        <button
+                                                            type="button"
+                                                            className="btn"
+                                                            onClick={() => navigate(`/admin/regional-news/update/${entry._id}`)}
+                                                        >
+                                                            <i className="fa-solid fa-plus" style={{ color: "#1920f0" }}></i>
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </TableCell>
 

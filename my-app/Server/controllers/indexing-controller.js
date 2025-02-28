@@ -226,97 +226,130 @@ const countryData = async (req, res) => {
     const pageSize = parseInt(limit) || 10;
     const skip = (pageNumber - 1) * pageSize;
 
-  
+
     const pipeline = [
-      { $unwind: "$states" },
-      { $unwind: "$states.cities" },
       {
-        $lookup: {
-          from: "regional-news",
-          let: { country: "$name", state: "$states.name", city: "$states.cities.name" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$selectedCountry", "$$country"] },
-                    { $eq: ["$selectedState", "$$state"] },
-                    { $eq: ["$selectedCity", "$$city"] }
-                  ]
-                }
-              }
-            }
-          ],
-          as: "matchedNews"
+        '$unwind': {
+          'path': '$states',
+          'includeArrayIndex': 'indexState',
+          'preserveNullAndEmptyArrays': true
+        }
+      }, {
+        '$unwind': {
+          'path': '$states.cities',
+          'includeArrayIndex': 'indexCity',
+          'preserveNullAndEmptyArrays': true
         }
       },
       {
-        $addFields: {
-          used: { $cond: { if: { $gt: [{ $size: "$matchedNews" }, 0] }, then: true, else: false } }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          selectedCountry: "$name",
-          selectedState: "$states.name",
-          selectedCity: "$states.cities.name",
-          used: 1
+        '$project': {
+          'name': 1,
+          'stateName': '$states.name',
+          'cityName': '$states.cities.name'
         }
       },
       matchStage,
       sortStage,
       { $skip: skip },
-      { $limit: pageSize }, 
-    ];
-    
-    // Separate count pipeline (to get total filtered records)
-    const countPipeline = [
-      { $unwind: "$states" },
-      { $unwind: "$states.cities" },
-      {
-        $lookup: {
-          from: "regional-news",
-          let: { country: "$name", state: "$states.name", city: "$states.cities.name" },
-          pipeline: [
+      { $limit: pageSize },
+       {
+        '$lookup': {
+          'from': 'regional-news',
+          'let': {
+            'country': '$name',
+            'state': '$stateName',
+            'city': '$cityName'
+          },
+          'pipeline': [
             {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$selectedCountry", "$$country"] },
-                    { $eq: ["$selectedState", "$$state"] },
-                    { $eq: ["$selectedCity", "$$city"] }
+              '$match': {
+                '$expr': {
+                  '$and': [
+                    {
+                      '$eq': [
+                        '$selectedCountry', '$$country'
+                      ]
+                    }, {
+                      '$eq': [
+                        '$selectedState', '$$state'
+                      ]
+                    }, {
+                      '$eq': [
+                        '$selectedCity', '$$city'
+                      ]
+                    }
                   ]
                 }
               }
             }
           ],
-          as: "matchedNews"
+          'as': 'matchedNews'
         }
-      },
-      {
-        $addFields: {
-          used: { $cond: { if: { $gt: [{ $size: "$matchedNews" }, 0] }, then: true, else: false } }
+      }, {
+        '$addFields': {
+          'used': {
+            '$cond': {
+              'if': {
+                '$gt': [
+                  {
+                    '$size': '$matchedNews'
+                  }, 0
+                ]
+              },
+              'then': true,
+              'else': false
+            }
+          }
         }
-      },
-      // {
-      //   $project: {
-      //     _id: 0,
-      //     country: "$name",
-      //     state: "$states.name",
-      //     city: "$states.cities.name",
-      //     used: 1
-      //   }
-      // },
-      matchStage,
-      { $count: "totalCount" }
-    ];
+      }, {
+        '$project': {
+          '_id': 0,
+          'name': 1,
+          'stateName': 1,
+          'cityName': 1,
+          'used': 1
+        }
+      }
+    ]
+
+    // Separate count pipeline (to get total filtered records)
+    // const countPipeline = [
+    //   { $unwind: "$states" },
+    //   { $unwind: "$states.cities" },
+    //   {
+    //     $lookup: {
+    //       from: "regional-news",
+    //       let: { country: "$name", state: "$states.name", city: "$states.cities.name" },
+    //       pipeline: [
+    //         {
+    //           $match: {
+    //             $expr: {
+    //               $and: [
+    //                 { $eq: ["$selectedCountry", "$$country"] },
+    //                 { $eq: ["$selectedState", "$$state"] },
+    //                 { $eq: ["$selectedCity", "$$city"] }
+    //               ]
+    //             }
+    //           }
+    //         }
+    //       ],
+    //       as: "matchedNews"
+    //     }
+    //   },
+    //   {
+    //     $addFields: {
+    //       used: { $cond: { if: { $gt: [{ $size: "$matchedNews" }, 0] }, then: true, else: false } }
+    //     }
+    //   },
+    //   matchStage,
+    //   { $count: "totalCount" }
+    // ];
 
 
     results.results = await model.collection(collectionName).aggregate(pipeline).toArray();
     console.log(results.results);
-    const countResult = await model.collection(collectionName).aggregate(countPipeline).toArray();
-    results.totalCount = countResult.length > 0 ? countResult[0].totalCount : 0;
+    // const countResult = await model.collection(collectionName).aggregate(countPipeline).toArray();
+    // results.totalCount = countResult.length > 0 ? countResult[0].totalCount : 0;
 
     // Send the results as a response
     res.status(200).send(results);
@@ -325,4 +358,103 @@ const countryData = async (req, res) => {
     res.status(500).send({ error: "An error occurred while fetching data." });
   }
 }
+
+const trail = async (req, res) => {
+
+  const model = await connectDB();
+
+  const pipeline = [
+    {
+      '$unwind': {
+        'path': '$states',
+        'includeArrayIndex': 'indexState',
+        'preserveNullAndEmptyArrays': true
+      }
+    }, {
+      '$unwind': {
+        'path': '$states.cities',
+        'includeArrayIndex': 'indexCity',
+        'preserveNullAndEmptyArrays': true
+      }
+    },
+    {
+      "$limit": 10
+    },
+    {
+      '$project': {
+        'name': 1,
+        'stateName': '$states.name',
+        'cityName': '$states.cities.name'
+      }
+    }, {
+      '$lookup': {
+        'from': 'regional-news',
+        'let': {
+          'country': '$name',
+          'state': '$stateName',
+          'city': '$cityName'
+        },
+        'pipeline': [
+          {
+            '$match': {
+              '$expr': {
+                '$and': [
+                  {
+                    '$eq': [
+                      '$selectedCountry', '$$country'
+                    ]
+                  }, {
+                    '$eq': [
+                      '$selectedState', '$$state'
+                    ]
+                  }, {
+                    '$eq': [
+                      '$selectedCity', '$$city'
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        'as': 'matchedNews'
+      }
+    }, {
+      '$addFields': {
+        'used': {
+          '$cond': {
+            'if': {
+              '$gt': [
+                {
+                  '$size': '$matchedNews'
+                }, 0
+              ]
+            },
+            'then': true,
+            'else': false
+          }
+        }
+      }
+    }, {
+      '$project': {
+        '_id': 0,
+        'selectedCountry': '$name',  // Renaming 'name' to 'country'
+        'selectedState': '$stateName',  // Renaming 'stateName' to 'state'
+        'selectedCity': '$cityName',  // Renaming 'cityName' to 'city'
+        'used': 1  // Keeping 'used' as is
+      }
+    }
+  ]
+
+  const results = await model.collection("countryStateCities").aggregate(pipeline).toArray();
+  console.log(results);
+
+  // const countResult = await model.collection("countryStateCities").aggregate(countPipeline).toArray();
+  //   const totalCount = countResult.length > 0 ? countResult : 0;
+  //   console.log(totalCount);
+
+}
+
+// trail();
+
 module.exports = { indexingNews, countryData };
