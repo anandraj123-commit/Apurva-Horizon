@@ -6,17 +6,16 @@ import {
   CardContent,
 } from '@mui/material';
 // import SendIcon from '@mui/icons-material/Send';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Notification from '../../Modules/Notification';
 import * as Yup from 'yup';
 import { Loader, SelectField, TextAreaField } from '@aws-amplify/ui-react';
-// import UsePost from '../../hooks/UsePost';
-import usePost from '../../hooks/usePost';
 import TagInputField from '../Inputcomponent/TagInputField';
 
 
-export default function NewsForm() {
+export default function NewsUpdate() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: '',
@@ -25,23 +24,22 @@ export default function NewsForm() {
     shortDescription: '',
     description: '',
     status: true,
-    storage:"server",
     sensorship: {
       stage: 'request',
       feedback: null
     },
+    file: null,
+    DisplayTime: null,
     seo: {
       title: '',
       description: '',
       keywords: []
-    },
-    file: null,
-    DisplayTime: null,
+    }
   });
   const [contentTypes, setContentTypes] = useState([]);
+  const [fileUrl, setFileUrl] = useState(null);
   const [subcategoryOptions, setSubcategoryOptions] = useState([]);
   const [errors, setErrors] = useState();
-  const fetchData = usePost("http://localhost:5000/api/news/add");
 
   const validationSchema = Yup.object({
     type: Yup.string().required('*Type is requied'),
@@ -50,7 +48,7 @@ export default function NewsForm() {
       .matches(/^[A-Za-z][A-Za-z ]*$/, "*Title must contain only alphabets and single spaces")
       .test("no-leading-space", "*Title cannot start with a space", (value) => !value || !value.startsWith(" "))
       .test("no-consecutive-spaces", "*Title cannot have consecutive spaces", (value) => !value || !/\s{2,}/.test(value))
-      .min(5, "*Title must be at least 8 characters")
+      .min(5, "*Title must be at least 5 characters")
       .max(50, "*Title cannot exceed 255 characters")
       .required("*Title is required"),
     shortDescription: Yup.string()
@@ -66,8 +64,7 @@ export default function NewsForm() {
       .max(255, "*Description cannot exceed 255 characters")
       .required("*Description is required"),
     status: Yup.boolean().required("*Status is required"),
-    storage: Yup.string().required("*Storage is required"),
-    file: Yup.string().required("*file is required"),
+    file: Yup.string().required("*File is required"),
     DisplayTime: Yup.date().typeError('Invalid date format').required('Display Time is required'),
     seoTitle: Yup.string()
       .matches(/^[A-Za-z][A-Za-z ]*$/, "*Title must contain only alphabets and single spaces")
@@ -87,6 +84,22 @@ export default function NewsForm() {
 
   // Fetch all categories on component mount
   useEffect(() => {
+    async function fetchNewsData() {
+      try {
+        const response = await fetch(`http://localhost:5000/api/news/news/view/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          // console.log(data);
+          setFormData(data);
+        } else {
+          Notification.error("Failed to fetch news data.");
+        }
+      } catch (error) {
+        Notification.error("Error fetching data.");
+      }
+    }
+
+    fetchNewsData();
     const fetchContentTypes = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/category-type/fetchAll');
@@ -102,7 +115,45 @@ export default function NewsForm() {
     };
 
     fetchContentTypes();
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    async function fetchSubCategory() {
+      try {
+        const response = await fetch(`http://localhost:5000/api/category-type/subcategory?category=${formData.type}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        // console.log(data[0].subtype);
+
+        setSubcategoryOptions(data[0].subtype);
+      } catch (error) {
+        console.log(error);
+
+      }
+    };
+
+    fetchSubCategory();
+  }, [formData.type]);
+
+  //function to get the file url to get the image preview
+  const handleFetchFile = async () => {
+    if (formData.file) {
+      const response = await fetch(`http://localhost:5000/api/news/file/${formData.file.filename}`);
+      const blob = await response.blob();
+      setFileUrl(URL.createObjectURL(blob));
+    }
+  };
+
+  useEffect(() => {
+    handleFetchFile();
+  }, [formData])
+
+
+
   // Handle form field changes
   const handleFormChange = async (e) => {
     const { name, value, type, files, dataset = {} } = e.target;
@@ -233,25 +284,10 @@ export default function NewsForm() {
     }
   };
 
-  const handleEditorChangeNew = async (e) => {
-    setFormData((prev) => ({ ...prev, description: e.target.value }));
-    try {
-      await validationSchema.validateAt('description', { 'description': e.target.value });
-      setErrors((prevErrors) => {
-        const newErrors = { ...prevErrors };
-        delete newErrors['description']; // Remove error for this field
-        return newErrors;
-      });
-    } catch (error) {
-      setErrors((prevErrors) => ({ ...prevErrors, description: error.message })); // Set error message
-    }
-  };
-
   //new submit handler
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     // Create FormData object to send data
     const newsData = new FormData();
     newsData.append("type", formData.type);
@@ -260,47 +296,48 @@ export default function NewsForm() {
     newsData.append("shortDescription", formData.shortDescription);
     newsData.append("description", formData.description);
     newsData.append("status", formData.status);
-    newsData.append("storage", formData.storage);
     newsData.append("sensorship", JSON.stringify(formData.sensorship));
     newsData.append("file", formData.file);
     newsData.append("DisplayTime", formData.DisplayTime);
     newsData.append("seo", JSON.stringify(formData.seo));
 
-    try {
-      const response = await fetchData(newsData);      
 
-      if (response.type === 'success') {
-        Notification.success(response.message)
+    try {
+      const response = await fetch(`http://localhost:5000/api/news/update-all/${id}`, {
+        method: "PUT",
+        body: newsData, // Send FormData
+      });
+      const data = await response.json()
+
+      if (response.ok) {
+        Notification.success(data.message)
         navigate('/admin/news/list')
       }
       else {
-        Notification.error(response.message)
+        Notification.error(data.message)
       }
     } catch (error) {
-      Notification.error("Error in Request ❌")
+      Notification.error("Some Backend error ❌")
     }
     finally {
       setLoading(false);
     }
   };
-  
+
+
+
 
   const isFormValid =
-    errors && Object.keys(errors).length === 0 && // Ensure errors exist before checking
-    formData?.type?.trim() &&
-    formData?.subcategory?.trim() &&
-    formData?.title?.trim() &&
-    formData?.shortDescription?.trim() &&
-    formData?.description?.trim() &&
-    formData?.status !== null &&
-    formData?.file !== null &&
-    formData?.DisplayTime !== null;
+    (!errors || Object.keys(errors).length === 0) &&
+    ["type", "subcategory", "title", "shortDescription", "description", "DisplayTime"]
+      .every(field => formData[field]?.trim());
+
 
 
   return (
     <Card sx={{ minWidth: 275 }} className="w-lg-75 w-md-80 w-sm-100 mx-auto">
       <CardContent className="p-lg-7 p-md-5 p-sm-4 container">
-        <h1 className="fs-1 fw-bold font-monospace">Add News</h1>
+        <h1 className="fs-1 fw-bold font-monospace">Update News</h1>
 
         <div className='w-100' style={{ height: '6rem' }}>
           <FormControl fullWidth size="small">
@@ -334,44 +371,44 @@ export default function NewsForm() {
           {errors?.type && <p style={{ color: 'red' }}>{errors.type}</p>}
         </div>
 
-        {
-          subcategoryOptions.length === 0 ? null :
+        {/* {
+          subcategoryOptions.length === 0 ? null : */}
 
-            <div className='w-100' style={{ height: '6.7rem' }}>
+        <div className='w-100' style={{ height: '6.7rem' }}>
 
-              <FormControl fullWidth size="small">
+          <FormControl fullWidth size="small">
 
-                <SelectField
-                  value={formData.subcategory}
-                  label="Subcategory"
-                  onChange={handleFormChange}
-                  style={{ border: errors?.subcategory ? '2px solid red' : '1px solid #ced4da' }}
+            <SelectField
+              value={formData.subcategory}
+              label="Subcategory"
+              onChange={handleFormChange}
+              style={{ border: errors?.subcategory ? '2px solid red' : '1px solid #ced4da' }}
 
-                  name="subcategory"
-                  onFocus={(e) => {
-                    e.target.style.backgroundColor = "#e6f7ff"; // Light blue on focus
-                    e.target.style.border = "1px solid #007bff"; // Optional: Blue border
-                    e.target.style.outline = "none"; // Ensure no thick border
-                    e.target.style.boxShadow = "none"; // Remove Amplify UI focus glow
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.backgroundColor = "transparent";
-                    e.target.style.border = errors?.title ? "2px solid red" : "1px solid #ced4da"; // Reset border
-                    e.target.style.outline = "none"; // Ensure no outline
-                    e.target.style.boxShadow = "none"; // Remove shadow
-                  }}
-                >
-                  {subcategoryOptions.map((subcategory, index) => (
-                    <option key={index} value={subcategory.name}>
-                      {subcategory.name}
-                    </option>
-                  ))}
-                </SelectField>
-              </FormControl>
+              name="subcategory"
+              onFocus={(e) => {
+                e.target.style.backgroundColor = "#e6f7ff"; // Light blue on focus
+                e.target.style.border = "1px solid #007bff"; // Optional: Blue border
+                e.target.style.outline = "none"; // Ensure no thick border
+                e.target.style.boxShadow = "none"; // Remove Amplify UI focus glow
+              }}
+              onBlur={(e) => {
+                e.target.style.backgroundColor = "transparent";
+                e.target.style.border = errors?.title ? "2px solid red" : "1px solid #ced4da"; // Reset border
+                e.target.style.outline = "none"; // Ensure no outline
+                e.target.style.boxShadow = "none"; // Remove shadow
+              }}
+            >
+              {subcategoryOptions.map((subcategory, index) => (
+                <option key={index} value={subcategory.name}>
+                  {subcategory.name}
+                </option>
+              ))}
+            </SelectField>
+          </FormControl>
 
-              {errors?.subcategory && <p style={{ color: 'red' }}>{errors.subcategory}</p>}
-            </div>
-        }
+          {errors?.subcategory && <p style={{ color: 'red' }}>{errors.subcategory}</p>}
+        </div>
+        {/* } */}
 
         <div className='w-100' style={{ height: '6rem' }}>
           {/* Title */}
@@ -416,26 +453,34 @@ export default function NewsForm() {
               e.target.style.outline = "none"; // Ensure no outline
             }}
           />
+          {errors?.shortDescription && <p className="text-danger">{errors.shortDescription}</p>}
         </div>
-        <div className='w-100' style={{ height: '10rem' }}>
-
-          <label htmlFor="short-description" className="mt-3">Description</label>
-          <Editor
+        <div className='w-100' style={{ height: '8.5rem' }}>
+          {/* Description */}
+          <TextAreaField
+            label="Description"
+            name="description"
             value={formData.description}
-            onChange={handleEditorChangeNew}
-            onMouseDown={(e) => {
+            onChange={handleFormChange}
+            style={{ border: errors?.description ? '2px solid red' : '1px solid #ced4da' }}
+            multiline
+            rows={3}
+            onFocus={(e) => {
               e.target.style.backgroundColor = "#e6f7ff"; // Light blue on focus
               e.target.style.border = "1px solid #007bff"; // Optional: Blue border
               e.target.style.outline = "none"; // Ensure no thick border
+              e.target.style.boxShadow = "none"; // Remove Amplify UI focus glow
             }}
             onBlur={(e) => {
               e.target.style.backgroundColor = "transparent";
-              e.target.style.border = errors?.description ? "2px solid red" : "1px solid #ced4da"; // Reset border
+              e.target.style.border = errors?.title ? "2px solid red" : "1px solid #ced4da"; // Reset border
               e.target.style.outline = "none"; // Ensure no outline
+              e.target.style.boxShadow = "none"; // Remove shadow
             }}
           />
           {errors?.description && <p className="text-danger">{errors.description}</p>}
         </div>
+
         <div className='w-100' style={{ height: '6.7rem' }}>
           <FormControl fullWidth size="small">
             <SelectField
@@ -465,35 +510,6 @@ export default function NewsForm() {
           {errors?.status && <p className="text-danger">{errors.status}</p>}
         </div>
 
-        <div className='w-100' style={{ height: '6.7rem' }}>
-          <FormControl fullWidth size="small">
-            <SelectField
-              labelId="storage-select-label"
-              value={formData.storage}
-              onChange={handleFormChange}
-              style={{ width: '100%' }}
-              name="storage"
-              label="Storage"
-              onFocus={(e) => {
-                e.target.style.backgroundColor = "#e6f7ff"; // Light blue on focus
-                e.target.style.border = "1px solid #007bff"; // Optional: Blue border
-                e.target.style.outline = "none"; // Ensure no thick border
-                e.target.style.boxShadow = "none"; // Remove Amplify UI focus glow
-              }}
-              onBlur={(e) => {
-                e.target.style.backgroundColor = "transparent";
-                e.target.style.border = errors?.title ? "2px solid red" : "1px solid #ced4da"; // Reset border
-                e.target.style.outline = "none"; // Ensure no outline
-                e.target.style.boxShadow = "none"; // Remove shadow
-              }}
-            >
-              <option value="server">Store in Server Storage</option>
-              <option value="cloud">Store in Cloud Storage</option>
-            </SelectField>
-          </FormControl>
-          {/* {errors?.status && <p className="text-danger">{errors.status}</p>} */}
-        </div>
-
         <div className='w-100' style={{ height: '5rem' }}>
           <label htmlFor="file-upload" className='fs-4'>File Upload</label>
           <br />
@@ -503,10 +519,17 @@ export default function NewsForm() {
             onChange={handleFormChange}
             style={{ fontSize: '1rem' }}
           />
-          {formData.file && formData.file instanceof Blob && (
-            <img src={URL.createObjectURL(formData.file)} alt="Preview" style={{ maxWidth: "100px" }} align="right" />
-          )}
-          {errors?.file && <p className="text-danger">{errors.file}</p>}
+
+          {
+            formData.file && formData.file instanceof Blob ? (
+              <img src={URL.createObjectURL(formData.file)} alt="Preview" style={{ maxWidth: "100px" }} align="right" />
+            ) :
+              fileUrl && (
+                <img src={fileUrl} alt="Preview" style={{ maxWidth: "100px" }} align="right" />
+              )
+          }
+
+          {/* {errors?.image && <p className="text-danger">{errors.image}</p>} */}
         </div>
 
         <div className='w-100' style={{ height: '5rem' }}>
@@ -522,6 +545,7 @@ export default function NewsForm() {
           />
           {errors?.DisplayTime && <p className="text-danger">{errors.DisplayTime}</p>}
         </div>
+
         <hr />
         <h1 className="fs-1 fw-bold font-monospace">Add SEO</h1>
 
@@ -582,12 +606,11 @@ export default function NewsForm() {
           <TagInputField
             label="Keywords"
             name="keywords"
-            value={formData.seo?.keywords || []}
+            value={formData.seo.keywords || []}
             onChange={handleFormChange}
           />
           {errors?.seoKeywords && <p className="text-danger">{errors.seoKeywords}</p>}
         </div>
-
         <div className='d-flex justify-content-center'>
           <button
             type="submit"
@@ -603,7 +626,7 @@ export default function NewsForm() {
             }}
             onClick={submitHandler}
           >
-            <span>Submit</span>
+            <span>Update</span>
             {loading && <Loader size="large" />}
           </button>
         </div>

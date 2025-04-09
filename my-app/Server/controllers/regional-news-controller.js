@@ -27,24 +27,23 @@ const viewRegionalNews = async(req,res)=>{
 
 const updateRegionalNews = async (req, res) => {
     const { id } = req.params; // Extract the ID from the route parameter
-    const { ContentType, title, description, subtype } = req.body; // Extract data from the request body
+    // const listItem = req.body;
+    const {newsTitle,newsDescription,displayTime,selectedCountry,selectedState,selectedCity,status} = req.body;
+
 
     try {
         const dbo = await connectDB(); // Connect to the database
 
         // Update the main content and subtypes
-        const updatedCategory = await dbo.collection("category-type").updateOne(
+        const updatedCategory = await dbo.collection("regional-news").updateOne(
             { _id: new ObjectId(id) }, // Match the document by ID
             {
                 $set: {
-                    ContentType,
-                    title,
-                    description,
-                    subtype, // Subtypes as an array
+                    newsTitle,newsDescription,displayTime,selectedCountry,selectedState,selectedCity,status
                 },
             }
         );
-        res.status(200).json({ message: 'Category updated successfully ✅', data: updatedCategory });
+        res.status(200).json({ message: 'News updated successfully ✅'});
     } catch (error) {
         // console.error('Error updating category:', error);
         res.status(500).json({ message: 'Failed to Update ❌' });

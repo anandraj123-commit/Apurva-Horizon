@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import TablePagination from '@mui/material/TablePagination';
 import ReactSearchBox from "react-search-box";
 import {
@@ -14,10 +14,7 @@ import CustomSeparator from "../common/Breadcrumbs";
 import '../asset/css/Loader.css';
 import '../asset/css/common.css';
 import './css/List.css';
-import Input from '../Inputcomponent/Inputs.js';
-import { useList } from '../content-type/store/contentcontext.js';
 import Notification from '../../Modules/Notification.js';
-import { createTheme } from '@mui/material/styles';
 import useFetch from '../../hooks/useFetch.js';
 
 
@@ -49,7 +46,7 @@ const theme: Theme = {
 
 
 
-const NewsList = () => {
+const NewsListOdia = () => {
     const [list, setList] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
@@ -58,9 +55,9 @@ const NewsList = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filters, setFilters] = useState({});  // <-- Add this line
     // const [requestDocument, setRequestDocument] = useState({});  // <-- Add this line
-    
+
     // let activeSort = {}
-    
+
     const [sortOrder, setSortOrder] = useState({
         "title": 0,
         "type": 0,
@@ -69,21 +66,22 @@ const NewsList = () => {
         "_id": 0
     });
     const navigate = useNavigate();
-    
+
+    // for loading
     // const [loading, setLoading] = useState(false);
-    
+
     // const { fetchData } = useList()
-    
+
     // setList(data.results);
     // setTotalCount(data.totalCount);
-    
+
     // console.log(data.results);
-    
-    
-    
+
+
+
     const deleteHandler = async (id) => {
         const isConfirmed = window.confirm("Are you sure you want to delete this item?");
-        
+
         if (!isConfirmed) {
             return; // Exit if the user cancels
         }
@@ -91,19 +89,19 @@ const NewsList = () => {
             const response = await fetch(`http://localhost:5000/api/news/delete/${id}`, {
                 method: "DELETE", // Use DELETE instead of GET
             });
-            
+
             if (!response.ok) {
                 throw new Error('Failed to delete item');
             }
-            
+
             const result = await response.json();
         } catch (error) {
             console.log(error);
         }
-        
+
     }
-    
-    
+
+
     const searchHandler = async (value, name) => {
         const updatedFilters = {
             ...filters,  // Maintain existing filters
@@ -111,24 +109,24 @@ const NewsList = () => {
         };
         setFilters(updatedFilters);  // Store for pagination
     };
-    
+
     const toggleOrder = () => {
         setIsReversed(!isReversed);
     };
-    
+
     // const finalList = isReversed ? [...list].reverse() : list;
-    
+
     const handleChangePage = async (event, newPage) => {
         setPage(newPage);
     };
-    
-    
+
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0); // Reset to the first page
     };
-    
-    
+
+
     const SortSymbol = ({ sortOrder }) => {
         if (sortOrder % 3 === 0) {
             return <i class="fa-solid fa-sort"></i>
@@ -145,25 +143,25 @@ const NewsList = () => {
     //     setSortOrder(getActiveSort(sortOrder)); // Ensure activeSort updates
     // }, [sortOrder]);
 
-    let activeSort={}
-    const BASE_URL = `http://localhost:5000/api/search/news?page=${page + 1}&limit=${rowsPerPage}&sort=${JSON.stringify(activeSort)}&filters=${JSON.stringify(filters)}`
-    
+    let activeSort = {}
+    const BASE_URL = `http://localhost:5000/api/search/news_or?page=${page + 1}&limit=${rowsPerPage}&sort=${JSON.stringify(activeSort)}&filters=${JSON.stringify(filters)}`
+
     const { data, loading, error } = useFetch(BASE_URL)
     useEffect(() => {
         // setActiveSort(getActiveSort(sortOrder));
         activeSort = getActiveSort(sortOrder);
         if (data) {
             // console.log(data);
-            
+
             setList(data.results || []);
             setTotalCount(data.totalCount || 0);
         }
-    }, [data,page, rowsPerPage, sortOrder, filters, buttonClicked]); // Runs when `data` changes
-    
+    }, [data, page, rowsPerPage, sortOrder, filters, buttonClicked]); // Runs when `data` changes
+
     // useEffect(() => {
-        
+
     //     // const fetchDataAsync = async () => {
-        //         //     try {
+    //         //     try {
     //             //         const activeSort = getActiveSort(sortOrder);
     //             //         const result = await fetchData("news", filters, page, rowsPerPage, activeSort);
     //             //         setList(result.results);  // Populate the list with data
@@ -173,35 +171,35 @@ const NewsList = () => {
     //     //     }
     //     // };
     //     // console.log(data);
-        
+
     //     // setList(data.results)
     //     // setTotalCount(data.totalCount);
-        
+
     //     // fetchDataAsync();
     // }, [page, rowsPerPage, sortOrder, filters, buttonClicked]); // Ensure to include sortOrder and filters as dependencies
-    
+
     const getActiveSort = (sortOrder) => {
         const sortOrderObject = {};
-        
+
         // Iterate through the sortOrder object and build sortOrder
         for (const [key, value] of Object.entries(sortOrder)) {
             if (value === 1) sortOrderObject[key] = 1;  // Ascending
             if (value === 2) sortOrderObject[key] = -1; // Descending
             // No need to add the key if value === 0 (no sorting for this field)
         }
-        
+
         return sortOrderObject;
     };
-    
+
     const changeSortOrder = async (field) => {
         const updatedSortOrder = {
             ...sortOrder,
             [field]: (sortOrder[field] + 1) % 3
         };
-        
+
         setSortOrder(updatedSortOrder);  // Update sort state
     };
-    
+
     //request for approval button logic
     const sendApprovalRequest = async (id) => {
         try {
@@ -209,7 +207,7 @@ const NewsList = () => {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
             });
-            
+
             const responseData = await response.json()
             if (response.ok) {
                 Notification.success(responseData.message)
@@ -221,7 +219,7 @@ const NewsList = () => {
             console.error('Error updating category:', error);
         }
     };
-    
+
     const renderSensorshipStatus = (sensorship, id) => {
         switch (sensorship.stage) {
             case "request":
@@ -230,12 +228,12 @@ const NewsList = () => {
                         Request
                     </button>
                 );
-                case "approved":
-                    return <button className="btn btn-success equal-btn" style={{ cursor: "default" }}>Approved</button>;
-                    case "rejected":
-                        return <button className="btn btn-danger equal-btn">Rejected</button>;
-                        case "review":
-                            return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
+            case "approved":
+                return <button className="btn btn-success equal-btn" style={{ cursor: "default" }}>Approved</button>;
+            case "rejected":
+                return <button className="btn btn-danger equal-btn">Rejected</button>;
+            case "review":
+                return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
                     <button
                         className="btn btn-info"
                         style={{ height: "25px", width: "110px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}
@@ -265,7 +263,7 @@ const NewsList = () => {
                 <>
                     <CustomSeparator />
                     <div className="container d-flex flex-row justify-content-between align-self-center">
-                        <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>News</p>
+                        <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>News (Odia)</p>
                         <buttonCONTENT
                             type="button"
                             className="btn btn-success"
@@ -303,6 +301,16 @@ const NewsList = () => {
                                                     placeholder="Search"
                                                     onChange={(value) => searchHandler(value, "_id")}
                                                     onClear={() => searchHandler("", "_id")} name="id"
+                                                    className="w-75"
+                                                />
+                                            </div>
+                                        </TableCell>
+                                        <TableCell as="th">News
+                                            <div style={{ marginTop: '5px', height: '40px', }}>
+                                                <ReactSearchBox
+                                                    placeholder="Search"
+                                                    onChange={(value) => searchHandler(value, "news")}
+                                                    onClear={() => searchHandler("", "news")} name="news"
                                                     className="w-75"
                                                 />
                                             </div>
@@ -386,13 +394,22 @@ const NewsList = () => {
                                     {list.map((entry, index) => (
                                         <TableRow key={entry._id}>
                                             <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
-                                            <TableCell>{entry._id}</TableCell>
+                                            <TableCell>
+                                                <NavLink to={`/admin/news/news_or/view/${entry._id}`}>
+                                                    {entry._id}
+                                                </NavLink>
+                                            </TableCell>
+                                            <TableCell>
+                                                <NavLink to={`/admin/news/news/view/${entry.news}`}>
+                                                    {entry.news}
+                                                </NavLink>
+                                            </TableCell>
                                             <TableCell>{entry.type}</TableCell>
                                             <TableCell>{entry.subcategory}</TableCell>
                                             <TableCell>{entry.title}</TableCell>
                                             <TableCell>{entry.description}</TableCell>
                                             <TableCell className='d-flex justify-content-center'>
-                                                {renderSensorshipStatus(entry.sensorship, entry._id)}
+                                                {renderSensorshipStatus(entry.sensorship, entry.news)}
                                             </TableCell>
                                             <TableCell className="text-center" colSpan={3} >
 
@@ -411,7 +428,7 @@ const NewsList = () => {
                                                     <button
                                                         type="button"
                                                         className="btn"
-                                                        onClick={() => navigate(`/admin/news/update/${entry._id}`)}
+                                                        onClick={() => navigate(`/admin/category-type/update/${entry._id}`)}
                                                     >
                                                         <i
                                                             className="fa-solid fa-pen-nib fs-4"
@@ -422,7 +439,7 @@ const NewsList = () => {
                                                     <button
                                                         type="button"
                                                         className="btn"
-                                                        onClick={() => navigate(`/admin/news/news/view/${entry._id}`)}
+                                                        onClick={() => navigate(`/admin/news/news_or/view/${entry._id}`)}
                                                     >
                                                         <i
                                                             className="fa-solid fa-eye fs-3"
@@ -457,4 +474,4 @@ const NewsList = () => {
     );
 };
 
-export default NewsList;
+export default NewsListOdia;

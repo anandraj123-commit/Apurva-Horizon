@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import TablePagination from '@mui/material/TablePagination';
 import ReactSearchBox from "react-search-box";
 import {
@@ -49,7 +49,7 @@ const theme: Theme = {
 
 
 
-const NewsList = () => {
+const NewsListBengali = () => {
     const [list, setList] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
     const [isReversed, setIsReversed] = useState(false);
@@ -57,7 +57,6 @@ const NewsList = () => {
     const [page, setPage] = useState(0); // MUI pagination uses 0-based indexing
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filters, setFilters] = useState({});  // <-- Add this line
-    // const [requestDocument, setRequestDocument] = useState({});  // <-- Add this line
     
     // let activeSort = {}
     
@@ -70,6 +69,7 @@ const NewsList = () => {
     });
     const navigate = useNavigate();
     
+    // for loading
     // const [loading, setLoading] = useState(false);
     
     // const { fetchData } = useList()
@@ -146,7 +146,7 @@ const NewsList = () => {
     // }, [sortOrder]);
 
     let activeSort={}
-    const BASE_URL = `http://localhost:5000/api/search/news?page=${page + 1}&limit=${rowsPerPage}&sort=${JSON.stringify(activeSort)}&filters=${JSON.stringify(filters)}`
+    const BASE_URL = `http://localhost:5000/api/search/news_bn?page=${page + 1}&limit=${rowsPerPage}&sort=${JSON.stringify(activeSort)}&filters=${JSON.stringify(filters)}`
     
     const { data, loading, error } = useFetch(BASE_URL)
     useEffect(() => {
@@ -265,7 +265,7 @@ const NewsList = () => {
                 <>
                     <CustomSeparator />
                     <div className="container d-flex flex-row justify-content-between align-self-center">
-                        <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>News</p>
+                        <p className="text-primary" style={{ fontSize: "200%", fontWeight: "550", height: '10px' }}>News (Bengali)</p>
                         <buttonCONTENT
                             type="button"
                             className="btn btn-success"
@@ -303,6 +303,16 @@ const NewsList = () => {
                                                     placeholder="Search"
                                                     onChange={(value) => searchHandler(value, "_id")}
                                                     onClear={() => searchHandler("", "_id")} name="id"
+                                                    className="w-75"
+                                                />
+                                            </div>
+                                        </TableCell>
+                                        <TableCell as="th">News
+                                            <div style={{ marginTop: '5px', height: '40px', }}>
+                                                <ReactSearchBox
+                                                    placeholder="Search"
+                                                    onChange={(value) => searchHandler(value, "news")}
+                                                    onClear={() => searchHandler("", "news")} name="news"
                                                     className="w-75"
                                                 />
                                             </div>
@@ -386,13 +396,22 @@ const NewsList = () => {
                                     {list.map((entry, index) => (
                                         <TableRow key={entry._id}>
                                             <TableCell className='text-center'>{page * rowsPerPage + index + 1}</TableCell>
-                                            <TableCell>{entry._id}</TableCell>
+                                            <TableCell>
+                                                <NavLink to={`/admin/news/news_bn/view/${entry._id}`}>
+                                                    {entry._id}
+                                                </NavLink>
+                                            </TableCell>
+                                            <TableCell>
+                                                <NavLink to={`/admin/news/news/view/${entry.news}`}>
+                                                    {entry.news}
+                                                </NavLink>
+                                            </TableCell>
                                             <TableCell>{entry.type}</TableCell>
                                             <TableCell>{entry.subcategory}</TableCell>
                                             <TableCell>{entry.title}</TableCell>
                                             <TableCell>{entry.description}</TableCell>
                                             <TableCell className='d-flex justify-content-center'>
-                                                {renderSensorshipStatus(entry.sensorship, entry._id)}
+                                                {renderSensorshipStatus(entry.sensorship, entry.news)}
                                             </TableCell>
                                             <TableCell className="text-center" colSpan={3} >
 
@@ -411,7 +430,7 @@ const NewsList = () => {
                                                     <button
                                                         type="button"
                                                         className="btn"
-                                                        onClick={() => navigate(`/admin/news/update/${entry._id}`)}
+                                                        onClick={() => navigate(`/admin/category-type/update/${entry._id}`)}
                                                     >
                                                         <i
                                                             className="fa-solid fa-pen-nib fs-4"
@@ -422,7 +441,7 @@ const NewsList = () => {
                                                     <button
                                                         type="button"
                                                         className="btn"
-                                                        onClick={() => navigate(`/admin/news/news/view/${entry._id}`)}
+                                                        onClick={() => navigate(`/admin/news/news_bn/view/${entry._id}`)}
                                                     >
                                                         <i
                                                             className="fa-solid fa-eye fs-3"
@@ -457,4 +476,4 @@ const NewsList = () => {
     );
 };
 
-export default NewsList;
+export default NewsListBengali;

@@ -71,7 +71,7 @@ const theme: Theme = {
 
 
 
-const NewsList = () => {
+const IndexingRegionalNews = () => {
     const [list, setList] = useState([]);
     const [buttonClicked, setButtonClicked] = useState(false);
     const [totalCount, setTotalCount] = useState(0); // Total items from backend
@@ -461,4 +461,4 @@ const NewsList = () => {
     );
 };
 
-export default NewsList;
+export default IndexingRegionalNews;

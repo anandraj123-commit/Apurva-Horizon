@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-
+const cookieParser = require('cookie-parser');
 const app = express();
 const contentType = require('./routers/content-type-router');
 const categoryType = require('./routers/category-type-router');
@@ -10,6 +10,8 @@ const regionalNewsRouter = require('./routers/regional-news-router');
 const searchRouter = require('./routers/search-router');
 const sensorshipRouter = require('./routers/sensorship-router');
 const indexingRouter = require('./routers/indexing-router');
+const countryStateRouter = require('./routers/countrystate-router');
+const AuthRouter = require('./routers/auth-router');
 
 const path = require('path');
 // const vidRouter = require('./routers/Videorouter');
@@ -23,6 +25,7 @@ const corsOption = {
 }
 app.use(cors(corsOption));
 app.use(express.json())
+app.use(cookieParser())
 app.use('/uploads/videos', express.static(path.join(__dirname, 'uploads', 'videos')));
 app.use('/api/content-type', contentType)
 // app.use('/api/file', fileUploadRouter);
@@ -32,6 +35,8 @@ app.use('/api/regional-news', regionalNewsRouter)
 app.use('/api/search', searchRouter)
 app.use('/api/sensorship-news', sensorshipRouter)
 app.use('/api/news-indexing', indexingRouter)
+app.use('/api/country-state-city', countryStateRouter)
+app.use('/api/auth', AuthRouter);
 
 
 

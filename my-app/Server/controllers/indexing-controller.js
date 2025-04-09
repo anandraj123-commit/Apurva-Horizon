@@ -347,7 +347,7 @@ const countryData = async (req, res) => {
 
 
     results.results = await model.collection(collectionName).aggregate(pipeline).toArray();
-    console.log(results.results);
+    // console.log(results.results);
     // const countResult = await model.collection(collectionName).aggregate(countPipeline).toArray();
     // results.totalCount = countResult.length > 0 ? countResult[0].totalCount : 0;
 

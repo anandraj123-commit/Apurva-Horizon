@@ -14,7 +14,7 @@ const initialState = {
 };
 
 function reducer(state, { type, payload }) {
-    console.log(payload);
+    // console.log(payload);
     switch (type) {
         case ACTIONS.API_REQUEST:
             return { ...state, data: {}, loading: true };
