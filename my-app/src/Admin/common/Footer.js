@@ -12,16 +12,16 @@ const Footer = function(){
                 <div className="col-6 text-end">
                     <ul className="list-inline">
                         <li className="list-inline-item">
-                            <a className="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
+                            <a className="text-muted" href="https://adminkit.io/" target="_blank" rel="noreferrer noopener" >Support</a>
                         </li>
                         <li className="list-inline-item">
-                            <a className="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
+                            <a className="text-muted" href="https://adminkit.io/" target="_blank" rel="noreferrer noopener">Help Center</a>
                         </li>
                         <li className="list-inline-item">
-                            <a className="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
+                            <a className="text-muted" href="https://adminkit.io/" target="_blank" rel="noreferrer noopener">Privacy</a>
                         </li>
                         <li className="list-inline-item">
-                            <a className="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
+                            <a className="text-muted" href="https://adminkit.io/" target="_blank" rel="noreferrer noopener">Terms</a>
                         </li>
                     </ul>
                 </div>
