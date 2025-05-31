@@ -49,19 +49,35 @@ import TagInputField from './Modules/Testing';
 import LoginPage from './Admin/pages/LoginPage';
 // import { ToastContainer } from 'react-toastify';
 import { useAuth } from './Admin/context/AuthContext';
-import { ToastContainer } from 'react-toastify';
+import CategoryPage from './web/Pages/CategoryPage';
+import HomePage from './web/Pages/HomePage';
+import ViewPage from './web/Pages/ViewPage';
+import SubcategoryPage from './web/Pages/SubcategoryPage';
+// import { ToastContainer } from 'react-toastify';
 
 
 function App() {
 
-  const {loggedIn} = useAuth();
+  const { loggedIn } = useAuth();
+  const [toggle, setToggle] = useState(false);
 
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
+
+  
   return (
     <div>
-    {/* <ToastContainer /> */}
+      {/* <ToastContainer /> */}
       <Router>
         <Routes>
-          <Route path="/" element={<Web />} />
+          <Route path="/" element={<Web handleToggle={handleToggle} />}>
+            <Route path="/" element={<HomePage/>}/>
+            <Route path="/:category" element={<CategoryPage/>}/>
+            <Route path="/:category/:subcategory" element={<SubcategoryPage/>}/>
+            <Route path="/:category/:subcategory/view-page/:id" element={<ViewPage/>}/>
+          </Route>
+
           <Route path="/admin" element={loggedIn === true ? <Admin /> : <LoginPage />} >
             <Route path="country-state" element={<CountryState />} />
             <Route path="content-type" element={<List />} />

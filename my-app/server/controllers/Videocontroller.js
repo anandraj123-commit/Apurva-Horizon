@@ -18,7 +18,7 @@ const uploadVideoMiddleware = upload.single('video');
 
 const uploadVideo = async (req, res) => {
   try {
-    const { title, description, displayAt, status } = req.body;
+    const { title, description, displayAt, status, type, subcategory } = req.body;
     const file = req.file;
 
     if (!file) {
@@ -109,27 +109,6 @@ const viewListItem = async (req, res) => {
   }
 };
 
-// const updateList = async (req, res) => {
-//   const { id } = req.params;
-//   const { title, status, description, videoLink, displayAt } = req.body;
-
-//   try {
-//     const dbo = await connectDb();
-
-//     const updatedVideo = await dbo.collection('videos').updateOne(
-//       { _id: new ObjectId(id) },
-//       { $set: { title, status, description, videoLink, displayAt } }
-//     );
-
-//     if (!updatedVideo.matchedCount) {
-//       return res.status(404).json({ message: 'Video not found' });
-//     }
-
-//     res.json({ message: 'Successfully Updated ✅', data: updatedVideo });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Internal server error ❌' });
-//   }
-// };
 const updateList = async (req, res) => {
   
   const { id } = req.params;

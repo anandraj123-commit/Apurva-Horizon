@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TablePagination from '@mui/material/TablePagination';
 import ReactSearchBox from "react-search-box";
-import Button from '@mui/material/Button';
-import { MdModeEditOutline } from "react-icons/md";
-import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { RiDeleteBinLine } from "react-icons/ri";
-import { Switch } from '@mui/material';
-import { TableSortLabel } from '@mui/material';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 
@@ -20,15 +14,7 @@ import {
     TableCell,
     ThemeProvider,
     Theme,
-    SearchField,
-    SelectField,
-    Loader,
-    Breadcrumbs,
 } from '@aws-amplify/ui-react';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
-import Sidebar from '../common/Sidebar';
-import { Badge } from '@mui/material';
 import CustomSeparator from "../common/Breadcrumbs";
 import '../asset/css/Loader.css';
 import '../asset/css/common.css';
@@ -73,14 +59,7 @@ const NewsList = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [statusFilter, setStatusFilter] = useState('');
     const navigate = useNavigate();
-    // for loading
     const [loading, setLoading] = useState(false);
-
-
-
-    // const [sortKey, setSortKey] = useState('');
-    // const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -104,17 +83,12 @@ const NewsList = () => {
                 } else {
                     console.error('Failed to fetch item data');
                 }
-                // setList(prevList =>
-                //     prevList.map(item =>
-                //         item._id === id ? { ...item, status: newStatus } : item
-                //     )
-                // );
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
             finally {
                 setTimeout(() => {
-                    setLoading(false);  // Hide loader after a delay
+                    setLoading(false);  
                 }, 400);
             }
         };
@@ -167,16 +141,11 @@ const NewsList = () => {
         return creatdisplayDate === searchdisDate;
     });
 
-    // const toggleSortByTitle = () => {
-    //     setIsReversed(!isReversed);
-    // };
-    // Reverse order logic
 
     const toggleOrder = () => {
         setIsReversed(!isReversed);
     };
 
-    // const finalList = isReversed ? [...filteredListByDate].reverse() : filteredListByDate;
     const finalList = isReversed ? [...filteredListByDisplayDate].reverse() : filteredListByDisplayDate;
 
 
@@ -348,19 +317,6 @@ const NewsList = () => {
                                             <TableCell className="text-center">
                                                 {entry.status ? 'active' : 'inactive'}
                                             </TableCell>
-                                            {/* <TableCell className="text-center">
-                                                {entry.videoLink || entry.filePath ? (
-                                                    <video width="100" height="70" controls>
-                                                        <source
-                                                            src={entry.videoLink || `http://localhost:5000/uploads/videos/${entry.fileName}`}
-                                                            type="video/webm"
-                                                        />
-                                                        Your browser does not support the video tag.
-                                                    </video>
-                                                ) : (
-                                                    <p>No video</p>
-                                                )}
-                                            </TableCell> */}
                                             <TableCell className="text-center">
                                                 {entry.videoLink || entry.filePath ? (
                                                     <video width="100" height="70" controls>

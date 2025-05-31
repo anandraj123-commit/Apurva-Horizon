@@ -19,7 +19,6 @@ const searchFunctionality = async (req, res) => {
         const model = await connectDB();
         const results = {};
 
-
         //intialised matchStage for pipeline used in aggregation
         const matchStage = {
             $match: {}
@@ -41,7 +40,6 @@ const searchFunctionality = async (req, res) => {
 
         // Building $sort stage dynamically
         const sortStage = Object.keys(parsedSort).length ? { $sort: parsedSort } : { $sort: { _id: 1 } };
-
 
         // Pagination logic
         const pageNumber = parseInt(page) || 1;

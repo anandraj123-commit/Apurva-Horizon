@@ -1,19 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TablePagination from '@mui/material/TablePagination';
 import ReactSearchBox from "react-search-box";
-import Button from '@mui/material/Button';
-import { MdModeEditOutline } from "react-icons/md";
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { RiDeleteBinLine } from "react-icons/ri";
-import { Switch } from '@mui/material';
-import { TableSortLabel } from '@mui/material';
-import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-
-
 import {
     Table,
     TableHead,
@@ -21,23 +9,14 @@ import {
     TableCell,
     ThemeProvider,
     Theme,
-    SearchField,
-    SelectField,
-    Loader,
-    Breadcrumbs,
 } from '@aws-amplify/ui-react';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
-import Sidebar from '../common/Sidebar';
-import { Badge } from '@mui/material';
 import CustomSeparator from "../common/Breadcrumbs";
 import '../asset/css/Loader.css';
 import '../asset/css/common.css';
 import './css/List.css';
-import Input from '../Inputcomponent/Inputs.js';
 import { useList } from '../content-type/store/contentcontext.js';
 
-const theme: Theme = {
+const theme = {
 
     name: 'table-theme',
     tokens: {
@@ -122,12 +101,6 @@ const ReadyQueueList = () => {
         setFilters(updatedFilters);  // Store for pagination
     };
 
-    const toggleOrder = () => {
-        setIsReversed(!isReversed);
-    };
-
-    // const finalList = isReversed ? [...list].reverse() : list;
-
     const handleChangePage = async (event, newPage) => {
         setPage(newPage);
     };
@@ -137,7 +110,6 @@ const ReadyQueueList = () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0); // Reset to the first page
     };
-
 
     const SortSymbol = ({ sortOrder }) => {
         if (sortOrder % 3 === 0) {
@@ -155,7 +127,7 @@ const ReadyQueueList = () => {
         const fetchDataAsync = async () => {
             try {
                 const activeSort = getActiveSort(sortOrder);
-                const result = await fetchData("news", filters, page, rowsPerPage, activeSort);
+                const result = await fetchData("news", filters, page, rowsPerPage, activeSort);                
                 setList(result.results);  // Populate the list with data
                 setTotalCount(result.totalCount);  // Set total count for pagination
             } catch (error) {

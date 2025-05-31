@@ -1,0 +1,406 @@
+.header {
+  width: 100%;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: white;
+
+}
+
+.topBar {
+  background-color: #fff;
+  padding: 8px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e5e5;
+
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.date {
+  color: #333;
+  font-size: 14px;
+}
+
+.ePaper {
+  color: #dc2626;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.loginButton {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.freeTrial {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+}
+
+.subscribeButton {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+@media screen and (max-width: 768px) {
+  .subscribeButton{
+    padding: 3px 8px;
+  }
+  .freeTrial {
+    padding: 3px 8px;
+  }
+}
+
+.logoSection {
+  
+  width:100%;
+}
+
+.logo {
+  height: 10%;
+  width: 60%;
+  margin: 0 auto;
+  padding: 10px 10px;
+}
+
+.nav {
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  position: relative;
+  display: flex;
+}
+
+.navList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin: 0.1% 8% 0.5% 8%;
+  padding: 12px 24px;
+  background: white;
+  width: 70%;
+  margin: 0 auto;
+}
+
+.navItem {
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  position: relative;
+  white-space: nowrap;
+}
+
+/* .navItem:hover{
+  color:red;
+} */
+
+.activeIndex{
+  color:red !important;
+}
+
+.languageOptions{
+  /* outline: #; */
+  border: none;
+}
+
+.socialIcons{
+  display: flex;
+  gap:0.5rem;
+}
+
+.liveNow {
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.liveNow::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background-color: #dc2626;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.rightNav {
+  display: flex;
+  gap: 24px;
+  padding: 12px 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: #f8f8f8;
+}
+
+.menuButton, .searchButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.categoryButton{
+  margin: 0.8rem;
+}
+
+.mobileNav {
+  display: none;
+}
+
+.centralizeNavMenu{
+  width: 100%;
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .mobileNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: white;
+  }
+
+  .navList, .rightNav {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 50;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    margin:0;
+    /* width: 50%; */
+    height: auto;
+  }
+
+  .navListOpen, .rightNavOpen {
+    display: flex;
+    /* height: 20rem; */
+  }
+
+  .navItem {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: block;
+    width: 100%;
+  }
+  .nav{
+    height: auto !important;
+  }
+}
+
+/* dropdown css  */
+
+
+/* The mega menu: hidden by default */
+.megaMenu {
+  display: none;
+  position: absolute;
+  /* top: 100%; */
+  left: 3%;
+  width: 95%;
+  height:28rem;
+  /* margin: 0 auto; */
+  background: white;
+  padding: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 99;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* The wrapper will show the menu on hover */
+.navItemWrapper:hover .megaMenu {
+  display: block;
+}
+
+
+/* particular hovered menu item css  */
+.container {
+  width: 100%;
+  gap: 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  /* align-items: center;
+  justify-content: space-around; */
+}
+
+.sidebar {
+  width: 15%;
+  border-right: 1px solid #e5e5e5;
+  padding : 30px 0;
+  height: 100%;
+  justify-items: center;
+  
+}
+
+.menuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.menuItem {
+  cursor: pointer;
+  color: #333;
+  font-size: 13px;
+}
+
+.menuItem:hover {
+  color: #dc2626;
+}
+
+.menuIcon{
+  margin:0.7rem;
+}
+
+.content {
+  height: 27rem;
+  /* width: (100%-200px); */
+  width: auto;
+}
+
+.newsGrid {
+  height: 25rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap:10px;
+  overflow: hidden;
+}
+
+.newsCard {
+  transition: transform 0.2s;
+  width: 15rem;
+  height: 24rem;
+  padding: 0.7rem;
+}
+
+.newsCard:hover {
+  transform: translateY(-4px);
+  box-shadow:  0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.seeMore{
+  font-weight: 500;
+  text-align: right;
+  color: #333;
+}
+
+.newsImage {
+  width: 100%;
+  height: 8rem;
+  object-fit: cover;
+}
+
+.newsContent {
+  padding: 16px;
+}
+
+.newsTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin: 4px;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;       /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  max-height: 3rem; /* Adjust based on line count */
+  text-overflow: ellipsis;
+}
+
+.displayTime{
+  font-size: 10px;
+  text-align: right;
+  width:100%;
+  color: #333;
+}
+
+.newsLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.subNews {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.subNewsItem {
+  font-size: 14px;
+  color: #666;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.subNewsItem:hover {
+  color: #dc2626;
+}
+/* 
+.newsItem{
+} */
+
+.newsTitle{
+  padding: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+
+  .newsGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   View,
@@ -6,8 +6,6 @@ import {
   useTheme,
 } from "@aws-amplify/ui-react";
 import { useLocation } from "react-router-dom";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
 import CustomSeparator from "../common/Breadcrumbs";
 
 export default function NewsView() {
@@ -27,10 +25,10 @@ export default function NewsView() {
           },
         }
       );
-      
+
       if (response.ok) {
         const data = await response.json();
-        console.log("the data is",data._id);
+        console.log("the data is", data._id);
         setDocument(data);
       }
     };
@@ -39,11 +37,9 @@ export default function NewsView() {
 
   return (
     <>
-       
-          <CustomSeparator
-                                  baseRoute="/admin/video-upload"
-                                  /> 
-
+      <CustomSeparator
+        baseRoute="/admin/video-upload"
+      />
       {/* Page Content */}
       <Card
         variation="elevated"
@@ -60,9 +56,9 @@ export default function NewsView() {
         </Heading>
 
         {/* Table Layout (Option 2: Image Fitting in the Table) */}
-        <table style={{ width: "80%", borderCollapse: "collapse"}} border="0" className="mx-auto">
+        <table style={{ width: "80%", borderCollapse: "collapse" }} border="0" className="mx-auto">
           <tbody>
-            
+
             <tr>
               <td style={styles.titleColumn} className="text-success">ID</td>
               <td style={styles.valueColumn} className="text-success">{document._id || "N/A"}</td>
@@ -83,33 +79,22 @@ export default function NewsView() {
               <td style={styles.titleColumn}>Display At</td>
               <td style={styles.valueColumn} >{document.displayAt || "N/A"}</td>
             </tr>
-            {/* <tr>
-              <td style={styles.titleColumn}>Image</td>
-              <td style={styles.valueColumn}>
-                <img
-                  src={document.imageUrl || "https://picsum.photos/100"}
-                  alt="News"
-                  style={{
-                    maxWidth: "100%", // Image fits the table width
-                    height: "auto",
-                    borderRadius: "4px",
-                  }}
-                />
-              </td>
-            </tr> */}
             <tr>
-            <td style={styles.titleColumn}>Video</td>
-            {document.videoLink || document.filePath ? (
-                                                    <video width="160" height="150" controls>
-                                                        <source
-                                                            src={document.videoLink || `http://localhost:5000/uploads/videos/${document.fileName}`}
-                                                            type="video/webm"
-                                                        />
-                                                        Your browser does not support the video tag.
-                                                    </video>
-                                                ) : (
-                                                    <p>No video</p>
-                                                )}
+              <td style={styles.titleColumn}>Video</td>
+              <td style={styles.valueColumn}>
+
+              {document.filePath ? (
+                <video width="160" height="150" controls>
+                  <source
+                    src={document.videoLink || `http://localhost:5000/uploads/videos/${document.fileName}`}
+                    type="video/webm"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <p>{document.videoLink || "No Video Exists"}</p>
+              )}
+              </td>
             </tr>
           </tbody>
         </table>

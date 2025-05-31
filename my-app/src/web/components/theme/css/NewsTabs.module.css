@@ -1,0 +1,61 @@
+.newsBox {
+  width: 22.5rem;
+  border: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  font-size: 14px;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab {
+  flex: 1;
+  padding: 8px 12px;
+  text-align: center;
+  cursor: pointer;
+  background: #f9f9f9;
+  border: none;
+  font-weight: bold;
+  border-radius: 5px;
+  color: #333;
+}
+
+.tab:hover {
+  background: #eee;
+}
+
+.active {
+  background: #000;
+  color: white;
+}
+
+.newsList {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.newsItem {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 6px;
+}
+
+.icon {
+  color: red;
+}
+
+.headline {
+  color: #333;
+  cursor: pointer;
+}
+
+.headline:hover {
+  text-decoration: underline;
+}

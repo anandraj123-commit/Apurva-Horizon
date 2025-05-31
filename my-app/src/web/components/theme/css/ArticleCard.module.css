@@ -1,0 +1,219 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.cardDark {
+  background-color: #1e1e1e;
+  color: #e5e7eb;
+}
+
+.horizontal {
+  flex-direction: row;
+  align-items: center;
+}
+
+.small {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.medium {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.large {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.imageContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.horizontal .imageContainer {
+  flex: 0 0 40%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.small .image {
+  height: 160px;
+}
+
+.medium .image {
+  height: 200px;
+}
+
+.large .image {
+  height: 300px;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.featured {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #dc2626;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.breaking {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #dc2626;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+.content {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.date {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.dateDark {
+  color: #9ca3af;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #1a365d;
+  line-height: 1.3;
+}
+
+.titleDark {
+  color: #ffffff;
+}
+
+.small .title {
+  font-size: 1rem;
+}
+
+.medium .title {
+  font-size: 1.25rem;
+}
+
+.large .title {
+  font-size: 1.5rem;
+}
+
+.summary {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #4b5563;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.summaryDark {
+  color: #d1d5db;
+}
+
+.small .summary {
+  display: none;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  font-size: 0.875rem;
+}
+
+.author {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.authorDark {
+  color: #9ca3af;
+}
+
+.readTime {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #6b7280;
+}
+
+.readTimeDark {
+  color: #9ca3af;
+}
+
+.readTimeIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (max-width: 640px) {
+  .horizontal {
+    flex-direction: column;
+  }
+  
+  .horizontal .imageContainer {
+    flex: none;
+    width: 100%;
+  }
+  
+  .large .image {
+    height: 200px;
+  }
+}

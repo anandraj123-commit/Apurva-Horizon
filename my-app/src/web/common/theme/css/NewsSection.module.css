@@ -1,0 +1,158 @@
+.newsSection {
+    background: white;
+    padding: 2rem 1rem;
+    font-family: 'Georgia', serif;
+    color: #111;
+  }
+  
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1280px;
+    margin: auto;
+  }
+  
+  .column {
+    flex: 1 1 300px;
+    min-width: 280px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.6rem;
+    color: #8b0000;
+    margin-bottom: 1rem;
+  }
+  
+  .premiumItem h4 {
+    font-size: 0.85rem;
+    color: #8b0000;
+  }
+  
+  .premiumItem p {
+    font-weight: 600;
+  }
+  
+  .premiumItem span {
+    font-size: 0.75rem;
+    color: gray;
+  }
+  
+  .premiumList li {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  
+  .premiumList span {
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+  }
+  
+  .category {
+    font-size: 0.85rem;
+    color: #8b0000;
+    font-weight: 700;
+  }
+  
+  .headline {
+    font-size: 1.8rem;
+    margin: 0.5rem 0;
+  }
+  
+  .imageWrapper {
+    position: relative;
+    margin-top: 1rem;
+  }
+  
+  .imageWrapper img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  
+  .imageText {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.8);
+    padding: 0.2rem 0.5rem;
+    font-weight: bold;
+  }
+  
+  .subNews {
+    margin-top: 1rem;
+  }
+  
+  .subNews .live {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #b10000;
+    background: #f9dcdc;
+    padding: 0.2rem 0.4rem;
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .subNews p {
+    margin: 0.3rem 0 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .timeline li {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .timeline time {
+    display: block;
+    font-size: 0.75rem;
+    color: #777;
+  }
+  
+  .moreStories {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #111;
+    text-decoration: underline;
+  }
+  
+  .sponsored {
+    margin-top: 1.5rem;
+    background: #f1f1f1;
+    padding: 0.8rem;
+    border-left: 4px solid #888;
+  }
+  
+  .sponsored span {
+    font-size: 0.75rem;
+    background: #888;
+    color: #fff;
+    padding: 0.1rem 0.4rem;
+    display: inline-block;
+    margin-bottom: 0.3rem;
+  }
+  
+  .sponsored p {
+    font-size: 0.9rem;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .imageText {
+      font-size: 0.9rem;
+    }
+  
+    .headline {
+      font-size: 1.5rem;
+    }
+  }
+  

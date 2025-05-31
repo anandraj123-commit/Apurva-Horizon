@@ -1,7 +1,10 @@
 require('dotenv').config();
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const {Server} = require("socket.io");
+const cookieParser = require('cookie-parser');
 const contentType = require('./routers/content-type-router');
 const categoryType = require('./routers/category-type-router');
 // const fileUploadRouter = require('./routers/file-upload-router');
@@ -12,17 +15,28 @@ const sensorshipRouter = require('./routers/sensorship-router');
 const indexingRouter = require('./routers/indexing-router');
 const countryStateRouter = require('./routers/countrystate-router');
 const AuthRouter = require('./routers/auth-router');
-
 const path = require('path');
+
+const socket = require('./utils/socket');
+
 // const vidRouter = require('./routers/Videorouter');
 const vidRouter = require('./routers/Videouploadrouter');
 const cors = require('cors');
-// const connectDb = require('./utils/db');
+const mainRouter = require('./routes/mainRoutes')
+
 const corsOption = {
     origin: "http://localhost:3000",
     method: "GET,POST,PUT,DELETE,PATCH,HEAD",
     credentials: true,
 }
+
+
+const io = socket.init(server);
+
+
+app.set("view engine","ejs");
+app.set("views",path.resolve("./views"));
+
 app.use(cors(corsOption));
 app.use(express.json())
 app.use(cookieParser())
@@ -37,16 +51,31 @@ app.use('/api/sensorship-news', sensorshipRouter)
 app.use('/api/news-indexing', indexingRouter)
 app.use('/api/country-state-city', countryStateRouter)
 app.use('/api/auth', AuthRouter);
-
-
-
 app.use('/api/search', searchRouter);
 // app.use('/api/upload', videoRouter);
 app.use('/api/videos', vidRouter);
 // app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // app.use('/uploads/videos', express.static(path.join(__dirname, 'uploads', 'videos')));
+
+//main website backend routes
+app.use('/api/web',mainRouter);
+
+//socket routes
+io.on('connection', (socket) => {
+    console.log('a user connected',socket.id);
+
+    // Listen for "send_message" events from the connected client
+    socket.on("refresh_category", (data) => {
+        console.log("Message Received ", data); // Log the received message data
+
+        // Emit the received message data to all connected clients
+        io.emit("receive_message", data);
+    });
+
+  });
+  
 const PORT = 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log('server is running at port:', PORT);
 })
 
