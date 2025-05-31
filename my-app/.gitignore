@@ -2,8 +2,8 @@
 
 # dependencies
 /node_modules
-/temp_folder/node_modules
-/temp_folder/uploads/
+/server/node_modules
+/server/uploads/
 /.pnp
 .pnp.js
 
