@@ -33,7 +33,7 @@ import SensorshipPanel from './Admin/sensorship/SensorshipPanel';
 import SensorshipRegionalView from './Admin/sensorship/SensorshipRegionalView';
 import IndexingPanel from './Admin/indexing/IndexingPanel';
 import IndexingNews from './Admin/indexing/IndexingNews';
-import FileUpload from './Admin/FileUpload';
+import FileUpload from './Admin/Fileupload';
 import NewsListHindi from './Admin/news/NewsListHindi';
 import NewsListTelugu from './Admin/news/NewsListTelugu';
 import NewsListTamil from './Admin/news/NewsListTamil';
@@ -78,7 +78,7 @@ function App() {
             <Route path="/:category/:subcategory/view-page/:id" element={<ViewPage/>}/>
           </Route>
 
-          <Route path="/admin" element={loggedIn === true ? <Admin /> : <LoginPage />} >
+          <Route path="/admin" element={ <Admin /> } >
             <Route path="country-state" element={<CountryState />} />
             <Route path="content-type" element={<List />} />
             <Route path="apurva-horizon" element={<ApurvaHorizon />} />

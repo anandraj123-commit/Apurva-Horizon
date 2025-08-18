@@ -17,7 +17,7 @@ export default function NewsView() {
   useEffect(() => {
     const fetchSingleItem = async () => {
       const response = await fetch(
-        `http://localhost:5000/api/videos/view/${pathAfterView}`,
+        `http://localhost:4000/api/videos/view/${pathAfterView}`,
         {
           method: "GET",
           headers: {
@@ -86,7 +86,7 @@ export default function NewsView() {
               {document.filePath ? (
                 <video width="160" height="150" controls>
                   <source
-                    src={document.videoLink || `http://localhost:5000/uploads/videos/${document.fileName}`}
+                    src={document.videoLink || `http://localhost:4000/uploads/videos/${document.fileName}`}
                     type="video/webm"
                   />
                   Your browser does not support the video tag.

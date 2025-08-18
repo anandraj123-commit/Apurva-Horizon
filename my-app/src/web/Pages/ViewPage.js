@@ -12,9 +12,9 @@ const ViewPage = () => {
   const [height, setHeight] = useState("600px");
   const {id,category,subcategory} = useParams();
 
-  const {data:categoryData,loading:loading1,error:error1} = useFetchData(`http://localhost:5000/api/web/fetch-data/fetchParticularCategory/paginated?category=${category}&pageNo=0&rowsPerPage=10`)
-  const {data:subcategoryData,loading:loading2,error:error2} = useFetchData(`http://localhost:5000/api/web/fetch-data/fetchEachSubcategory/paginated?category=${category}&subcategoryCount=7&newsLimit=20&subcategory=${subcategory}`)
-  const {data:categoryDataGroupedBySubcategory,loading:loading3,error:error3} = useFetchData(`http://localhost:5000/api/web/fetch-data/fetchEachSubcategory/paginated?category=${category}&subcategoryCount=7&newsLimit=10`)
+  const {data:categoryData,loading:loading1,error:error1} = useFetchData(`http://localhost:4000/api/web/fetch-data/fetchParticularCategory/paginated?category=${category}&pageNo=0&rowsPerPage=10`)
+  const {data:subcategoryData,loading:loading2,error:error2} = useFetchData(`http://localhost:4000/api/web/fetch-data/fetchEachSubcategory/paginated?category=${category}&subcategoryCount=7&newsLimit=20&subcategory=${subcategory}`)
+  const {data:categoryDataGroupedBySubcategory,loading:loading3,error:error3} = useFetchData(`http://localhost:4000/api/web/fetch-data/fetchEachSubcategory/paginated?category=${category}&subcategoryCount=7&newsLimit=10`)
     
   const subcategoryItems = subcategoryData[0]?.news || [];
   const categoryItems = categoryData?.data || [];
@@ -41,7 +41,7 @@ const ViewPage = () => {
         <div className={styles.iframeStyles}>
           <iframe
             ref={iframeRef}
-            src={`http://localhost:5000/api/web/fetch-data/singleNews/${id}`}
+            src={`http://localhost:4000/api/web/fetch-data/singleNews/${id}`}
             title="News View"
             style={{ width: "100%", height, border: 'none', transition: 'height 0.3s ease' }}
           ></iframe>

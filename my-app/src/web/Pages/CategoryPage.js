@@ -9,7 +9,7 @@ import Loader from '../common/Loader'
 
 export default function CategoryPage() {
   const category = useParams().category;
-    const {data:responseData,loading,error} = useFetchData(`http://localhost:5000/api/web/fetch-data/fetchEachSubcategory/paginated?category=${category}&subcategoryCount=10&newsLimit=16`);
+    const {data:responseData,loading,error} = useFetchData(`http://localhost:4000/api/web/fetch-data/fetchEachSubcategory/paginated?category=${category}&subcategoryCount=10&newsLimit=16`);
   
 
   if(loading){

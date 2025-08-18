@@ -13,7 +13,7 @@ import Linkedin from "lucide-react/dist/esm/icons/linkedin";
 import { Link } from "react-router-dom";
 
 
-const socket = io.connect("http://localhost:5000")
+const socket = io.connect("http://localhost:4000")
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
@@ -30,7 +30,7 @@ const Header = () => {
   };
 
   const fetchAllCategory = async () => {
-    const response = await fetch("http://localhost:5000/api/web/fetch-data/fetchAllCategory", {
+    const response = await fetch("http://localhost:4000/api/web/fetch-data/fetchAllCategory", {
       method: "GET",
       headers: { 'Content-Type': 'application/json' },
     })
@@ -60,7 +60,7 @@ const Header = () => {
 
 
   const getNews = async (category, subcategory, index) => {
-    const response = await fetch(`http://localhost:5000/api/web/fetch-data/fetchNewsByCategory/${category}/${subcategory}`, {
+    const response = await fetch(`http://localhost:4000/api/web/fetch-data/fetchNewsByCategory/${category}/${subcategory}`, {
       method: "GET",
       headers: { 'content-type': "application/json" }
     })

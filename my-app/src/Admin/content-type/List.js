@@ -86,7 +86,7 @@ const List = () => {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://localhost:5000/api/content-type/users?page=${page + 1}&limit=${rowsPerPage}`,
+                    `http://localhost:4000/api/content-type/users?page=${page + 1}&limit=${rowsPerPage}`,
                     {
                         method: 'GET',
                         headers: {
@@ -117,7 +117,7 @@ const List = () => {
     //delete handler 
     const deleteHandler = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/content-type/delete/${id}`, {
+            const response = await fetch(`http://localhost:4000/api/content-type/delete/${id}`, {
                 method: "GET",
             })
 
@@ -320,11 +320,15 @@ const List = () => {
                                                 {entry.status ? 'active' : 'inactive'}
                                             </TableCell>
                                             <TableCell>
-                                                {new Intl.DateTimeFormat('en-US', {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                }).format(new Date(entry.createdAt))}
+                                                {entry.createdAt && !isNaN(new Date(entry.createdAt).getTime()) ? (
+                                                    new Intl.DateTimeFormat('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric',
+                                                    }).format(new Date(entry.createdAt))
+                                                ) : (
+                                                    "Invalid Date"
+                                                )}
                                             </TableCell>
                                             <TableCell className="text-center" colSpan={3} >
                                                 <div className="d-flex justify-content-center gap-3">

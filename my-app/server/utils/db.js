@@ -7,7 +7,7 @@ const connectDb = async () => {
     if(dbo)return dbo;
     try {
         const client = await MongoClient.connect(URI);
-        dbo = client.db("arihantjain");
+        dbo = client.db("apurva");
         return dbo;
 
     } catch (error) {

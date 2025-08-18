@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import styles from './theme/css/Footer.module.css';
 import io from 'socket.io-client';
 
-const socket = io.connect("http://localhost:5000")
+const socket = io.connect("http://localhost:4000")
 
 const Footer = () => {
 
   const [categoryData, setCategoryData] = useState([]);
 
   const fetchAllCategory = async () => {
-    const response = await fetch("http://localhost:5000/api/main/fetch-data/fetchAllCategory", {
+    const response = await fetch("http://localhost:4000/api/main/fetch-data/fetchAllCategory", {
       method: "GET",
       headers: { 'Content-Type': 'application/json' },
     })

@@ -8,7 +8,7 @@ import Loader from '../../common/Loader';
 export default function StoryCardGrid({category}) {
 
   const [pageNo,setPageNo] = useState(0);
-  const {data:responseData,loading,error} = useFetchData(`http://localhost:5000/api/web/fetch-data/fetchParticularCategory/paginated?category=${category}&pageNo=${pageNo}&rowsPerPage=12`);
+  const {data:responseData,loading,error} = useFetchData(`http://localhost:4000/api/web/fetch-data/fetchParticularCategory/paginated?category=${category}&pageNo=${pageNo}&rowsPerPage=12`);
   const items = responseData?.data || [];
 
   const TotalPages = parseInt(responseData.count)<responseData.count?parseInt(responseData.count)+1:responseData.count;  

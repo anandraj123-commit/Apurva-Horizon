@@ -39,7 +39,7 @@ const Update = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:5000/api/content-type/view/${id}`, {
+                const response = await fetch(`http://localhost:4000/api/content-type/view/${id}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const Update = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:5000/api/content-type/update/${id}`, {
+            const response = await fetch(`http://localhost:4000/api/content-type/update/${id}`, {
                 method: "PUT", // Use PUT or PATCH for updates
                 headers: {
                     'Content-Type': 'application/json',

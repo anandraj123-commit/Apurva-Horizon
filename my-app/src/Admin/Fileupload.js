@@ -60,7 +60,7 @@
 //     formData.append('filedata', selectedFile);
 
 //     try {
-//       const response = await fetch('http://localhost:5000/upload', {  // Ensure URL matches your server endpoint
+//       const response = await fetch('http://localhost:4000/upload', {  // Ensure URL matches your server endpoint
 //         method: 'POST',
 //         body: formData,
 //       });

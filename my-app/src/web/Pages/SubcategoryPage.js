@@ -10,7 +10,7 @@ import LatestNews from "../components/News_Grid/LatestNews";
 
 export default function SubcategoryPage() {
     const {subcategory,category} = useParams();
-      const {data:responseData,loading,error} = useFetchData(`http://localhost:5000/api/web/fetch-data/fetchEachSubcategory/paginated?category=${category}&subcategoryCount=10&newsLimit=21&subcategory=${subcategory}`);  
+      const {data:responseData,loading,error} = useFetchData(`http://localhost:4000/api/web/fetch-data/fetchEachSubcategory/paginated?category=${category}&subcategoryCount=10&newsLimit=21&subcategory=${subcategory}`);  
 
   return (
     <div className={styles.categoryPageWrapper}>

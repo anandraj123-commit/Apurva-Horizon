@@ -70,7 +70,7 @@ function Addvideo() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/videos/upload-link', {
+      const response = await fetch('http://localhost:4000/api/videos/upload-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ videoLink, title, description, status: status === 'active', displayAt, type, subcategory }),
@@ -106,7 +106,7 @@ function Addvideo() {
 
 
     try {
-      const response = await fetch('http://localhost:5000/api/videos/upload', {
+      const response = await fetch('http://localhost:4000/api/videos/upload', {
         method: 'POST',
         body: formData,
       });

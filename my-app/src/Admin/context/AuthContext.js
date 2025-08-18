@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
     const checkAuth = async () => {
         try {
-          const response = await fetch("http://localhost:5000/api/auth/remember", {
+          const response = await fetch("http://localhost:4000/api/auth/remember", {
             method: "GET",
             credentials: "include", // Allows sending cookies
           });

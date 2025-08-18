@@ -21,7 +21,7 @@ export default function CategoryView() {
 
   useEffect(() => {
     const fetchSingleItem = async () => {
-      const response = await fetch(`http://localhost:5000/api/category-type/view/${pathAfterView}`, {
+      const response = await fetch(`http://localhost:4000/api/category-type/view/${pathAfterView}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"

@@ -17,7 +17,7 @@ export default function RegionView() {
     useEffect(() => {
         const fetchSingleItem = async () => {
             const response = await fetch(
-                `http://localhost:5000/api/regional-news/view/${pathAfterView}`,
+                `http://localhost:4000/api/regional-news/view/${pathAfterView}`,
                 {
                     method: "GET",
                     headers: {

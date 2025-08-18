@@ -66,7 +66,7 @@ const NewsList = () => {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://localhost:5000/api/videos/users?page=${page + 1}&limit=${rowsPerPage}`,
+                    `http://localhost:4000/api/videos/users?page=${page + 1}&limit=${rowsPerPage}`,
                     {
                         method: 'GET',
                         headers: {
@@ -99,7 +99,7 @@ const NewsList = () => {
 
     const deleteHandler = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/videos/delete/${id}`, {
+            const response = await fetch(`http://localhost:4000/api/videos/delete/${id}`, {
                 method: "GET",
             })
 
@@ -321,7 +321,7 @@ const NewsList = () => {
                                                 {entry.videoLink || entry.filePath ? (
                                                     <video width="100" height="70" controls>
                                                         <source
-                                                            src={entry.videoLink || `http://localhost:5000/${entry.filePath}`}
+                                                            src={entry.videoLink || `http://localhost:4000/${entry.filePath}`}
                                                             type="video/webm"
                                                         />
                                                         Your browser does not support the video tag.

@@ -21,7 +21,7 @@ export default function ViewPage() {
 
   useEffect(() => {
     const fetchSingleItem = async () => {
-      const response = await fetch(`http://localhost:5000/api/content-type/view/${pathAfterView}`, {
+      const response = await fetch(`http://localhost:4000/api/content-type/view/${pathAfterView}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
