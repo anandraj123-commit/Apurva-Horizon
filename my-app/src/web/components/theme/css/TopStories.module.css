@@ -1,0 +1,88 @@
+.topStories {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #111827;
+  border-bottom: 2px solid #d97706;
+  padding-bottom: 8px;
+  display: inline-block;
+}
+
+.storiesList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.storyItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.storyItem:hover {
+  background-color: #f9fafb;
+}
+
+.storyRank {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #d97706;
+  min-width: 30px;
+  text-align: center;
+}
+
+.storyContent {
+  flex: 1;
+}
+
+.storyTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exclusiveBadge {
+  background-color: #d97706;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.storyMeta {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.category {
+  color: #2563eb;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.readTime {
+  opacity: 0.8;
+}

@@ -1,0 +1,58 @@
+.stockTicker {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 32px;
+  margin-top: 1rem;
+}
+
+.tickerTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #00ff88;
+}
+
+.tickerContainer {
+  overflow: hidden;
+  height: 40px;
+}
+
+.stockItems {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
+
+.stockItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 100%;
+  font-family: 'Courier New', monospace;
+}
+
+.symbol {
+  font-weight: bold;
+  color: #00ff88;
+  font-size: 0.9rem;
+}
+
+.price {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.change {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.positive {
+  color: #00ff88;
+}
+
+.negative {
+  color: #ff4444;
+}

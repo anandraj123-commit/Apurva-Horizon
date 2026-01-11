@@ -1,0 +1,193 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #000;
+}
+
+.mainNews {
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+.mainImage {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.mainTitle {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  color: #000;
+}
+
+.metaInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.category {
+  background-color: #000;
+  color: #fff;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  margin-right: 1rem;
+  font-weight: 500;
+}
+
+.date {
+  margin-right: 1rem;
+}
+
+.shortDesc {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.fullDesc {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 2rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+}
+
+.button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.outlineButton {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.outlineButton:hover {
+  background-color: #f5f5f5;
+}
+
+.primaryButton {
+  background-color: #000;
+  color: #fff;
+  border: none;
+}
+
+.primaryButton:hover {
+  background-color: #333;
+}
+
+.photoStoriesSection {
+  margin: 3rem 0;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.storiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.storyCard {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.storyCard:hover {
+  transform: translateY(-5px);
+}
+
+.storyImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.storyTitle {
+  font-size: 1rem;
+  padding: 1rem 0;
+  font-weight: 600;
+  color: #000;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.activeDot {
+  background-color: #000;
+  width: 25px;
+  border-radius: 10px;
+}
+
+.navigationControls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.navButton {
+  background: transparent;
+  border: 1px solid #ccc;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navButton:hover {
+  background-color: #f5f5f5;
+}

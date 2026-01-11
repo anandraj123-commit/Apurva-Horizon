@@ -1,0 +1,86 @@
+.opinionSection {
+  background-color: #f9fafb;
+  padding: 32px;
+  border-radius: 8px;
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #111827;
+  border-bottom: 2px solid #2563eb;
+  padding-bottom: 8px;
+  display: inline-block;
+}
+
+.opinionList {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.opinionItem {
+  padding-bottom: 24px;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.opinionItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.opinionTitle {
+  margin-bottom: 16px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.opinionTitle a {
+  color: #111827;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.opinionTitle a:hover {
+  color: #2563eb;
+}
+
+.excerpt {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #374151;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.opinionMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.author {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.authorRole {
+  opacity: 0.8;
+}
+
+.date,
+.readTime {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .opinionMeta {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

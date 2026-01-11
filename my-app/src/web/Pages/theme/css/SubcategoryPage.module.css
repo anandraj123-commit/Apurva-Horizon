@@ -1,0 +1,15 @@
+.opnionTopStoriesWrapper{
+    display: flex;
+}
+
+.columnOne{
+    width:70%;
+    border-right: 2px solid #4b5563;
+    margin-right: 0.5rem;
+}
+
+.columnTwo{
+    width:30%;
+    margin-left: 0.7rem;
+}
+

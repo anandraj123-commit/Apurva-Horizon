@@ -1,0 +1,62 @@
+.container {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  
+  .mainHeading {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .featureImage {
+    height: 240px;
+    object-fit: cover;
+  }
+  
+  .smallFeatureImage {
+    height: 120px;
+    object-fit: cover;
+  }
+  
+  .smallImage {
+    height: 100px;
+    object-fit: cover;
+  }
+  
+  .adCard {
+    min-height: 100%;
+  }
+  .seeMoreAlign{
+    width: 100%;
+    text-align: end;
+  }
+  
+  /* Add any additional custom styles here */
+  
+  @media (max-width: 768px) {
+    .mainHeading {
+      font-size: 1.5rem;
+    }
+    
+    .featureImage {
+      height: 200px;
+    }
+    
+    .smallFeatureImage {
+      height: 100px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .mainHeading {
+      font-size: 1.3rem;
+    }
+    
+    .featureImage {
+      height: 180px;
+    }
+  }
+  
